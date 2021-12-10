@@ -2,13 +2,21 @@ package com.intermediary.entity;
 
 import java.io.Serializable;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 @Entity
 @Table(name = "empresas")
@@ -36,6 +44,16 @@ public class EmpresaEntity implements Serializable {
 
 	@Email(message = "No es una dirección de correo bien formada")
 	private String Correo;
+	
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "representante_legal")
+	private RepresentanteLegalEntity representanteLegalEntity;
+	
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+	@ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+	@JoinColumn(name = "categoria")
+	private CategoriaEntity categoriaEntity;
 
 	public Long getId() {
 		return id;
@@ -100,6 +118,16 @@ public class EmpresaEntity implements Serializable {
 	public void setCorreo(String correo) {
 		Correo = correo;
 	}
+	
+
+	public RepresentanteLegalEntity getRepresentanteLegalEntity() {
+		return representanteLegalEntity;
+	}
+
+	public void setRepresentanteLegalEntity(RepresentanteLegalEntity representanteLegalEntity) {
+		this.representanteLegalEntity = representanteLegalEntity;
+	}
+
 
 	/**
 	 * 
