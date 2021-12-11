@@ -10,10 +10,12 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindException;
 
 import com.intermediary.catalogo.mensajes.CatalogoMensajesEmpresaEntity;
 import com.intermediary.dto.EmpresaDTO;
+import com.intermediary.entity.EmpresaEntity;
 import com.intermediary.repository.EmpresaRepository;
 import com.intermediary.service.EmpresaService;
 import com.intermediary.utils.converter.EmpresaConverter;
@@ -29,6 +31,7 @@ public class EmpresaServiceImpl implements EmpresaService{
 	private EmpresaConverter converter;
 	
 	@Override
+	@Transactional(readOnly = true)
 	public ResponseEntity<?> encontrarTodos() {
 		List<EmpresaDTO> empresasDTOs = null;
 		Map<String, Object> response = new HashMap<>();
@@ -46,6 +49,21 @@ public class EmpresaServiceImpl implements EmpresaService{
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
 		}
 		return  new ResponseEntity<List<EmpresaDTO>>(empresasDTOs, HttpStatus.OK);
+	}
+
+	@Override
+	@Transactional
+	public ResponseEntity<?> registroEmpresa(EmpresaEntity empresaRegistro) {
+		Map<String, Object> response = new HashMap<>();
+		try {;
+			empresaRepository.save(empresaRegistro);
+		} catch (DataAccessException e) {
+			response.put(CatalogoMensajesEmpresaEntity.MENSAJE, CatalogoMensajesEmpresaEntity.ERROR_INSERTAR_EMPRESAS);
+			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		response.put(CatalogoMensajesEmpresaEntity.MENSAJE, CatalogoMensajesEmpresaEntity.EMPRESA_CREADA_CON_EXITO);
+		response.put(CatalogoMensajesEmpresaEntity.EMPRESA, empresaRegistro);
+		return new ResponseEntity<EmpresaEntity>(empresaRegistro, HttpStatus.CREATED);
 	}
 
 }
