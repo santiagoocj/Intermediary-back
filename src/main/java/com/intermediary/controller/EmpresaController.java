@@ -19,11 +19,15 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.intermediary.catalogo.mensajes.CatalogoMensajesEmpresaEntity;
+import com.intermediary.dto.parametros.RegistroEmpresaDTO;
 import com.intermediary.entity.EmpresaEntity;
 import com.intermediary.service.impl.EmpresaServiceImpl;
 
+import lombok.extern.slf4j.Slf4j;
+
 @Controller
 @RequestMapping("/api")
+@Slf4j
 public class EmpresaController {
 	
 	@Autowired
@@ -34,13 +38,16 @@ public class EmpresaController {
 		return empresaService.encontrarTodos();
 	}
 	
-	@PostMapping("/empresas/{representante}/{categoria}")
-	public ResponseEntity<?> registrarEmpresa(@Valid @RequestBody EmpresaEntity empresa, BindingResult validacionesEntidad, @PathVariable Long representante, @PathVariable Long categoria){
+	@PostMapping("/empresas")
+	public ResponseEntity<?> registrarEmpresa(@Valid @RequestBody RegistroEmpresaDTO datosRegistroEmpresa, BindingResult validacionesEntidad){
+		log.info("ERRORES VALIDACIONES =========== " + validacionesEntidad.hasErrors());
 		if(validacionesEntidad.hasErrors()) {
-			listadoErroresValidacionEntidad(validacionesEntidad);
+			log.info("hay ERRORES =========================");
+			return listadoErroresValidacionEntidad(validacionesEntidad);
 		}
-		EmpresaEntity empresaRegistro = empresa;
-		return empresaService.registroEmpresa(empresaRegistro);
+		EmpresaEntity empresaRegistro = datosRegistroEmpresa.getEmpresa();
+		empresaService.registroEmpresa(empresaRegistro);
+		return new ResponseEntity<String>("¡Se a registrado la empresa!", HttpStatus.OK);
 	}
 	
 	private ResponseEntity<Map<String, Object>> listadoErroresValidacionEntidad(BindingResult validacionesEntidad){
