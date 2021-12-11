@@ -1,6 +1,7 @@
 package com.intermediary.entity;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -51,9 +52,9 @@ public class EmpresaEntity implements Serializable {
 	private RepresentanteLegalEntity representanteLegalEntity;
 	
 	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-	@ManyToOne(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+	@OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
 	@JoinColumn(name = "categoria")
-	private CategoriaEntity categoriaEntity;
+	private List<CategoriaEntity> categoriasEntity;
 
 	public Long getId() {
 		return id;
