@@ -43,7 +43,6 @@ public class EmpresaEntity implements Serializable {
 	@Column(name = "tipo_persona")
 	private String tipoPersona;
 	
-	@Email(message = "no es una dirección de correo bien formada")
 	@NotNull
 	private String correo;
 

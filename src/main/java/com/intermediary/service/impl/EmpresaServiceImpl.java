@@ -15,8 +15,11 @@ import org.springframework.validation.BindException;
 
 import com.intermediary.catalogo.mensajes.CatalogoMensajesEmpresaEntity;
 import com.intermediary.dto.EmpresaDTO;
+import com.intermediary.dto.parametros.RegistroEmpresaDTO;
 import com.intermediary.entity.EmpresaEntity;
+import com.intermediary.exception.DataException;
 import com.intermediary.repository.EmpresaRepository;
+import com.intermediary.repository.RepresentanteLegalRepository;
 import com.intermediary.service.EmpresaService;
 import com.intermediary.utils.converter.EmpresaConverter;
 
@@ -26,6 +29,10 @@ public class EmpresaServiceImpl implements EmpresaService{
 	@Autowired
 	@Qualifier("EmpresaRepository")
 	private EmpresaRepository empresaRepository;
+	
+	@Autowired
+	@Qualifier("RepresentanteLegalRepository")
+	private RepresentanteLegalRepository representanteLegalRepository;
 	
 	@Autowired
 	private EmpresaConverter converter;
@@ -38,11 +45,9 @@ public class EmpresaServiceImpl implements EmpresaService{
 		try {
 			empresasDTOs = converter.EntityToModel(empresaRepository.findAll());
 		} catch (DataAccessException e) {
-			response.put(CatalogoMensajesEmpresaEntity.MENSAJE, CatalogoMensajesEmpresaEntity.ERROR_CONSULTA_EMPRESAS);
-			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
+			throw new DataException(CatalogoMensajesEmpresaEntity.ERROR_CONSULTA_EMPRESAS, HttpStatus.NOT_FOUND);
 		} catch (BindException e) {
-			response.put(CatalogoMensajesEmpresaEntity.MENSAJE, CatalogoMensajesEmpresaEntity.ERROR_CONSULTA_EMPRESAS);
-			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+			throw new DataException(CatalogoMensajesEmpresaEntity.ERROR_SERVIDOR, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		if(empresasDTOs == null || empresasDTOs.isEmpty()) {
 			response.put(CatalogoMensajesEmpresaEntity.MENSAJE, CatalogoMensajesEmpresaEntity.SIN_EMPRESAS_EN_BASE_DATOS);
@@ -53,17 +58,19 @@ public class EmpresaServiceImpl implements EmpresaService{
 
 	@Override
 	@Transactional
-	public ResponseEntity<?> registroEmpresa(EmpresaEntity empresaRegistro) {
+	public ResponseEntity<?> registroEmpresa(RegistroEmpresaDTO datosEmpresaRegistro) {
 		Map<String, Object> response = new HashMap<>();
-		try {;
-			empresaRepository.save(empresaRegistro);
+		EmpresaEntity empresa = null;
+		try {
+			empresa = converter.modelToEntity(datosEmpresaRegistro.getEmpresa());
 		} catch (DataAccessException e) {
-			response.put(CatalogoMensajesEmpresaEntity.MENSAJE, CatalogoMensajesEmpresaEntity.ERROR_INSERTAR_EMPRESAS);
-			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.INTERNAL_SERVER_ERROR);
+			throw new DataException(CatalogoMensajesEmpresaEntity.ERROR_INSERTAR_EMPRESAS, HttpStatus.INTERNAL_SERVER_ERROR);
+		} catch (BindException e) {
+			throw new DataException(CatalogoMensajesEmpresaEntity.ERROR_SERVIDOR, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		response.put(CatalogoMensajesEmpresaEntity.MENSAJE, CatalogoMensajesEmpresaEntity.EMPRESA_CREADA_CON_EXITO);
-		response.put(CatalogoMensajesEmpresaEntity.EMPRESA, empresaRegistro);
-		return new ResponseEntity<EmpresaEntity>(empresaRegistro, HttpStatus.CREATED);
+		response.put(CatalogoMensajesEmpresaEntity.EMPRESA, datosEmpresaRegistro);
+		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
 	}
 
 }
