@@ -11,11 +11,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.Email;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
@@ -27,6 +27,7 @@ public class EmpresaEntity implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 
+	@NotNull
 	private String nit;
 
 	@Column(name = "razon_social")
@@ -35,16 +36,18 @@ public class EmpresaEntity implements Serializable {
 	@Column(name = "codigo_ciu")
 	private String codigoCiu;
 
+	@NotNull
 	@Column(name = "actividad_principal")
 	private String actividadPrincipal;
 
 	@Column(name = "tipo_persona")
 	private String tipoPersona;
+	
+	@NotNull
+	private String correo;
 
 	private String celular;
-
-	@Email(message = "No es una dirección de correo bien formada")
-	private String Correo;
+	
 	
 	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	@OneToOne(fetch = FetchType.LAZY)
@@ -111,15 +114,16 @@ public class EmpresaEntity implements Serializable {
 	public void setCelular(String celular) {
 		this.celular = celular;
 	}
+	
+	
 
 	public String getCorreo() {
-		return Correo;
+		return correo;
 	}
 
 	public void setCorreo(String correo) {
-		Correo = correo;
+		this.correo = correo;
 	}
-	
 
 	public RepresentanteLegalEntity getRepresentanteLegalEntity() {
 		return representanteLegalEntity;
