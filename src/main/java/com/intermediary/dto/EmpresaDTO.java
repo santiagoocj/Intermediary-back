@@ -1,5 +1,7 @@
 package com.intermediary.dto;
 
+import java.util.List;
+
 import lombok.Data;
 
 @Data
@@ -13,5 +15,5 @@ public class EmpresaDTO {
 	private String celular;
 	private String Correo;
 	private RepresentanteLegalDTO representanteLegalDTO;
-	private CategoriaDTO categoriaDTO;
+	private List<CategoriaDTO> categoriaDTO;
 }

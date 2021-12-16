@@ -14,7 +14,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -114,8 +113,6 @@ public class EmpresaEntity implements Serializable {
 	public void setCelular(String celular) {
 		this.celular = celular;
 	}
-	
-	
 
 	public String getCorreo() {
 		return correo;
@@ -132,6 +129,16 @@ public class EmpresaEntity implements Serializable {
 	public void setRepresentanteLegalEntity(RepresentanteLegalEntity representanteLegalEntity) {
 		this.representanteLegalEntity = representanteLegalEntity;
 	}
+	
+	public List<CategoriaEntity> getCategoriasEntity() {
+		return categoriasEntity;
+	}
+
+	public void setCategoriasEntity(List<CategoriaEntity> categoriasEntity) {
+		this.categoriasEntity = categoriasEntity;
+	}
+
+
 
 
 	/**

@@ -1,5 +1,9 @@
 package com.intermediary.dto;
 
-public class CategoriaDTO {
+import lombok.Data;
 
+@Data
+public class CategoriaDTO {
+	private long id;
+	private String categoria;
 }
