@@ -17,6 +17,9 @@ public class EmpresaConverter {
 	@Autowired
 	private GenericValidator<EmpresaEntity> genericValidator;
 	
+	@Autowired
+	private RepresentanteLegalConverter representanteLegalConverter;
+	
 	public List<EmpresaDTO> EntityToModel(List<EmpresaEntity> empresaEntity) throws BindException{
 		List<EmpresaDTO> empresasDTO = null;
 		if(!empresaEntity.isEmpty()) {
@@ -39,8 +42,9 @@ public class EmpresaConverter {
 			empresaDTO.setActividadPrincipal(empresaEntity.getActividadPrincipal());
 			empresaDTO.setTipoPersona(empresaEntity.getTipoPersona());
 			empresaDTO.setCelular(empresaEntity.getCelular());
-			empresaDTO.setCorreo(empresaDTO.getCorreo());
-			//queda faltando RepresentanteLegalDTO y CategoriaDTO
+			empresaDTO.setCorreo(empresaEntity.getCorreo());
+			empresaDTO.setRepresentanteLegalDTO(representanteLegalConverter.EntityToModel(empresaEntity.getRepresentanteLegalEntity()));
+			//queda faltando CategoriaDTO
 		}
 		genericValidator.validate(empresaEntity);
 		return empresaDTO;
@@ -58,7 +62,8 @@ public class EmpresaConverter {
 			empresaEntity.setTipoPersona(empresaDTO.getTipoPersona());
 			empresaEntity.setCelular(empresaDTO.getCelular());
 			empresaEntity.setCorreo(empresaDTO.getCorreo());
-			//queda faltando RepresentanteLegalDTO y CategoriaDTO
+			empresaEntity.setRepresentanteLegalEntity(representanteLegalConverter.ModelToEntity(empresaDTO.getRepresentanteLegalDTO()));
+			//queda faltando CategoriaDTO
 		}
 		genericValidator.validate(empresaEntity);
 		return empresaEntity;

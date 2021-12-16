@@ -2,6 +2,7 @@ package com.intermediary.entity;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
@@ -20,18 +21,17 @@ public class RepresentanteLegalEntity implements Serializable{
 	//clave primaria cedula?
 	private Long id;
 	
-	/*¿y el documento donde se crea
-	private String tipoDocumento;*/
+	@Column(name = "tipo_documento")
+	private String tipoDocumento;
+	
+	private String documento;
 	
 	private String nombre;
 	
 	private String apellidos;
 	
-	private String contraseña;
-	
 	private String celular;
 	
-	@Email(message = "No es una dirección de correo bien formada")
 	private String email;
 
 	public Long getId() {
@@ -49,6 +49,23 @@ public class RepresentanteLegalEntity implements Serializable{
 	public void setNombre(String nombre) {
 		this.nombre = nombre;
 	}
+	
+
+	public String getTipoDocumento() {
+		return tipoDocumento;
+	}
+
+	public void setTipoDocumento(String tipoDocumento) {
+		this.tipoDocumento = tipoDocumento;
+	}
+
+	public String getDocumento() {
+		return documento;
+	}
+
+	public void setDocumento(String documento) {
+		this.documento = documento;
+	}
 
 	public String getApellidos() {
 		return apellidos;
@@ -56,14 +73,6 @@ public class RepresentanteLegalEntity implements Serializable{
 
 	public void setApellidos(String apellidos) {
 		this.apellidos = apellidos;
-	}
-
-	public String getContraseña() {
-		return contraseña;
-	}
-
-	public void setContraseña(String contraseña) {
-		this.contraseña = contraseña;
 	}
 
 	public String getCelular() {
