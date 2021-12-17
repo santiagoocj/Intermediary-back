@@ -8,6 +8,7 @@ import com.intermediary.dto.RepresentanteLegalDTO;
 import com.intermediary.entity.RepresentanteLegalEntity;
 import com.intermediary.utils.converter.validator.GenericValidator;
 
+
 @Component
 public class RepresentanteLegalConverter {
 	
@@ -31,10 +32,9 @@ public class RepresentanteLegalConverter {
 		
 	}
 	
-	@SuppressWarnings("unused")
 	public RepresentanteLegalEntity ModelToEntity(RepresentanteLegalDTO representanteLegalDTO) throws BindException {
 		RepresentanteLegalEntity representanteLegalEntity = null;
-		if(representanteLegalEntity != null) {
+		if(representanteLegalDTO != null) {
 			representanteLegalEntity = new RepresentanteLegalEntity();
 			representanteLegalEntity.setId(representanteLegalDTO.getId());
 			representanteLegalEntity.setTipoDocumento(representanteLegalDTO.getTipoDocumento());

@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
-import com.intermediary.catalogo.mensajes.CatalogoMensajesEmpresaEntity;
+import com.intermediary.catalogo.mensajes.CatalogoMensajesEmpresa;
 import com.intermediary.dto.parametros.RegistroEmpresaDTO;
 import com.intermediary.exception.DataException;
 import com.intermediary.service.impl.EmpresaServiceImpl;
@@ -36,10 +36,10 @@ public class EmpresaController {
 	
 	private void erroresDatosRegistroEmpresa(RegistroEmpresaDTO datosRegistroEmpresa) {
 		if(datosRegistroEmpresa.getEmpresa().getNit() == null) {
-			throw new DataException(CatalogoMensajesEmpresaEntity.NIT_REQUERIDO, HttpStatus.BAD_REQUEST);
+			throw new DataException(CatalogoMensajesEmpresa.NIT_REQUERIDO, HttpStatus.BAD_REQUEST);
 		}
 		if(datosRegistroEmpresa.getEmpresa().getCorreo() == null) {
-			throw new DataException(CatalogoMensajesEmpresaEntity.CORREO_REQUERIDO, HttpStatus.BAD_REQUEST);
+			throw new DataException(CatalogoMensajesEmpresa.CORREO_REQUERIDO, HttpStatus.BAD_REQUEST);
 		}
 	}
 

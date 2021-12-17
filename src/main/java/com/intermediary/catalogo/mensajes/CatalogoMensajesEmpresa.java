@@ -1,6 +1,6 @@
 package com.intermediary.catalogo.mensajes;
 
-public class CatalogoMensajesEmpresaEntity {
+public class CatalogoMensajesEmpresa {
 	
 	//Validaciones de empresa
 	public static final String MENSAJE ="mensaje";

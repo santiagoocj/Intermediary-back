@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindException;
 
-import com.intermediary.catalogo.mensajes.CatalogoMensajesEmpresaEntity;
+import com.intermediary.catalogo.mensajes.CatalogoMensajesEmpresa;
 import com.intermediary.dto.EmpresaDTO;
 import com.intermediary.dto.parametros.RegistroEmpresaDTO;
 import com.intermediary.entity.EmpresaEntity;
@@ -45,12 +45,12 @@ public class EmpresaServiceImpl implements EmpresaService{
 		try {
 			empresasDTOs = converter.EntityToModel(empresaRepository.findAll());
 		} catch (DataAccessException e) {
-			throw new DataException(CatalogoMensajesEmpresaEntity.ERROR_CONSULTA_EMPRESAS, HttpStatus.NOT_FOUND);
+			throw new DataException(CatalogoMensajesEmpresa.ERROR_CONSULTA_EMPRESAS, HttpStatus.NOT_FOUND);
 		} catch (BindException e) {
-			throw new DataException(CatalogoMensajesEmpresaEntity.ERROR_SERVIDOR, HttpStatus.INTERNAL_SERVER_ERROR);
+			throw new DataException(CatalogoMensajesEmpresa.ERROR_SERVIDOR, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		if(empresasDTOs == null || empresasDTOs.isEmpty()) {
-			response.put(CatalogoMensajesEmpresaEntity.MENSAJE, CatalogoMensajesEmpresaEntity.SIN_EMPRESAS_EN_BASE_DATOS);
+			response.put(CatalogoMensajesEmpresa.MENSAJE, CatalogoMensajesEmpresa.SIN_EMPRESAS_EN_BASE_DATOS);
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
 		}
 		return  new ResponseEntity<List<EmpresaDTO>>(empresasDTOs, HttpStatus.OK);
@@ -64,12 +64,12 @@ public class EmpresaServiceImpl implements EmpresaService{
 		try {
 			empresa = converter.modelToEntity(datosEmpresaRegistro.getEmpresa());
 		} catch (DataAccessException e) {
-			throw new DataException(CatalogoMensajesEmpresaEntity.ERROR_INSERTAR_EMPRESAS, HttpStatus.INTERNAL_SERVER_ERROR);
+			throw new DataException(CatalogoMensajesEmpresa.ERROR_INSERTAR_EMPRESAS, HttpStatus.INTERNAL_SERVER_ERROR);
 		} catch (BindException e) {
-			throw new DataException(CatalogoMensajesEmpresaEntity.ERROR_SERVIDOR, HttpStatus.INTERNAL_SERVER_ERROR);
+			throw new DataException(CatalogoMensajesEmpresa.ERROR_SERVIDOR, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
-		response.put(CatalogoMensajesEmpresaEntity.MENSAJE, CatalogoMensajesEmpresaEntity.EMPRESA_CREADA_CON_EXITO);
-		response.put(CatalogoMensajesEmpresaEntity.EMPRESA, datosEmpresaRegistro);
+		response.put(CatalogoMensajesEmpresa.MENSAJE, CatalogoMensajesEmpresa.EMPRESA_CREADA_CON_EXITO);
+		response.put(CatalogoMensajesEmpresa.EMPRESA, datosEmpresaRegistro);
 		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
 	}
 
