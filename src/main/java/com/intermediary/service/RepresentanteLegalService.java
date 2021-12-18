@@ -7,4 +7,6 @@ import com.intermediary.dto.RepresentanteLegalDTO;
 public interface RepresentanteLegalService {
 	
 	public ResponseEntity<?> registrarRepresentantelegal(RepresentanteLegalDTO datosRepresentanteLegal);
+	
+	public ResponseEntity<?> buscar(Long id);
 }

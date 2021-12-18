@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +28,12 @@ public class RepresentanteLegalController {
 		validacionDatosRepresentanteLegal(datosRepresentanteLegal);
 		return representantelegalService.registrarRepresentantelegal(datosRepresentanteLegal);
 	}
+	
+	@GetMapping("/representantelegal/{id}")
+	public ResponseEntity<?> buscarPorId(@PathVariable Long id){
+		return representantelegalService.buscar(id);
+	}
+	
 	
 	private void validacionDatosRepresentanteLegal(RepresentanteLegalDTO representanteLegalDTO) {
 		if(representanteLegalDTO.getTipoDocumento() == null) {

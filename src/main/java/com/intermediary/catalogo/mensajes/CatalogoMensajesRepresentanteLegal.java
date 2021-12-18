@@ -14,5 +14,6 @@ public class CatalogoMensajesRepresentanteLegal {
 	public static final String REPRESENTANTE_CREADO_CON_EXITO = "El cliente a sido creado con éxito";
 	public static final String MENSAJE = "mensaje";
 	public static final String REPRESENTANTE = "cliente";
+	public static final String CLIENTE_NO_ENCONTRADO = "El cliente no se encuentra registrado en el sistema";
 
 }
