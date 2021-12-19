@@ -15,7 +15,6 @@ import org.springframework.validation.BindException;
 
 import com.intermediary.catalogo.mensajes.CatalogoMensajesEmpresa;
 import com.intermediary.dto.EmpresaDTO;
-import com.intermediary.dto.parametros.RegistroEmpresaDTO;
 import com.intermediary.entity.EmpresaEntity;
 import com.intermediary.exception.DataException;
 import com.intermediary.repository.EmpresaRepository;
@@ -58,11 +57,12 @@ public class EmpresaServiceImpl implements EmpresaService{
 
 	@Override
 	@Transactional
-	public ResponseEntity<?> registroEmpresa(RegistroEmpresaDTO datosEmpresaRegistro) {
+	public ResponseEntity<?> registroEmpresa(EmpresaDTO datosEmpresaRegistro) {
 		Map<String, Object> response = new HashMap<>();
 		EmpresaEntity empresa = null;
 		try {
-			empresa = converter.modelToEntity(datosEmpresaRegistro.getEmpresa());
+			empresa = converter.modelToEntity(datosEmpresaRegistro);
+			empresaRepository.save(empresa);
 		} catch (DataAccessException e) {
 			throw new DataException(CatalogoMensajesEmpresa.ERROR_INSERTAR_EMPRESAS, HttpStatus.INTERNAL_SERVER_ERROR);
 		} catch (BindException e) {
