@@ -15,5 +15,5 @@ public class EmpresaDTO {
 	private String celular;
 	private String Correo;
 	private RepresentanteLegalDTO representanteLegalDTO;
-	private List<CategoriaDTO> categoriaDTO;
+	private List<EmpresaCategoriaDTO> categoriaDTO;
 }

@@ -1,6 +1,7 @@
 package com.intermediary.entity;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -47,16 +48,19 @@ public class EmpresaEntity implements Serializable {
 
 	private String celular;
 	
-	
 	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "representante_legal")
 	private RepresentanteLegalEntity representanteLegalEntity;
 	
-	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+	
 	@OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-	@JoinColumn(name = "categoria")
-	private List<CategoriaEntity> categoriasEntity;
+	@JoinColumn(name = "empresa_id")
+	private List<EmpresaCategoriaEntity> categoriasEntity;
+	
+	public EmpresaEntity() {
+		this.categoriasEntity = new ArrayList<>();
+	}
 
 	public Long getId() {
 		return id;
@@ -129,14 +133,18 @@ public class EmpresaEntity implements Serializable {
 	public void setRepresentanteLegalEntity(RepresentanteLegalEntity representanteLegalEntity) {
 		this.representanteLegalEntity = representanteLegalEntity;
 	}
-	
-	public List<CategoriaEntity> getCategoriasEntity() {
+
+
+
+	public List<EmpresaCategoriaEntity> getCategoriasEntity() {
 		return categoriasEntity;
 	}
 
-	public void setCategoriasEntity(List<CategoriaEntity> categoriasEntity) {
+	public void setCategoriasEntity(List<EmpresaCategoriaEntity> categoriasEntity) {
 		this.categoriasEntity = categoriasEntity;
 	}
+
+
 
 
 

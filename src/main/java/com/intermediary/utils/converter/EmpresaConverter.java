@@ -21,7 +21,7 @@ public class EmpresaConverter {
 	private RepresentanteLegalConverter representanteLegalConverter;
 	
 	@Autowired
-	private CategoriaConverter categoriaConverter;
+	private EmpresaCategoriaConverter categoriaConverter;
 	
 	public List<EmpresaDTO> EntityToModel(List<EmpresaEntity> empresaEntity) throws BindException{
 		List<EmpresaDTO> empresasDTO = null;
