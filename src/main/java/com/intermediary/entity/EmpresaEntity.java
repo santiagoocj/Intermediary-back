@@ -53,7 +53,6 @@ public class EmpresaEntity implements Serializable {
 	@JoinColumn(name = "representante_legal")
 	private RepresentanteLegalEntity representanteLegalEntity;
 	
-	
 	@OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
 	@JoinColumn(name = "empresa_id")
 	private List<EmpresaCategoriaEntity> categoriasEntity;
@@ -62,6 +61,7 @@ public class EmpresaEntity implements Serializable {
 		this.categoriasEntity = new ArrayList<>();
 	}
 
+	
 	public Long getId() {
 		return id;
 	}
@@ -143,10 +143,6 @@ public class EmpresaEntity implements Serializable {
 	public void setCategoriasEntity(List<EmpresaCategoriaEntity> categoriasEntity) {
 		this.categoriasEntity = categoriasEntity;
 	}
-
-
-
-
 
 
 	/**

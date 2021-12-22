@@ -2,6 +2,7 @@ package com.intermediary.entity;
 
 import java.io.Serializable;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -9,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "categoria")
+@Table(name = "categorias")
 public class CategoriaEntity implements Serializable {
 
 	/**
@@ -21,6 +22,7 @@ public class CategoriaEntity implements Serializable {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
 	
+	@Column(name = "tipo_categoria")
 	private String categoria;
 
 	public Long getId() {

@@ -3,13 +3,12 @@ package com.intermediary.service.impl;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.transaction.Transactional;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindException;
 
 import com.intermediary.catalogo.mensajes.CatalogoMensajesRepresentanteLegal;
@@ -46,6 +45,26 @@ public class RepresentanteLegalServiceImpl implements RepresentanteLegalService{
 		respuesta.put(CatalogoMensajesRepresentanteLegal.MENSAJE, CatalogoMensajesRepresentanteLegal.REPRESENTANTE_CREADO_CON_EXITO);
 		respuesta.put(CatalogoMensajesRepresentanteLegal.REPRESENTANTE, datosRepresentanteLegal);
 		return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.CREATED);
+	}
+
+	@Override
+	@Transactional(readOnly = true)
+	public ResponseEntity<?> buscar(Long id) {
+		Map<String, Object> respuesta = new HashMap<>();
+		RepresentanteLegalEntity representanteLegalEntity = null;
+		representanteLegalEntity = representanteLegalRepository.findById(id).orElse(null);
+		if(representanteLegalEntity != null) {
+			RepresentanteLegalDTO representanteMostrar = null;
+			try{
+				representanteMostrar = representanteConverter.EntityToModel(representanteLegalEntity);
+			}catch (BindException e) {
+				throw new DataException(CatalogoMensajesRepresentanteLegal.ERROR_SERVIDOR, HttpStatus.INTERNAL_SERVER_ERROR);
+			}
+			respuesta.put(CatalogoMensajesRepresentanteLegal.REPRESENTANTE, representanteMostrar);
+			return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.CREATED);
+		}
+		respuesta.put(CatalogoMensajesRepresentanteLegal.MENSAJE, CatalogoMensajesRepresentanteLegal.CLIENTE_NO_ENCONTRADO);
+		return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.NOT_FOUND);
 	}
 
 }
