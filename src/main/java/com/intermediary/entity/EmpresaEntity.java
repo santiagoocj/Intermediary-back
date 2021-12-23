@@ -12,8 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.ManyToMany;
-import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -54,13 +53,14 @@ public class EmpresaEntity implements Serializable {
 	@JoinColumn(name = "representante_legal")
 	private RepresentanteLegalEntity representanteLegalEntity;
 	
-	@ManyToMany(fetch = FetchType.LAZY)
-	@JoinColumn(name = "categoria_id")
-	private List<CategoriaEntity> categoriasEntity;
-
+	@OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+	@JoinColumn(name = "empresa_id")
+	private List<EmpresaCategoriaEntity> categoriasEntity;
+	
 	public EmpresaEntity() {
 		this.categoriasEntity = new ArrayList<>();
 	}
+
 	
 	public Long getId() {
 		return id;
@@ -133,16 +133,16 @@ public class EmpresaEntity implements Serializable {
 	public void setRepresentanteLegalEntity(RepresentanteLegalEntity representanteLegalEntity) {
 		this.representanteLegalEntity = representanteLegalEntity;
 	}
-	
-	public List<CategoriaEntity> getCategoriasEntity() {
+
+
+
+	public List<EmpresaCategoriaEntity> getCategoriasEntity() {
 		return categoriasEntity;
 	}
 
-	public void setCategoriasEntity(List<CategoriaEntity> categoriasEntity) {
+	public void setCategoriasEntity(List<EmpresaCategoriaEntity> categoriasEntity) {
 		this.categoriasEntity = categoriasEntity;
 	}
-
-
 
 
 	/**
