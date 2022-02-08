@@ -14,7 +14,6 @@ import com.intermediary.exception.DataException;
 import com.intermediary.repository.RegistroRepository;
 import com.intermediary.service.RegistroService;
 import com.intermediary.utils.converter.RegistroConverter;
-import com.intermediary.utils.response.ResponseBasic;
 
 @Service("RegistroService")
 public class RegistroServiceImpl implements RegistroService{
@@ -28,17 +27,15 @@ public class RegistroServiceImpl implements RegistroService{
 
 	@Override
 	public ResponseEntity<RespuestaRegistroDTO> realizarRegistro(RegistroDTO datosRegistro) {
-		RespuestaRegistroDTO respuesta = new RespuestaRegistroDTO();
-		ResponseBasic<RespuestaRegistroDTO> resp = ResponseBasic.<RespuestaRegistroDTO>basicBuilder().build();
+		RespuestaRegistroDTO respuesta = null;
 		RegistroEntity registroEntity = null;
 		try {
 			registroEntity = registroConverter.ModelToEntity(datosRegistro);
 			registroRepository.save(registroEntity);
+			respuesta = RespuestaRegistroDTO.builder().registro(datosRegistro).mensaje(CatalogoMensajesRegistro.REGISTRO_EXITOSO).build();
 		}catch (Exception e) {
 			throw new DataException(CatalogoMensajesRegistro.REGISTRO_FALLIDO, HttpStatus.BAD_REQUEST);
 		} 
-		respuesta.setRegistro(datosRegistro);
-		respuesta.setMensaje(CatalogoMensajesRegistro.REGISTRO_EXITOSO);
 		return new ResponseEntity<RespuestaRegistroDTO>(respuesta, HttpStatus.CREATED);
 	}
 

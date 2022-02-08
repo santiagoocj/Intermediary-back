@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import com.intermediary.dto.ErrorDTO;
+import com.intermediary.exception.BusinessExecption;
 import com.intermediary.exception.DataException;
 
 
@@ -13,6 +14,12 @@ public class ControllerAdvice {
 	
 	@ExceptionHandler(value = DataException.class)
 	public ResponseEntity<ErrorDTO> requestExceptionHandler(DataException ex){
+		ErrorDTO error = ErrorDTO.builder().error(ex.getMessage()).build();
+		return new ResponseEntity<ErrorDTO>(error, ex.getStatus());
+	}
+	
+	@ExceptionHandler(value = BusinessExecption.class)
+	public ResponseEntity<ErrorDTO> requestExceptionBusiness(BusinessExecption ex){
 		ErrorDTO error = ErrorDTO.builder().error(ex.getMessage()).build();
 		return new ResponseEntity<ErrorDTO>(error, ex.getStatus());
 	}
