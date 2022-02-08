@@ -22,5 +22,4 @@ public class DataException extends RuntimeException {/**
 		this.status = status;
 	}
 	
-	
 }
