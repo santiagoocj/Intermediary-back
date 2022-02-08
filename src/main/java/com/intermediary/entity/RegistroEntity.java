@@ -10,7 +10,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "registro")
+@Table(name = "registros")
 public class RegistroEntity implements Serializable{
 	/**
 	 * 
@@ -22,6 +22,9 @@ public class RegistroEntity implements Serializable{
 	private Long id;
 	
 	private String nit;
+	
+	@Column(name = "nombre_empresa")
+	private String nombreEmpresa;
 	
 	@Column(name = "razon_social")
 	private String razonSocial;
@@ -45,6 +48,14 @@ public class RegistroEntity implements Serializable{
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getNombreEmpresa() {
+		return nombreEmpresa;
+	}
+
+	public void setNombreEmpresa(String nombreEmpresa) {
+		this.nombreEmpresa = nombreEmpresa;
 	}
 
 	public String getNit() {

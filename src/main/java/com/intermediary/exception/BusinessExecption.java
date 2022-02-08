@@ -2,14 +2,15 @@ package com.intermediary.exception;
 
 import org.springframework.http.HttpStatus;
 
-public class DataException extends RuntimeException {/**
+public class BusinessExecption extends Exception {
+	/**
 	 * 
 	 */
-	private static final long serialVersionUID = -4071638817205573189L;
-
-	private HttpStatus status;
+	private static final long serialVersionUID = 2202436054232940143L;
 	
-	public DataException(String mensaje, HttpStatus status) {
+	private HttpStatus status;
+
+	public BusinessExecption(String mensaje, HttpStatus status) {
 		super(mensaje);
 		this.status = status;
 	}
@@ -21,5 +22,4 @@ public class DataException extends RuntimeException {/**
 	public void setStatus(HttpStatus status) {
 		this.status = status;
 	}
-	
 }

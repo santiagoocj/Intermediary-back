@@ -4,13 +4,16 @@ import java.io.Serializable;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "solicitud_de_registro")
+@Table(name = "solicitudes_de_registro")
 public class SolicitudRegistroEntity implements Serializable{
 	/**
 	 * 
@@ -25,6 +28,10 @@ public class SolicitudRegistroEntity implements Serializable{
 	
 	@Column(name = "estado_solicitud")
 	private String estadoSolicitud;
+	
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_registro")
+	private RegistroEntity registro;
 
 	public long getId() {
 		return id;
@@ -49,6 +56,15 @@ public class SolicitudRegistroEntity implements Serializable{
 	public void setEstadoSolicitud(String estadoSolicitud) {
 		this.estadoSolicitud = estadoSolicitud;
 	}
+
+	public RegistroEntity getRegistro() {
+		return registro;
+	}
+
+	public void setRegistro(RegistroEntity registro) {
+		this.registro = registro;
+	}
+	
 	
 	
 
