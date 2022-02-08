@@ -12,6 +12,11 @@ public class Validator {
 			throw new BusinessExecption(mensaje, HttpStatus.BAD_REQUEST);
 		}
 	}
+	public static void validarNombreNulo(String nombre, String mensaje) throws BusinessExecption{
+		if(nombre == null) {
+			throw new BusinessExecption(mensaje, HttpStatus.BAD_REQUEST);
+		}
+	}
 	public static void validarRazonSocialNulo(String razonSocial, String mensaje) throws BusinessExecption{
 		if(razonSocial == null) {
 			throw new BusinessExecption(mensaje, HttpStatus.BAD_REQUEST);

@@ -8,6 +8,7 @@ import lombok.Setter;
 public class RegistroDTO {
 	private Long id;
 	private String nit;
+	private String nombreEmpresa;
 	private String razonSocial;
 	private String codigoCiu;
 	private String actividadPrincipal;

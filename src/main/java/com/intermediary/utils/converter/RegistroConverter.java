@@ -20,6 +20,7 @@ public class RegistroConverter {
 			registroDTO = new RegistroDTO();
 			registroDTO.setId(registroEntity.getId());
 			registroDTO.setNit(registroEntity.getNit());
+			registroDTO.setNombreEmpresa(registroEntity.getNombreEmpresa());
 			registroDTO.setRazonSocial(registroEntity.getRazonSocial());
 			registroDTO.setCodigoCiu(registroEntity.getCodigoCiu());
 			registroDTO.setActividadPrincipal(registroEntity.getActividadPrincipal());
@@ -37,6 +38,7 @@ public class RegistroConverter {
 			registroEntity = new RegistroEntity();
 			registroEntity.setId(registroDTO.getId());
 			registroEntity.setNit(registroDTO.getNit());
+			registroEntity.setNombreEmpresa(registroDTO.getNombreEmpresa());
 			registroEntity.setRazonSocial(registroDTO.getRazonSocial());
 			registroEntity.setCodigoCiu(registroDTO.getCodigoCiu());
 			registroEntity.setActividadPrincipal(registroDTO.getActividadPrincipal());

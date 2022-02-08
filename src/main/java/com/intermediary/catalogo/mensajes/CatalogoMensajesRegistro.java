@@ -16,4 +16,5 @@ public class CatalogoMensajesRegistro {
 	public static final String CELULAR_REQUERIDO = "El campo celular es requerido";
 	public static final String EMAIL_REQUERIDO = "El campo email es requerido";
 	public static final String EMAIL_NO_VALIDO = "El formato del email no es válido";
+	public static final String NOMBRE_REQUERIDO = "El campo nombre es requerido";
 }

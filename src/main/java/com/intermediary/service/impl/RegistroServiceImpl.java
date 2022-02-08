@@ -23,6 +23,9 @@ public class RegistroServiceImpl implements RegistroService{
 	private RegistroRepository registroRepository;
 	
 	@Autowired
+	private SolicitudRegistroServiceImpl solicitudRegistroServiceImpl;
+	
+	@Autowired
 	private RegistroConverter registroConverter;
 
 	@Override
@@ -32,6 +35,7 @@ public class RegistroServiceImpl implements RegistroService{
 		try {
 			registroEntity = registroConverter.ModelToEntity(datosRegistro);
 			registroRepository.save(registroEntity);
+			solicitudRegistroServiceImpl.guardarSolicitud(registroEntity);
 			respuesta = RespuestaRegistroDTO.builder().registro(datosRegistro).mensaje(CatalogoMensajesRegistro.REGISTRO_EXITOSO).build();
 		}catch (Exception e) {
 			throw new DataException(CatalogoMensajesRegistro.REGISTRO_FALLIDO, HttpStatus.BAD_REQUEST);

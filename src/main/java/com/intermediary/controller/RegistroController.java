@@ -24,6 +24,7 @@ public class RegistroController {
 	@PostMapping("/registro")
 	public ResponseEntity<RespuestaRegistroDTO> realizarRegistro(@RequestBody RegistroDTO registroDTO) throws BusinessExecption{
 		Validator.validarNitNulo(registroDTO.getNit(), CatalogoMensajesRegistro.NIT_REQUERIDO);
+		Validator.validarNombreNulo(registroDTO.getNombreEmpresa(), CatalogoMensajesRegistro.NOMBRE_REQUERIDO);
 		Validator.validarRazonSocialNulo(registroDTO.getRazonSocial(), CatalogoMensajesRegistro.RAZON_SOCIAL_REQUERIDO);
 		Validator.validarCodigoCiuNulo(registroDTO.getCodigoCiu(), CatalogoMensajesRegistro.CODIGO_CIU_REQUERIDO);
 		Validator.validarActividadPrincipalNulo(registroDTO.getActividadPrincipal(), CatalogoMensajesRegistro.ACTIVIDAD_PRINCIPAL_REQUERIDO);
