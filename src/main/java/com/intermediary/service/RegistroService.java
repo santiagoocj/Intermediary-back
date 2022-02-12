@@ -1,5 +1,7 @@
 package com.intermediary.service;
 
+import java.util.List;
+
 import org.springframework.http.ResponseEntity;
 
 import com.intermediary.dto.RegistroDTO;
@@ -10,4 +12,5 @@ public interface RegistroService {
 	
 	public ResponseEntity<RespuestaRegistroDTO> realizarRegistro(RegistroDTO datosRegistro);
 
+	public ResponseEntity<List<RegistroDTO>> listarTodo();
 }

@@ -1,5 +1,8 @@
 package com.intermediary.utils.converter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.validation.BindException;
@@ -13,6 +16,17 @@ public class RegistroConverter {
 	
 	@Autowired
 	private GenericValidator<RegistroEntity> genericValidator;
+	
+	public List<RegistroDTO> EntityToModel(List<RegistroEntity> registrosEntity) throws BindException {
+		List<RegistroDTO> registros = null;
+		if(!registrosEntity.isEmpty()) {
+			registros = new ArrayList<>();
+			for(RegistroEntity registroEntity: registrosEntity) {
+				registros.add(EntityToModel(registroEntity));
+			}
+		}
+		return registros;
+	}
 	
 	public RegistroDTO EntityToModel(RegistroEntity registroEntity) throws BindException {
 		RegistroDTO registroDTO = null;
