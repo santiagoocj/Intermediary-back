@@ -8,5 +8,6 @@ import lombok.Setter;
 public class SolicitudRegistroDTO {
 	private Long id;
 	private String nombre;
+	private String estado;
 	private RegistroDTO registroDTO;
 }
