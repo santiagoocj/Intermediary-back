@@ -10,11 +10,14 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import com.intermediary.catalogo.mensajes.CatalogoMensajesGenerales;
 import com.intermediary.catalogo.mensajes.CatalogoMensajesSolicitudRegistro;
 import com.intermediary.dto.CambiarEstadoSolicitudRegistroDTO;
 import com.intermediary.dto.respuestas.ListarSolicitudRegistroDTO;
 import com.intermediary.dto.respuestas.RespuestaEstadoSolicitudRegistroDTO;
+import com.intermediary.exception.BusinessExecption;
 import com.intermediary.exception.DataException;
+import com.intermediary.exception.util.ValidatorParameters;
 import com.intermediary.service.impl.SolicitudRegistroServiceImpl;
 
 @Controller
@@ -30,10 +33,12 @@ public class SolicitudRegistroController {
 	}
 	
 	@PostMapping("/solicitud-registro/{id}")
-	public ResponseEntity<RespuestaEstadoSolicitudRegistroDTO> cambiarEstado(@RequestBody CambiarEstadoSolicitudRegistroDTO solicitudRegistro, @PathVariable Long id){
+	public ResponseEntity<RespuestaEstadoSolicitudRegistroDTO> cambiarEstado(@RequestBody CambiarEstadoSolicitudRegistroDTO solicitudRegistro, @PathVariable Long id) throws BusinessExecption{
 		if(!solicitudRegistroServiceImpl.existeSolicitud(id)) {
 			throw new DataException(CatalogoMensajesSolicitudRegistro.SOLICITUD_NO_ENCONTRADA, HttpStatus.NOT_FOUND);
 		}
+		ValidatorParameters.validarContenidoCorreoNulo(solicitudRegistro.getContenidoCorreoEstadoSolicitud(), CatalogoMensajesGenerales.CONTENIDO_CORREO_NULO);
+		ValidatorParameters.validarContenidoCorreoVacio(solicitudRegistro.getContenidoCorreoEstadoSolicitud(), CatalogoMensajesGenerales.CONTENIDO_CORREO_VACIO);
 		return solicitudRegistroServiceImpl.modificar(id,solicitudRegistro);
 	}
 

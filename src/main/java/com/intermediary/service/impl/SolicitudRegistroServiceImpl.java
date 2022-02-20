@@ -9,8 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindException;
 
+import com.intermediary.catalogo.mensajes.CatalogoMensajesGenerales;
 import com.intermediary.catalogo.mensajes.CatalogoMensajesSolicitudRegistro;
 import com.intermediary.dto.CambiarEstadoSolicitudRegistroDTO;
+import com.intermediary.dto.EmailDTO;
 import com.intermediary.dto.SolicitudRegistroDTO;
 import com.intermediary.dto.respuestas.ListarSolicitudRegistroDTO;
 import com.intermediary.dto.respuestas.RespuestaEstadoSolicitudRegistroDTO;
@@ -31,6 +33,9 @@ public class SolicitudRegistroServiceImpl implements SolicitudRegistroService{
 	
 	@Autowired
 	private SolicitudRegistroConverter solicitudRegistroConverter;
+	
+	@Autowired
+	private EmailServiceImpl emailServiceImpl;
 
 	@Override
 	public void guardarSolicitud(RegistroEntity registro) throws BindException {
@@ -67,6 +72,8 @@ public class SolicitudRegistroServiceImpl implements SolicitudRegistroService{
 		try {
 			solicitudRegistro = solicitudRegistroRepository.findById(id).orElse(null);
 			modificarEstadoSolicitudRegistro(solicitudRegistro, solicitudCambiar);
+			EmailDTO email = construirEmail(solicitudCambiar.getContenidoCorreoEstadoSolicitud(), solicitudRegistro.getRegistro().getEmail());
+			emailServiceImpl.sendEmail(email);
 			respuesta.setMensaje(mensajeRespuesta);
 			respuesta.setIdSolicitud(id);
 		} catch (BindException e) {
@@ -75,9 +82,17 @@ public class SolicitudRegistroServiceImpl implements SolicitudRegistroService{
 		return new ResponseEntity<RespuestaEstadoSolicitudRegistroDTO>(respuesta, HttpStatus.OK);
 	}
 	
+	private EmailDTO construirEmail(String contenidoCorreoEstadoSolicitud, String email) {
+		EmailDTO emailEnviar = new EmailDTO();
+		emailEnviar.setEmail(email);
+		emailEnviar.setSubject(CatalogoMensajesGenerales.SOLICITUD_REGISTRO);
+		emailEnviar.setContent(contenidoCorreoEstadoSolicitud);
+		return emailEnviar;
+	}
+
 	private void modificarEstadoSolicitudRegistro(SolicitudRegistroEntity solicitud ,CambiarEstadoSolicitudRegistroDTO solicitudCambiar) throws BindException {
-		if(solicitudCambiar.getNombre() != null) {
-			solicitud.setNombre(solicitudCambiar.getNombre());
+		if(solicitudCambiar.getNombreSolicitud() != null) {
+			solicitud.setNombre(solicitudCambiar.getNombreSolicitud());
 		}
 		solicitud.setEstadoSolicitud(solicitudCambiar.getEstado());
 		solicitudRegistroRepository.save(solicitud);

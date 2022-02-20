@@ -6,6 +6,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CambiarEstadoSolicitudRegistroDTO {
-	String nombre;
+	String nombreSolicitud;
 	String estado;
+	String contenidoCorreoEstadoSolicitud;
 }
