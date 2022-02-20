@@ -9,12 +9,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
+import org.springframework.stereotype.Service;
 
 import com.intermediary.catalogo.mensajes.CatalogoMensajesGenerales;
 import com.intermediary.dto.EmailDTO;
 import com.intermediary.exception.GenericExecption;
 import com.intermediary.service.EmailService;
 
+@Service("EmailService")
 public class EmailServiceImpl implements EmailService{
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(EmailServiceImpl.class);
@@ -43,6 +45,15 @@ public class EmailServiceImpl implements EmailService{
 			throw new GenericExecption(CatalogoMensajesGenerales.ERROR_ENVIAR_MENSAJE, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return send;
+	}
+
+	@Override
+	public EmailDTO construirEmail(String email, String asunto, String contenido) {
+		EmailDTO emailEnviar = new EmailDTO();
+		emailEnviar.setEmail(email);
+		emailEnviar.setSubject(asunto);
+		emailEnviar.setContent(contenido);
+		return emailEnviar;
 	}
 
 }

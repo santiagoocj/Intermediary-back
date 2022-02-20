@@ -34,7 +34,7 @@ public class SolicitudRegistroServiceImpl implements SolicitudRegistroService{
 	@Autowired
 	private SolicitudRegistroConverter solicitudRegistroConverter;
 	
-	@Autowired
+	@Autowired(required = true)
 	private EmailServiceImpl emailServiceImpl;
 
 	@Override
@@ -72,7 +72,7 @@ public class SolicitudRegistroServiceImpl implements SolicitudRegistroService{
 		try {
 			solicitudRegistro = solicitudRegistroRepository.findById(id).orElse(null);
 			modificarEstadoSolicitudRegistro(solicitudRegistro, solicitudCambiar);
-			EmailDTO email = construirEmail(solicitudCambiar.getContenidoCorreoEstadoSolicitud(), solicitudRegistro.getRegistro().getEmail());
+			EmailDTO email = emailServiceImpl.construirEmail(solicitudRegistro.getRegistro().getEmail(), CatalogoMensajesGenerales.SOLICITUD_REGISTRO, solicitudCambiar.getContenidoCorreoEstadoSolicitud());
 			emailServiceImpl.sendEmail(email);
 			respuesta.setMensaje(mensajeRespuesta);
 			respuesta.setIdSolicitud(id);
@@ -82,13 +82,6 @@ public class SolicitudRegistroServiceImpl implements SolicitudRegistroService{
 		return new ResponseEntity<RespuestaEstadoSolicitudRegistroDTO>(respuesta, HttpStatus.OK);
 	}
 	
-	private EmailDTO construirEmail(String contenidoCorreoEstadoSolicitud, String email) {
-		EmailDTO emailEnviar = new EmailDTO();
-		emailEnviar.setEmail(email);
-		emailEnviar.setSubject(CatalogoMensajesGenerales.SOLICITUD_REGISTRO);
-		emailEnviar.setContent(contenidoCorreoEstadoSolicitud);
-		return emailEnviar;
-	}
 
 	private void modificarEstadoSolicitudRegistro(SolicitudRegistroEntity solicitud ,CambiarEstadoSolicitudRegistroDTO solicitudCambiar) throws BindException {
 		if(solicitudCambiar.getNombreSolicitud() != null) {
