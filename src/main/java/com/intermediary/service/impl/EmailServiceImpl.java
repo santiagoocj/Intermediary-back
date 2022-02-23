@@ -9,19 +9,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import com.intermediary.catalogo.mensajes.CatalogoMensajesGenerales;
 import com.intermediary.dto.EmailDTO;
 import com.intermediary.exception.GenericExecption;
 import com.intermediary.service.EmailService;
 
-@Service("EmailService")
+@Component
 public class EmailServiceImpl implements EmailService{
 	
 	private static final Logger LOGGER = LoggerFactory.getLogger(EmailServiceImpl.class);
-
-	@Autowired(required = true)
+	
+	@Autowired(required = false)
 	private JavaMailSender sender;
 
 	@Override
