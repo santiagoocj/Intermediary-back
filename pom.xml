@@ -16,6 +16,7 @@
 	<name>intermediary</name>
 	<description>desarrollo back end para la plataforma intermediary que conecta empresarios con vendedores del oriente antioqueño para ampliar su mercado y negocios </description>
 	<properties>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<java.version>11</java.version>
 	</properties>
 	<dependencies>
