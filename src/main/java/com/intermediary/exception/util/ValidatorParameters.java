@@ -4,7 +4,7 @@ import org.springframework.http.HttpStatus;
 
 import com.intermediary.exception.BusinessExecption;
 
-public class Validator {
+public class ValidatorParameters {
 	private static final CharSequence CARACTER_ARROBA = "@";
 	
 	public static void validarNitNulo(String nit, String mensaje) throws BusinessExecption{
@@ -49,6 +49,16 @@ public class Validator {
 	}
 	public static void validarEmailPermitido(String email, String mensaje) throws BusinessExecption{
 		if(!email.contains(CARACTER_ARROBA)) {
+			throw new BusinessExecption(mensaje, HttpStatus.BAD_REQUEST);
+		}
+	}
+	public static void validarContenidoCorreoNulo(String contenidoCorreo, String mensaje) throws BusinessExecption{
+		if(contenidoCorreo == null) {
+			throw new BusinessExecption(mensaje, HttpStatus.BAD_REQUEST);
+		}
+	}
+	public static void validarContenidoCorreoVacio(String contenidoCorreo, String mensaje) throws BusinessExecption{
+		if(contenidoCorreo.isEmpty()) {
 			throw new BusinessExecption(mensaje, HttpStatus.BAD_REQUEST);
 		}
 	}

@@ -9,9 +9,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindException;
 
+import com.intermediary.catalogo.mensajes.CatalogoMensajesGenerales;
 import com.intermediary.catalogo.mensajes.CatalogoMensajesSolicitudRegistro;
+import com.intermediary.dto.CambiarEstadoSolicitudRegistroDTO;
+import com.intermediary.dto.EmailDTO;
 import com.intermediary.dto.SolicitudRegistroDTO;
 import com.intermediary.dto.respuestas.ListarSolicitudRegistroDTO;
+import com.intermediary.dto.respuestas.RespuestaEstadoSolicitudRegistroDTO;
 import com.intermediary.entity.RegistroEntity;
 import com.intermediary.entity.SolicitudRegistroEntity;
 import com.intermediary.enums.EstadoSolicitudEnum;
@@ -29,6 +33,9 @@ public class SolicitudRegistroServiceImpl implements SolicitudRegistroService{
 	
 	@Autowired
 	private SolicitudRegistroConverter solicitudRegistroConverter;
+	
+	@Autowired(required = true)
+	private EmailServiceImpl emailServiceImpl;
 
 	@Override
 	public void guardarSolicitud(RegistroEntity registro) throws BindException {
@@ -55,6 +62,38 @@ public class SolicitudRegistroServiceImpl implements SolicitudRegistroService{
 			throw new DataException(CatalogoMensajesSolicitudRegistro.ERROR_LISTAR_SOLICITUDES_REGISTRO, HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<ListarSolicitudRegistroDTO>(respuesta, HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<RespuestaEstadoSolicitudRegistroDTO> modificar(Long id, CambiarEstadoSolicitudRegistroDTO solicitudCambiar) {
+		SolicitudRegistroEntity solicitudRegistro = null;
+		String mensajeRespuesta = CatalogoMensajesSolicitudRegistro.SOLICITUD_MODIFICADA;
+		RespuestaEstadoSolicitudRegistroDTO respuesta = new RespuestaEstadoSolicitudRegistroDTO();
+		try {
+			solicitudRegistro = solicitudRegistroRepository.findById(id).orElse(null);
+			modificarEstadoSolicitudRegistro(solicitudRegistro, solicitudCambiar);
+			EmailDTO email = emailServiceImpl.construirEmail(solicitudRegistro.getRegistro().getEmail(), CatalogoMensajesGenerales.SOLICITUD_REGISTRO, solicitudCambiar.getContenidoCorreoEstadoSolicitud());
+			emailServiceImpl.sendEmail(email);
+			respuesta.setMensaje(mensajeRespuesta);
+			respuesta.setIdSolicitud(id);
+		} catch (BindException e) {
+			throw new DataException(CatalogoMensajesSolicitudRegistro.ERROR_EDITAR_SOLICITUD_DE_REGISTRO, HttpStatus.BAD_REQUEST);
+		}
+		return new ResponseEntity<RespuestaEstadoSolicitudRegistroDTO>(respuesta, HttpStatus.OK);
+	}
+	
+
+	private void modificarEstadoSolicitudRegistro(SolicitudRegistroEntity solicitud ,CambiarEstadoSolicitudRegistroDTO solicitudCambiar) throws BindException {
+		if(solicitudCambiar.getNombreSolicitud() != null) {
+			solicitud.setNombre(solicitudCambiar.getNombreSolicitud());
+		}
+		solicitud.setEstadoSolicitud(solicitudCambiar.getEstado());
+		solicitudRegistroRepository.save(solicitud);
+	}
+
+	@Override
+	public boolean existeSolicitud(Long id) {
+		return solicitudRegistroRepository.findById(id).orElse(null) == null? false:true;
 	}
 
 }
