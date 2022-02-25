@@ -15,9 +15,15 @@ import org.springframework.validation.BindException;
 
 import com.intermediary.catalogo.mensajes.CatalogoMensajesEmpresa;
 import com.intermediary.dto.EmpresaDTO;
+import com.intermediary.dto.respuestas.RespuestaEmpresaDTO;
 import com.intermediary.entity.EmpresaEntity;
+import com.intermediary.entity.MembresiaEntity;
+import com.intermediary.entity.RegistroEntity;
+import com.intermediary.entity.RepresentanteLegalEntity;
 import com.intermediary.exception.DataException;
 import com.intermediary.repository.EmpresaRepository;
+import com.intermediary.repository.MembresiaRepository;
+import com.intermediary.repository.RegistroRepository;
 import com.intermediary.repository.RepresentanteLegalRepository;
 import com.intermediary.service.EmpresaService;
 import com.intermediary.utils.converter.EmpresaConverter;
@@ -32,6 +38,14 @@ public class EmpresaServiceImpl implements EmpresaService{
 	@Autowired
 	@Qualifier("RepresentanteLegalRepository")
 	private RepresentanteLegalRepository representanteLegalRepository;
+	
+	@Autowired
+	@Qualifier("MembresiaRepository")
+	private MembresiaRepository membresiaRepository;
+	
+	@Autowired
+	@Qualifier("RegistroRepository")
+	private RegistroRepository registroRepository;
 	
 	@Autowired
 	private EmpresaConverter converter;
@@ -57,20 +71,37 @@ public class EmpresaServiceImpl implements EmpresaService{
 
 	@Override
 	@Transactional
-	public ResponseEntity<?> registroEmpresa(EmpresaDTO datosEmpresaRegistro) {
-		Map<String, Object> response = new HashMap<>();
+	public ResponseEntity<RespuestaEmpresaDTO> registroEmpresa(Long idRepresentante, Long idMembresia, Long idRegistro) {
 		EmpresaEntity empresa = null;
+		RepresentanteLegalEntity representante = null;
+		MembresiaEntity membresia = null;
+		RegistroEntity registro = null;
 		try {
-			empresa = converter.modelToEntity(datosEmpresaRegistro);
+			representante = representanteLegalRepository.findById(idRepresentante).orElse(null);
+			membresia = membresiaRepository.findById(idMembresia).orElse(null);
+			registro = registroRepository.findById(idRegistro).orElse(null);
+			empresa = crearEmpresa(representante, membresia, registro);
 			empresaRepository.save(empresa);
+			RespuestaEmpresaDTO retorno = new RespuestaEmpresaDTO();
 		} catch (DataAccessException e) {
 			throw new DataException(CatalogoMensajesEmpresa.ERROR_INSERTAR_EMPRESAS, HttpStatus.INTERNAL_SERVER_ERROR);
-		} catch (BindException e) {
-			throw new DataException(CatalogoMensajesEmpresa.ERROR_SERVIDOR, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-		response.put(CatalogoMensajesEmpresa.MENSAJE, CatalogoMensajesEmpresa.EMPRESA_CREADA_CON_EXITO);
-		response.put(CatalogoMensajesEmpresa.EMPRESA, datosEmpresaRegistro);
-		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
+		} 
+		return new ResponseEntity<RespuestaEmpresaDTO>(new RespuestaEmpresaDTO(), HttpStatus.CREATED);
+	}
+	
+	private EmpresaEntity crearEmpresa(RepresentanteLegalEntity representante, MembresiaEntity membresia, RegistroEntity registro) {
+		EmpresaEntity empresa = new EmpresaEntity();
+		empresa.setNombre(registro.getNombreEmpresa());
+		empresa.setNit(registro.getNit());
+		empresa.setRazonSocial(registro.getRazonSocial());
+		empresa.setCodigoCiu(registro.getCodigoCiu());
+		empresa.setActividadPrincipal(registro.getActividadPrincipal());
+		empresa.setTipoPersona(registro.getTipoPersona());
+		empresa.setCelular(registro.getCelular());
+		empresa.setCorreo(registro.getEmail());
+		empresa.setRepresentanteLegalEntity(representante);
+		empresa.setMembresiaEntity(membresia);
+		return empresa;
 	}
 
 }
