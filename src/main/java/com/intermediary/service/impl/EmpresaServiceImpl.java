@@ -83,7 +83,9 @@ public class EmpresaServiceImpl implements EmpresaService{
 			empresa = crearEmpresa(representante, membresia, registro);
 			empresaRepository.save(empresa);
 			RespuestaEmpresaDTO retorno = new RespuestaEmpresaDTO();
-		} catch (DataAccessException e) {
+			retorno.setEmpresa(converter.EntityToModel(empresa));
+			retorno.setMensaje(CatalogoMensajesEmpresa.EMPRESA_CREADA_CON_EXITO);
+		} catch (BindException e) {
 			throw new DataException(CatalogoMensajesEmpresa.ERROR_INSERTAR_EMPRESAS, HttpStatus.INTERNAL_SERVER_ERROR);
 		} 
 		return new ResponseEntity<RespuestaEmpresaDTO>(new RespuestaEmpresaDTO(), HttpStatus.CREATED);
