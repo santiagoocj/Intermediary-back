@@ -20,6 +20,8 @@ public class CatalogoMensajesEmpresa {
 	public static final String ERROR_SERVIDOR = "Ocurrió un error en el servidor";
 	public static final String NIT_REQUERIDO = "El campo nit es requerido";
 	public static final String CORREO_REQUERIDO = "El campo correo es requerido";
+	public static final String EMPRESA_NO_EXISTE = "La empresa no existe en la base de datos";
+	public static final String EMPRESA_MODIFICADA_CON_EXITO = "La empresa ha sido modificada con exito";
 	
 	
 }

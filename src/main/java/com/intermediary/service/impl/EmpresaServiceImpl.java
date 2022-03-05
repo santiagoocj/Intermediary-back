@@ -107,4 +107,53 @@ public class EmpresaServiceImpl implements EmpresaService{
 		return empresa;
 	}
 
+	@Override
+	public ResponseEntity<RespuestaEmpresaDTO> editarInformacion(Long idEmpresa, EmpresaDTO empresaInformacionNueva) {
+		EmpresaEntity empresaActual = empresaRepository.findById(idEmpresa).orElse(null);
+		RespuestaEmpresaDTO retorno = new RespuestaEmpresaDTO();
+		if(empresaActual == null) {
+			retorno.setMensaje(CatalogoMensajesEmpresa.EMPRESA_NO_EXISTE);
+			return new ResponseEntity<RespuestaEmpresaDTO>(retorno, HttpStatus.NOT_FOUND);
+		}
+		empresaActual = editarInformacionEmpresa(empresaActual, empresaInformacionNueva);
+		empresaRepository.save(empresaActual);
+		try {
+			retorno.setMensaje(CatalogoMensajesEmpresa.EMPRESA_MODIFICADA_CON_EXITO);
+			retorno.setEmpresa(converter.EntityToModel(empresaActual));
+		} catch (Exception e) {
+			throw new DataException(CatalogoMensajesEmpresa.ERROR_INSERTAR_EMPRESAS, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<RespuestaEmpresaDTO>(retorno, HttpStatus.OK);
+	}
+
+	private EmpresaEntity editarInformacionEmpresa(EmpresaEntity empresaActual, EmpresaDTO empresaInformacionNueva) {
+		if(!empresaInformacionNueva.getNombre().isEmpty()) {
+			empresaActual.setNombre(empresaInformacionNueva.getNombre());
+		}
+		if(!empresaInformacionNueva.getNit().isEmpty()) {
+			empresaActual.setNit(empresaInformacionNueva.getNit());
+		}
+		if(!empresaInformacionNueva.getRazonSocial().isEmpty()) {
+			empresaActual.setRazonSocial(empresaInformacionNueva.getRazonSocial());
+		}
+		if(!empresaInformacionNueva.getCodigoCiu().isEmpty()) {
+			empresaActual.setCodigoCiu(empresaInformacionNueva.getCodigoCiu());
+		}
+		if(!empresaInformacionNueva.getActividadPrincipal().isEmpty()) {
+			empresaActual.setActividadPrincipal(empresaInformacionNueva.getActividadPrincipal());
+		}
+		if(!empresaInformacionNueva.getTipoPersona().isEmpty()) {
+			empresaActual.setTipoPersona(empresaInformacionNueva.getTipoPersona());
+		}
+		if(!empresaInformacionNueva.getCorreo().isEmpty()) {
+			empresaActual.setCorreo(empresaInformacionNueva.getCorreo());
+		}
+		if(!empresaInformacionNueva.getCelular().isEmpty()) {
+			empresaActual.setCelular(empresaInformacionNueva.getCelular());
+		}
+		return empresaActual;
+	}
+
+
+
 }

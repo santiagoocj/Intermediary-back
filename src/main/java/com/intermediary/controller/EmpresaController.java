@@ -6,9 +6,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.intermediary.catalogo.mensajes.CatalogoMensajesEmpresa;
+import com.intermediary.dto.EmpresaDTO;
 import com.intermediary.dto.respuestas.RespuestaEmpresaDTO;
 import com.intermediary.exception.BusinessExecption;
 import com.intermediary.exception.util.ValidatorParameters;
@@ -32,6 +34,10 @@ public class EmpresaController {
 		ValidatorParameters.validarIdNulo(idRepresentante, CatalogoMensajesEmpresa.REPRESENTANTE_REQUERIDO);
 		ValidatorParameters.validarIdNulo(idMembresia, CatalogoMensajesEmpresa.MEMBRESIA_REQUERIDA);
 		return empresaService.registroEmpresa(idRepresentante, idMembresia, idRegistro);
+	}
 	
+	@PostMapping("/empresas/{idEmpresa}")
+	public ResponseEntity<RespuestaEmpresaDTO> editarInformacionEmpresa(@PathVariable Long idEmpresa, @RequestBody EmpresaDTO empresa){
+		return empresaService.editarInformacion(idEmpresa, empresa);
 	}
 }
