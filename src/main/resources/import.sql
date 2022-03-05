@@ -8,4 +8,5 @@ INSERT INTO membresias (id, suscripcion, vigencia) VALUES (1, 'Membresia express
 INSERT INTO membresias (id, suscripcion, vigencia) VALUES (2, 'Membresia premium','1 año');
 
 /*REGISTROS*/
+INSERT INTO registros (id, actividad_principal, celular, codigo_ciu,  email, nit, nombre_empresa, razon_social,  tipo_persona) VALUES (1, 'comercio','3105332562', '1256', 'santiagocampo163@gmail.com', '1525','IES','IES', 'Natural');
 
