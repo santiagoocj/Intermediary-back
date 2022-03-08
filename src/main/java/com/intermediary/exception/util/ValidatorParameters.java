@@ -62,4 +62,9 @@ public class ValidatorParameters {
 			throw new BusinessExecption(mensaje, HttpStatus.BAD_REQUEST);
 		}
 	}
+	public static void validarIdNulo(Long id, String mensaje) throws BusinessExecption{
+		if(id == null) {
+			throw new BusinessExecption(mensaje, HttpStatus.BAD_REQUEST);
+		}
+	}
 }

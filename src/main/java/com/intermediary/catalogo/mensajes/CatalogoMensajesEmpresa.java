@@ -5,6 +5,8 @@ public class CatalogoMensajesEmpresa {
 	//Validaciones de empresa
 	public static final String MENSAJE ="mensaje";
 	public static final String EMPRESA = "Empresa";
+	public static final String REPRESENTANTE_REQUERIDO = "La identificación del representante es requerida";
+	public static final String MEMBRESIA_REQUERIDA = "La identificación de la membresia es requerida";
 	
 	//Validaciones base de datos
 	public static final String ERROR_INSERTAR_EMPRESAS = "Error al realizar el insert en la base de datos";
@@ -18,4 +20,8 @@ public class CatalogoMensajesEmpresa {
 	public static final String ERROR_SERVIDOR = "Ocurrió un error en el servidor";
 	public static final String NIT_REQUERIDO = "El campo nit es requerido";
 	public static final String CORREO_REQUERIDO = "El campo correo es requerido";
+	public static final String EMPRESA_NO_EXISTE = "La empresa no existe en la base de datos";
+	public static final String EMPRESA_MODIFICADA_CON_EXITO = "La empresa ha sido modificada con exito";
+	
+	
 }

@@ -21,7 +21,7 @@ public class EmpresaConverter {
 	private RepresentanteLegalConverter representanteLegalConverter;
 	
 	@Autowired
-	private EmpresaCategoriaConverter categoriaConverter;
+	private MembresiaConverter membresiaConverter;
 	
 	public List<EmpresaDTO> EntityToModel(List<EmpresaEntity> empresaEntity) throws BindException{
 		List<EmpresaDTO> empresasDTO = null;
@@ -40,6 +40,7 @@ public class EmpresaConverter {
 			empresaDTO = new EmpresaDTO();
 			empresaDTO.setId(empresaEntity.getId());
 			empresaDTO.setNit(empresaEntity.getNit());
+			empresaDTO.setNombre(empresaEntity.getNombre());
 			empresaDTO.setRazonSocial(empresaEntity.getRazonSocial());
 			empresaDTO.setCodigoCiu(empresaEntity.getCodigoCiu());
 			empresaDTO.setActividadPrincipal(empresaEntity.getActividadPrincipal());
@@ -47,7 +48,7 @@ public class EmpresaConverter {
 			empresaDTO.setCelular(empresaEntity.getCelular());
 			empresaDTO.setCorreo(empresaEntity.getCorreo());
 			empresaDTO.setRepresentanteLegalDTO(representanteLegalConverter.EntityToModel(empresaEntity.getRepresentanteLegalEntity()));
-			empresaDTO.setCategoriaDTO(categoriaConverter.EntityToModel(empresaEntity.getCategoriasEntity()));
+			empresaDTO.setMembresiaDTO(membresiaConverter.EntityToModel(empresaEntity.getMembresiaEntity()));
 		}
 		genericValidator.validate(empresaEntity);
 		return empresaDTO;
@@ -59,6 +60,7 @@ public class EmpresaConverter {
 			empresaEntity = new EmpresaEntity();
 			empresaEntity.setId(empresaDTO.getId());
 			empresaEntity.setNit(empresaDTO.getNit());
+			empresaEntity.setNombre(empresaDTO.getNombre());
 			empresaEntity.setRazonSocial(empresaDTO.getRazonSocial());
 			empresaEntity.setCodigoCiu(empresaDTO.getCodigoCiu());
 			empresaEntity.setActividadPrincipal(empresaDTO.getActividadPrincipal());
@@ -66,7 +68,7 @@ public class EmpresaConverter {
 			empresaEntity.setCelular(empresaDTO.getCelular());
 			empresaEntity.setCorreo(empresaDTO.getCorreo());
 			empresaEntity.setRepresentanteLegalEntity(representanteLegalConverter.ModelToEntity(empresaDTO.getRepresentanteLegalDTO()));
-			empresaEntity.setCategoriasEntity(categoriaConverter.ModelToEntity(empresaDTO.getCategoriaDTO()));
+			empresaEntity.setMembresiaEntity(membresiaConverter.ModelToEntity(empresaDTO.getMembresiaDTO()));
 		}
 		genericValidator.validate(empresaEntity);
 		return empresaEntity;

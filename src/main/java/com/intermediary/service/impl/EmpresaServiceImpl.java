@@ -15,9 +15,15 @@ import org.springframework.validation.BindException;
 
 import com.intermediary.catalogo.mensajes.CatalogoMensajesEmpresa;
 import com.intermediary.dto.EmpresaDTO;
+import com.intermediary.dto.respuestas.RespuestaEmpresaDTO;
 import com.intermediary.entity.EmpresaEntity;
+import com.intermediary.entity.MembresiaEntity;
+import com.intermediary.entity.RegistroEntity;
+import com.intermediary.entity.RepresentanteLegalEntity;
 import com.intermediary.exception.DataException;
 import com.intermediary.repository.EmpresaRepository;
+import com.intermediary.repository.MembresiaRepository;
+import com.intermediary.repository.RegistroRepository;
 import com.intermediary.repository.RepresentanteLegalRepository;
 import com.intermediary.service.EmpresaService;
 import com.intermediary.utils.converter.EmpresaConverter;
@@ -32,6 +38,14 @@ public class EmpresaServiceImpl implements EmpresaService{
 	@Autowired
 	@Qualifier("RepresentanteLegalRepository")
 	private RepresentanteLegalRepository representanteLegalRepository;
+	
+	@Autowired
+	@Qualifier("MembresiaRepository")
+	private MembresiaRepository membresiaRepository;
+	
+	@Autowired
+	@Qualifier("RegistroRepository")
+	private RegistroRepository registroRepository;
 	
 	@Autowired
 	private EmpresaConverter converter;
@@ -57,20 +71,103 @@ public class EmpresaServiceImpl implements EmpresaService{
 
 	@Override
 	@Transactional
-	public ResponseEntity<?> registroEmpresa(EmpresaDTO datosEmpresaRegistro) {
-		Map<String, Object> response = new HashMap<>();
+	public ResponseEntity<RespuestaEmpresaDTO> registroEmpresa(Long idRepresentante, Long idMembresia, Long idRegistro) {
 		EmpresaEntity empresa = null;
+		RepresentanteLegalEntity representante = null;
+		MembresiaEntity membresia = null;
+		RegistroEntity registro = null;
+		RespuestaEmpresaDTO retorno = null;
 		try {
-			empresa = converter.modelToEntity(datosEmpresaRegistro);
+			representante = representanteLegalRepository.findById(idRepresentante).orElse(null);
+			membresia = membresiaRepository.findById(idMembresia).orElse(null);
+			registro = registroRepository.findById(idRegistro).orElse(null);
+			empresa = crearEmpresa(representante, membresia, registro);
 			empresaRepository.save(empresa);
-		} catch (DataAccessException e) {
-			throw new DataException(CatalogoMensajesEmpresa.ERROR_INSERTAR_EMPRESAS, HttpStatus.INTERNAL_SERVER_ERROR);
+			retorno = new RespuestaEmpresaDTO();
+			retorno.setEmpresa(converter.EntityToModel(empresa));
+			retorno.setMensaje(CatalogoMensajesEmpresa.EMPRESA_CREADA_CON_EXITO);
 		} catch (BindException e) {
-			throw new DataException(CatalogoMensajesEmpresa.ERROR_SERVIDOR, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-		response.put(CatalogoMensajesEmpresa.MENSAJE, CatalogoMensajesEmpresa.EMPRESA_CREADA_CON_EXITO);
-		response.put(CatalogoMensajesEmpresa.EMPRESA, datosEmpresaRegistro);
-		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
+			throw new DataException(CatalogoMensajesEmpresa.ERROR_INSERTAR_EMPRESAS, HttpStatus.INTERNAL_SERVER_ERROR);
+		} 
+		return new ResponseEntity<RespuestaEmpresaDTO>(retorno, HttpStatus.CREATED);
 	}
+	
+	private EmpresaEntity crearEmpresa(RepresentanteLegalEntity representante, MembresiaEntity membresia, RegistroEntity registro) {
+		EmpresaEntity empresa = new EmpresaEntity();
+		empresa.setNombre(registro.getNombreEmpresa());
+		empresa.setNit(registro.getNit());
+		empresa.setRazonSocial(registro.getRazonSocial());
+		empresa.setCodigoCiu(registro.getCodigoCiu());
+		empresa.setActividadPrincipal(registro.getActividadPrincipal());
+		empresa.setTipoPersona(registro.getTipoPersona());
+		empresa.setCelular(registro.getCelular());
+		empresa.setCorreo(registro.getEmail());
+		empresa.setRepresentanteLegalEntity(representante);
+		empresa.setMembresiaEntity(membresia);
+		return empresa;
+	}
+
+	@Override
+	public ResponseEntity<RespuestaEmpresaDTO> editarInformacion(Long idEmpresa, EmpresaDTO empresaInformacionNueva) {
+		EmpresaEntity empresaActual = empresaRepository.findById(idEmpresa).orElse(null);
+		RespuestaEmpresaDTO retorno = new RespuestaEmpresaDTO();
+		if(empresaActual == null) {
+			retorno.setMensaje(CatalogoMensajesEmpresa.EMPRESA_NO_EXISTE);
+			return new ResponseEntity<RespuestaEmpresaDTO>(retorno, HttpStatus.NOT_FOUND);
+		}
+		empresaActual = editarInformacionEmpresa(empresaActual, empresaInformacionNueva);
+		empresaRepository.save(empresaActual);
+		try {
+			retorno.setMensaje(CatalogoMensajesEmpresa.EMPRESA_MODIFICADA_CON_EXITO);
+			retorno.setEmpresa(converter.EntityToModel(empresaActual));
+		} catch (Exception e) {
+			throw new DataException(CatalogoMensajesEmpresa.ERROR_INSERTAR_EMPRESAS, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<RespuestaEmpresaDTO>(retorno, HttpStatus.OK);
+	}
+
+	private EmpresaEntity editarInformacionEmpresa(EmpresaEntity empresaActual, EmpresaDTO empresaInformacionNueva) {
+		if(!empresaInformacionNueva.getNombre().isEmpty()) {
+			empresaActual.setNombre(empresaInformacionNueva.getNombre());
+		}
+		if(!empresaInformacionNueva.getNit().isEmpty()) {
+			empresaActual.setNit(empresaInformacionNueva.getNit());
+		}
+		if(!empresaInformacionNueva.getRazonSocial().isEmpty()) {
+			empresaActual.setRazonSocial(empresaInformacionNueva.getRazonSocial());
+		}
+		if(!empresaInformacionNueva.getCodigoCiu().isEmpty()) {
+			empresaActual.setCodigoCiu(empresaInformacionNueva.getCodigoCiu());
+		}
+		if(!empresaInformacionNueva.getActividadPrincipal().isEmpty()) {
+			empresaActual.setActividadPrincipal(empresaInformacionNueva.getActividadPrincipal());
+		}
+		if(!empresaInformacionNueva.getTipoPersona().isEmpty()) {
+			empresaActual.setTipoPersona(empresaInformacionNueva.getTipoPersona());
+		}
+		if(!empresaInformacionNueva.getCorreo().isEmpty()) {
+			empresaActual.setCorreo(empresaInformacionNueva.getCorreo());
+		}
+		if(!empresaInformacionNueva.getCelular().isEmpty()) {
+			empresaActual.setCelular(empresaInformacionNueva.getCelular());
+		}
+		return empresaActual;
+	}
+
+	@Override
+	public ResponseEntity<RespuestaEmpresaDTO> renovarMembresia(Long idEmpresa, Long idMembresia) {
+		RespuestaEmpresaDTO respuestaRetorno = new RespuestaEmpresaDTO();
+		EmpresaEntity empresaRenovar = empresaRepository.findById(idEmpresa).orElse(null);
+		if(empresaRenovar == null) {
+			respuestaRetorno.setMensaje(CatalogoMensajesEmpresa.EMPRESA_NO_EXISTE);
+		}else {
+			MembresiaEntity membresiaNueva = membresiaRepository.findById(idMembresia).orElse(null);
+			empresaRenovar.setMembresiaEntity(membresiaNueva);
+			empresaRepository.save(empresaRenovar);
+		}
+		return new ResponseEntity<RespuestaEmpresaDTO>(respuestaRetorno, HttpStatus.OK);
+	}
+
+
 
 }

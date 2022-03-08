@@ -1,10 +1,6 @@
 package com.intermediary.entity;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,7 +8,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
@@ -26,6 +21,8 @@ public class EmpresaEntity implements Serializable {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	
+	private String nombre;
 
 	@NotNull
 	private String nit;
@@ -53,13 +50,10 @@ public class EmpresaEntity implements Serializable {
 	@JoinColumn(name = "representante_legal")
 	private RepresentanteLegalEntity representanteLegalEntity;
 	
-	@OneToMany(fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-	@JoinColumn(name = "empresa_id")
-	private List<EmpresaCategoriaEntity> categoriasEntity;
-	
-	public EmpresaEntity() {
-		this.categoriasEntity = new ArrayList<>();
-	}
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "membresia")
+	private MembresiaEntity membresiaEntity;
 
 	
 	public Long getId() {
@@ -68,6 +62,14 @@ public class EmpresaEntity implements Serializable {
 
 	public void setId(Long id) {
 		this.id = id;
+	}
+
+	public String getNombre() {
+		return nombre;
+	}
+
+	public void setNombre(String nombre) {
+		this.nombre = nombre;
 	}
 
 	public String getNit() {
@@ -133,15 +135,14 @@ public class EmpresaEntity implements Serializable {
 	public void setRepresentanteLegalEntity(RepresentanteLegalEntity representanteLegalEntity) {
 		this.representanteLegalEntity = representanteLegalEntity;
 	}
+	
 
-
-
-	public List<EmpresaCategoriaEntity> getCategoriasEntity() {
-		return categoriasEntity;
+	public MembresiaEntity getMembresiaEntity() {
+		return membresiaEntity;
 	}
 
-	public void setCategoriasEntity(List<EmpresaCategoriaEntity> categoriasEntity) {
-		this.categoriasEntity = categoriasEntity;
+	public void setMembresiaEntity(MembresiaEntity membresiaEntity) {
+		this.membresiaEntity = membresiaEntity;
 	}
 
 
