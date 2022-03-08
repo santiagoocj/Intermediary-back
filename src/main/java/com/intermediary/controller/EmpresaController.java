@@ -40,4 +40,9 @@ public class EmpresaController {
 	public ResponseEntity<RespuestaEmpresaDTO> editarInformacionEmpresa(@PathVariable Long idEmpresa, @RequestBody EmpresaDTO empresa){
 		return empresaService.editarInformacion(idEmpresa, empresa);
 	}
+	
+	@PostMapping("/empresas/{idMembresia}/{idEmpresa}")
+	public ResponseEntity<RespuestaEmpresaDTO> renovarMembresia(@PathVariable Long idMembresia, @PathVariable Long idEmpresa){
+		return empresaService.renovarMembresia(idEmpresa, idMembresia);
+	}
 }

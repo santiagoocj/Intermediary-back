@@ -154,6 +154,20 @@ public class EmpresaServiceImpl implements EmpresaService{
 		return empresaActual;
 	}
 
+	@Override
+	public ResponseEntity<RespuestaEmpresaDTO> renovarMembresia(Long idEmpresa, Long idMembresia) {
+		RespuestaEmpresaDTO respuestaRetorno = new RespuestaEmpresaDTO();
+		EmpresaEntity empresaRenovar = empresaRepository.findById(idEmpresa).orElse(null);
+		if(empresaRenovar == null) {
+			respuestaRetorno.setMensaje(CatalogoMensajesEmpresa.EMPRESA_NO_EXISTE);
+		}else {
+			MembresiaEntity membresiaNueva = membresiaRepository.findById(idMembresia).orElse(null);
+			empresaRenovar.setMembresiaEntity(membresiaNueva);
+			empresaRepository.save(empresaRenovar);
+		}
+		return new ResponseEntity<RespuestaEmpresaDTO>(respuestaRetorno, HttpStatus.OK);
+	}
+
 
 
 }
