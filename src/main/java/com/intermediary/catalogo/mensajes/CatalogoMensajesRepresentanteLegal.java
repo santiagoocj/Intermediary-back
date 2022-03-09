@@ -15,5 +15,6 @@ public class CatalogoMensajesRepresentanteLegal {
 	public static final String MENSAJE = "mensaje";
 	public static final String REPRESENTANTE = "cliente";
 	public static final String CLIENTE_NO_ENCONTRADO = "El cliente no se encuentra registrado en el sistema";
+	public static final String FORMATO_EMAIL_NO_VALIDO = "El formato del email no es válido";
 
 }

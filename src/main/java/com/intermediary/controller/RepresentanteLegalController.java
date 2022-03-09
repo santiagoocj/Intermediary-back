@@ -1,7 +1,6 @@
 package com.intermediary.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,9 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.intermediary.catalogo.mensajes.CatalogoMensajesRepresentanteLegal;
 import com.intermediary.dto.RepresentanteLegalDTO;
-import com.intermediary.exception.DataException;
+import com.intermediary.exception.BusinessExecption;
+import com.intermediary.exception.util.ValidatorParameters;
 import com.intermediary.service.impl.RepresentanteLegalServiceImpl;
-
 
 @Controller
 @RequestMapping("/api")
@@ -24,8 +23,13 @@ public class RepresentanteLegalController {
 	private RepresentanteLegalServiceImpl representantelegalService;
 
 	@PostMapping("/representantelegal")
-	public ResponseEntity<?> registroRepresentanteLeal(@RequestBody RepresentanteLegalDTO datosRepresentanteLegal){
-		validacionDatosRepresentanteLegal(datosRepresentanteLegal);
+	public ResponseEntity<?> registroRepresentanteLeal(@RequestBody RepresentanteLegalDTO datosRepresentanteLegal) throws BusinessExecption{
+		ValidatorParameters.validarDocumentoNulo(datosRepresentanteLegal.getTipoDocumento(), CatalogoMensajesRepresentanteLegal.TIPO_DOCUMENTO_REQUERIDO);
+		ValidatorParameters.validarDocumentoNulo(datosRepresentanteLegal.getDocumento(), CatalogoMensajesRepresentanteLegal.NUMERO_DOCUMENTO_REQUERIDO);
+		ValidatorParameters.validarNombreNulo(datosRepresentanteLegal.getNombre(), CatalogoMensajesRepresentanteLegal.NOMBRE_REQUERIDO);
+		ValidatorParameters.validarCelularNulo(datosRepresentanteLegal.getCelular(), CatalogoMensajesRepresentanteLegal.CELULAR_REQUERIDO);
+		ValidatorParameters.validarEmailNulo(datosRepresentanteLegal.getEmail(), CatalogoMensajesRepresentanteLegal.CORREO_REQUERIDO);
+		ValidatorParameters.validarEmailPermitido(datosRepresentanteLegal.getEmail(), CatalogoMensajesRepresentanteLegal.FORMATO_EMAIL_NO_VALIDO);
 		return representantelegalService.registrarRepresentantelegal(datosRepresentanteLegal);
 	}
 	
@@ -33,23 +37,5 @@ public class RepresentanteLegalController {
 	public ResponseEntity<?> buscarPorId(@PathVariable Long id){
 		return representantelegalService.buscar(id);
 	}
-	
-	
-	private void validacionDatosRepresentanteLegal(RepresentanteLegalDTO representanteLegalDTO) {
-		if(representanteLegalDTO.getTipoDocumento() == null) {
-			throw new DataException(CatalogoMensajesRepresentanteLegal.TIPO_DOCUMENTO_REQUERIDO, HttpStatus.BAD_REQUEST);
-		}
-		if(representanteLegalDTO.getDocumento() == null) {
-			throw new DataException(CatalogoMensajesRepresentanteLegal.NUMERO_DOCUMENTO_REQUERIDO, HttpStatus.BAD_REQUEST);
-		}
-		if(representanteLegalDTO.getNombre() == null) {
-			throw new DataException(CatalogoMensajesRepresentanteLegal.NOMBRE_REQUERIDO, HttpStatus.BAD_REQUEST);
-		}
-		if(representanteLegalDTO.getCelular() == null) {
-			throw new DataException(CatalogoMensajesRepresentanteLegal.CELULAR_REQUERIDO, HttpStatus.BAD_REQUEST);
-		}
-		if(representanteLegalDTO.getEmail() == null) {
-			throw new DataException(CatalogoMensajesRepresentanteLegal.CORREO_REQUERIDO, HttpStatus.BAD_REQUEST);
-		}
-	}
+
 }
