@@ -1,16 +1,16 @@
 package com.intermediary.entity;
 
-import java.io.Serializable;
-
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+import com.intermediary.entity.comun.AbstractEntidadComun;
+
 @Entity
 @Table(name = "membresias")
-public class MembresiaEntity implements Serializable{
+public class MembresiaEntity extends AbstractEntidadComun{
 
 	/**
 	 * 

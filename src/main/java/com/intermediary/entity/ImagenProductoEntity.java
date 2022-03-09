@@ -1,7 +1,5 @@
 package com.intermediary.entity;
 
-import java.io.Serializable;
-
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -12,10 +10,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.intermediary.entity.comun.AbstractEntidadComun;
 
 @Entity
 @Table(name = "imagen_productos")
-public class ImagenProductoEntity implements Serializable{
+public class ImagenProductoEntity extends AbstractEntidadComun{
 
 	/**
 	 * 

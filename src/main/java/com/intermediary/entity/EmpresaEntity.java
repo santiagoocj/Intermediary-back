@@ -1,6 +1,5 @@
 package com.intermediary.entity;
 
-import java.io.Serializable;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -13,10 +12,11 @@ import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.intermediary.entity.comun.AbstractEntidadComun;
 
 @Entity
 @Table(name = "empresas")
-public class EmpresaEntity implements Serializable {
+public class EmpresaEntity extends AbstractEntidadComun {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

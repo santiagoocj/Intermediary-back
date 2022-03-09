@@ -1,7 +1,5 @@
 package com.intermediary.entity;
 
-import java.io.Serializable;
-
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -11,9 +9,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import com.intermediary.entity.comun.AbstractEntidadComun;
+
 @Entity
 @Table(name = "empresa_categorias")
-public class EmpresaCategoriaEntity implements Serializable {
+public class EmpresaCategoriaEntity extends AbstractEntidadComun {
 	
 	private static final long serialVersionUID = -262149628584821659L;
 

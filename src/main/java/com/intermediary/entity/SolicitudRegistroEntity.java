@@ -1,7 +1,5 @@
 package com.intermediary.entity;
 
-import java.io.Serializable;
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -12,9 +10,11 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.intermediary.entity.comun.AbstractEntidadComun;
+
 @Entity
 @Table(name = "solicitudes_de_registro")
-public class SolicitudRegistroEntity implements Serializable{
+public class SolicitudRegistroEntity extends AbstractEntidadComun{
 	/**
 	 * 
 	 */
