@@ -22,6 +22,7 @@ public class CatalogoMensajesEmpresa {
 	public static final String CORREO_REQUERIDO = "El campo correo es requerido";
 	public static final String EMPRESA_NO_EXISTE = "La empresa no existe en la base de datos";
 	public static final String EMPRESA_MODIFICADA_CON_EXITO = "La empresa ha sido modificada con exito";
+	public static final String EMPRESA_ELIMINADA_EXITOSA = "La empresa se ha eliminado de manera exitosa";
 	
 	
 }

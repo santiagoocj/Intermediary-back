@@ -20,11 +20,10 @@ import com.intermediary.entity.EmpresaEntity;
 import com.intermediary.entity.MembresiaEntity;
 import com.intermediary.entity.RegistroEntity;
 import com.intermediary.entity.RepresentanteLegalEntity;
+import com.intermediary.enums.EstadoEntidad;
 import com.intermediary.exception.DataException;
 import com.intermediary.repository.EmpresaRepository;
-import com.intermediary.repository.MembresiaRepository;
 import com.intermediary.repository.RegistroRepository;
-import com.intermediary.repository.RepresentanteLegalRepository;
 import com.intermediary.service.EmpresaService;
 import com.intermediary.utils.converter.EmpresaConverter;
 
@@ -36,12 +35,12 @@ public class EmpresaServiceImpl implements EmpresaService{
 	private EmpresaRepository empresaRepository;
 	
 	@Autowired
-	@Qualifier("RepresentanteLegalRepository")
-	private RepresentanteLegalRepository representanteLegalRepository;
+	@Qualifier("RepresentanteLegalService")
+	private RepresentanteLegalServiceImpl RepresentanteLegalServiceImpl;
 	
 	@Autowired
-	@Qualifier("MembresiaRepository")
-	private MembresiaRepository membresiaRepository;
+	@Qualifier("MembresiaService")
+	private MembresiaServiceImpl membresiaService;
 	
 	@Autowired
 	@Qualifier("RegistroRepository")
@@ -78,8 +77,8 @@ public class EmpresaServiceImpl implements EmpresaService{
 		RegistroEntity registro = null;
 		RespuestaEmpresaDTO retorno = null;
 		try {
-			representante = representanteLegalRepository.findById(idRepresentante).orElse(null);
-			membresia = membresiaRepository.findById(idMembresia).orElse(null);
+			representante = RepresentanteLegalServiceImpl.buscarXId(idRepresentante);
+			membresia = membresiaService.buscarXId(idMembresia);
 			registro = registroRepository.findById(idRegistro).orElse(null);
 			empresa = crearEmpresa(representante, membresia, registro);
 			empresaRepository.save(empresa);
@@ -161,9 +160,25 @@ public class EmpresaServiceImpl implements EmpresaService{
 		if(empresaRenovar == null) {
 			respuestaRetorno.setMensaje(CatalogoMensajesEmpresa.EMPRESA_NO_EXISTE);
 		}else {
-			MembresiaEntity membresiaNueva = membresiaRepository.findById(idMembresia).orElse(null);
+			MembresiaEntity membresiaNueva = membresiaService.buscarXId(idMembresia);
 			empresaRenovar.setMembresiaEntity(membresiaNueva);
 			empresaRepository.save(empresaRenovar);
+		}
+		return new ResponseEntity<RespuestaEmpresaDTO>(respuestaRetorno, HttpStatus.OK);
+	}
+
+	@Override
+	public ResponseEntity<RespuestaEmpresaDTO> inactivar(Long idEmpresa) {
+		RespuestaEmpresaDTO respuestaRetorno = new RespuestaEmpresaDTO();
+		EmpresaEntity empresa = empresaRepository.findById(idEmpresa).orElse(null);
+		if(empresa == null) {
+			respuestaRetorno.setMensaje(CatalogoMensajesEmpresa.EMPRESA_NO_EXISTE);
+		}else {
+			empresa.setEstado(EstadoEntidad.INACTIVO);
+			Long idRepresentante = empresa.getRepresentanteLegalEntity().getId();
+			RepresentanteLegalServiceImpl.inactivar(idRepresentante);
+			empresaRepository.save(empresa);
+			respuestaRetorno.setMensaje(CatalogoMensajesEmpresa.EMPRESA_ELIMINADA_EXITOSA);
 		}
 		return new ResponseEntity<RespuestaEmpresaDTO>(respuestaRetorno, HttpStatus.OK);
 	}

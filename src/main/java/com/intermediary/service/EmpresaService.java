@@ -17,4 +17,6 @@ public interface EmpresaService {
 	public ResponseEntity<RespuestaEmpresaDTO> editarInformacion(Long idEmpresa, EmpresaDTO empresaInformacionNueva);
 	
 	public ResponseEntity<RespuestaEmpresaDTO> renovarMembresia(Long idEmpresa, Long idMembresia);
+	
+	public ResponseEntity<RespuestaEmpresaDTO> inactivar(Long idEmpresa);
 }

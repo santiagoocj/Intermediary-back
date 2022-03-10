@@ -14,6 +14,7 @@ import org.springframework.validation.BindException;
 import com.intermediary.catalogo.mensajes.CatalogoMensajesRepresentanteLegal;
 import com.intermediary.dto.RepresentanteLegalDTO;
 import com.intermediary.entity.RepresentanteLegalEntity;
+import com.intermediary.enums.EstadoEntidad;
 import com.intermediary.exception.DataException;
 import com.intermediary.repository.RepresentanteLegalRepository;
 import com.intermediary.service.RepresentanteLegalService;
@@ -65,6 +66,20 @@ public class RepresentanteLegalServiceImpl implements RepresentanteLegalService{
 		}
 		respuesta.put(CatalogoMensajesRepresentanteLegal.MENSAJE, CatalogoMensajesRepresentanteLegal.CLIENTE_NO_ENCONTRADO);
 		return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.NOT_FOUND);
+	}
+
+	@Override
+	public void inactivar(Long id) {
+		RepresentanteLegalEntity representante = representanteLegalRepository.findById(id).orElse(null);
+		if(representante != null) {
+			representante.setEstado(EstadoEntidad.INACTIVO);
+			representanteLegalRepository.save(representante);
+		}
+	}
+
+	@Override
+	public RepresentanteLegalEntity buscarXId(Long id) {
+		return representanteLegalRepository.findById(id).orElse(null);
 	}
 
 }
