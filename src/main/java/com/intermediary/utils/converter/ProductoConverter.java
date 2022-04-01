@@ -14,6 +14,9 @@ public class ProductoConverter {
 	@Autowired
 	private GenericValidator<ProductoEntity> genericValidator;
 	
+	@Autowired
+	private CategoriaConverter categoriaConverter;
+	
 	public ProductoDTO entityToModel(ProductoEntity productoEntity) throws BindException {
 		ProductoDTO productoDTO = null;
 		if(productoEntity != null) {
@@ -26,6 +29,7 @@ public class ProductoConverter {
 			productoDTO.setPrecio(productoEntity.getPrecio());
 			//imagenes del producto
 			productoDTO.setPrecioUnidad(productoEntity.getPrecioUnidad());
+			productoDTO.setCategoriaDTO(categoriaConverter.EntityToModel(productoEntity.getCategoria()));
 		}
 		genericValidator.validate(productoEntity);
 		return productoDTO;
@@ -43,6 +47,7 @@ public class ProductoConverter {
 			productoEntity.setPrecio(productoDTO.getPrecio());
 			//imagenes
 			productoEntity.setPrecioUnidad(productoDTO.getPrecioUnidad());
+			productoEntity.setCategoria(categoriaConverter.ModelToEntity(productoDTO.getCategoriaDTO()));
 		}
 		genericValidator.validate(productoEntity);
 		return productoEntity;

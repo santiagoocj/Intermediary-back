@@ -15,5 +15,6 @@ public class ProductoDTO {
 	private double precio;
 	private List<ImagenProductoDTO> imagenes; 
 	private double precioUnidad;
+	private CategoriaDTO categoriaDTO;
 
 }

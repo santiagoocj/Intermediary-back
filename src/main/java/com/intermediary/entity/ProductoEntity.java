@@ -9,7 +9,9 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -44,6 +46,11 @@ public class ProductoEntity extends AbstractEntidadComun{
 	
 	@Column(name = "precio_unidad")
 	private double precioUnidad;
+	
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "categoria")
+	private CategoriaEntity categoria;
 	
 	public ProductoEntity() {
 		this.imagenes = new ArrayList<>();
@@ -112,7 +119,12 @@ public class ProductoEntity extends AbstractEntidadComun{
 	public void setPrecioUnidad(double precioUnidad) {
 		this.precioUnidad = precioUnidad;
 	}
-	
-	
 
+	public CategoriaEntity getCategoria() {
+		return categoria;
+	}
+
+	public void setCategoria(CategoriaEntity categoria) {
+		this.categoria = categoria;
+	}
 }
