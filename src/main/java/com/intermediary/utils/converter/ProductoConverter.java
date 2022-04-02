@@ -17,6 +17,9 @@ public class ProductoConverter {
 	@Autowired
 	private CategoriaConverter categoriaConverter;
 	
+	@Autowired
+	private ImagenProductoConverter imagenProductoConverter;
+	
 	public ProductoDTO entityToModel(ProductoEntity productoEntity) throws BindException {
 		ProductoDTO productoDTO = null;
 		if(productoEntity != null) {
@@ -27,7 +30,7 @@ public class ProductoConverter {
 			productoDTO.setDimensiones(productoEntity.getDimensiones());
 			productoDTO.setPeso(productoEntity.getPeso());
 			productoDTO.setPrecio(productoEntity.getPrecio());
-			//imagenes del producto
+			productoDTO.setImagenes(imagenProductoConverter.entityToModel(productoEntity.getImagenes()));
 			productoDTO.setPrecioUnidad(productoEntity.getPrecioUnidad());
 			productoDTO.setCategoriaDTO(categoriaConverter.EntityToModel(productoEntity.getCategoria()));
 		}
@@ -45,7 +48,7 @@ public class ProductoConverter {
 			productoEntity.setDimensiones(productoDTO.getDescripcion());
 			productoEntity.setPeso(productoDTO.getPeso());
 			productoEntity.setPrecio(productoDTO.getPrecio());
-			//imagenes
+			productoEntity.setImagenes(imagenProductoConverter.modelToEntity(productoDTO.getImagenes()));
 			productoEntity.setPrecioUnidad(productoDTO.getPrecioUnidad());
 			productoEntity.setCategoria(categoriaConverter.ModelToEntity(productoDTO.getCategoriaDTO()));
 		}

@@ -11,11 +11,13 @@ import com.intermediary.entity.ProductoEntity;
 
 public interface ProductoService {
 	
-	public ResponseEntity<RespuestaProductoDTO> registrarProducto(ProductoDTO producto);
+	public ResponseEntity<RespuestaProductoDTO> registrarProducto(ProductoDTO producto, Long idCategoria);
 	
 	public ResponseEntity<RespuestaProductoDTO> inactivarProducto(Long idProducto);
 	
 	public ResponseEntity<List<ProductoEntity>> listarProductos();
+	
+	public ResponseEntity<List<ProductoEntity>> listarActivos();
 	
 	public ResponseEntity<ProductoDTO> visualizarProducto(Long idProducto) throws BindException;
 }

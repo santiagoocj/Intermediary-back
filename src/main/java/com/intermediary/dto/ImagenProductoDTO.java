@@ -6,4 +6,5 @@ import lombok.Data;
 public class ImagenProductoDTO {
 	private Long id;
 	private String ruta;
+	private ProductoDTO producto;
 }

@@ -27,12 +27,12 @@ public class ProductoController {
 	@Autowired
 	private ProductoServiceImpl productoService;
 	
-	@PostMapping("/producto")
-	public ResponseEntity<RespuestaProductoDTO> registrarProducto(@RequestBody ProductoDTO producto) throws BusinessExecption{
+	@PostMapping("/producto/registro/{idCategoria}")
+	public ResponseEntity<RespuestaProductoDTO> registrarProducto(@RequestBody ProductoDTO producto, @PathVariable Long idCategoria) throws BusinessExecption{
 		ValidatorParameters.validarNombreNulo(producto.getNombre(), CatalogoMensajesProducto.NOMBRE_NULO);
 		ValidatorParameters.validarNombreNulo(String.valueOf(producto.getPrecio()), CatalogoMensajesProducto.PRECIO_NULO);
 		ValidatorParameters.validarNombreNulo(String.valueOf(producto.getPrecioUnidad()), CatalogoMensajesProducto.PRECIO_UNIDAD_NULO);
-		return productoService.registrarProducto(producto);
+		return productoService.registrarProducto(producto, idCategoria);
 	}
 	
 	@PostMapping("/producto/{idProducto}")
@@ -43,6 +43,11 @@ public class ProductoController {
 	@GetMapping("/producto")
 	public ResponseEntity<List<ProductoEntity>> listarProductos(){
 		return productoService.listarProductos();
+	}
+	
+	@GetMapping("/producto/activo")
+	public ResponseEntity<List<ProductoEntity>> listarProductosActivos(){
+		return productoService.listarActivos();
 	}
 	
 	@GetMapping("/producto/{idProducto}")
