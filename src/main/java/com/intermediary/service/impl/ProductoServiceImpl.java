@@ -88,4 +88,46 @@ public class ProductoServiceImpl implements ProductoService{
 		return new ResponseEntity<List<ProductoEntity>>(productos, HttpStatus.OK);
 	}
 
+	@Override
+	public ResponseEntity<RespuestaProductoDTO> actualizarInformacionBasicaProducto(ProductoDTO producto) {
+		RespuestaProductoDTO respuesta = new RespuestaProductoDTO();
+		ProductoEntity productoActualizar = productoRepository.findById(producto.getId()).orElse(null);
+		if(productoActualizar == null) {
+			respuesta.setMensaje(CatalogoMensajesProducto.PRODUCTO_NO_ENCONTRADO);
+			return new ResponseEntity<RespuestaProductoDTO>(respuesta, HttpStatus.NOT_FOUND);
+		}
+		productoActualizar = actualizarInformacionBasica(productoActualizar, producto);
+		try {
+			productoRepository.save(productoActualizar);
+			ProductoDTO productoRespuesta = productoConverter.entityToModel(productoActualizar);
+			respuesta.setProducto(productoRespuesta);
+			respuesta.setMensaje(CatalogoMensajesProducto.PRODUCTO_MODIFICADO_EXITOSAMENTE);
+		} catch (BindException e) {
+			throw new DataException(CatalogoMensajesProducto.ERROR_INTERNO_DEL_SERVIDOR, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		return new ResponseEntity<RespuestaProductoDTO>(respuesta, HttpStatus.OK);
+	}
+	
+	private ProductoEntity actualizarInformacionBasica(ProductoEntity productoActualizar, ProductoDTO datosActualizar) {
+		if(datosActualizar.getNombre() != null) {
+			productoActualizar.setNombre(datosActualizar.getNombre());
+		}
+		if(datosActualizar.getDescripcion() != null) {
+			productoActualizar.setDescripcion(datosActualizar.getDescripcion());
+		}
+		if(datosActualizar.getDimensiones() != null) {
+			productoActualizar.setDimensiones(datosActualizar.getDimensiones());
+		}
+		if(productoActualizar.getPeso() != 0) {
+			productoActualizar.setPeso(datosActualizar.getPeso());
+		}
+		if(productoActualizar.getPrecio() != 0) {
+			productoActualizar.setPrecio(datosActualizar.getPrecio());
+		}
+		if(productoActualizar.getPrecioUnidad() != 0) {
+			productoActualizar.setPrecioUnidad(datosActualizar.getPrecioUnidad());
+		}
+		return productoActualizar;
+	}
+
 }

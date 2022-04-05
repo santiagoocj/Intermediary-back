@@ -20,4 +20,7 @@ public interface ProductoService {
 	public ResponseEntity<List<ProductoEntity>> listarActivos();
 	
 	public ResponseEntity<ProductoDTO> visualizarProducto(Long idProducto) throws BindException;
+	
+	public ResponseEntity<RespuestaProductoDTO> actualizarInformacionBasicaProducto(ProductoDTO producto);
+	
 }
