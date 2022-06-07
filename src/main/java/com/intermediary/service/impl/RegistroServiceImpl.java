@@ -36,7 +36,8 @@ public class RegistroServiceImpl implements RegistroService{
 		RegistroEntity registroEntity = null;
 		try {
 			registroEntity = registroConverter.ModelToEntity(datosRegistro);
-			registroRepository.save(registroEntity);
+			Long idDatosRegistro = registroRepository.save(registroEntity).getId();
+			datosRegistro.setId(idDatosRegistro);
 			solicitudRegistroServiceImpl.guardarSolicitud(registroEntity);
 			respuesta = RespuestaRegistroDTO.builder().registro(datosRegistro).mensaje(CatalogoMensajesRegistro.REGISTRO_EXITOSO).build();
 		}catch (Exception e) {

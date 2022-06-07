@@ -37,7 +37,8 @@ public class RepresentanteLegalServiceImpl implements RepresentanteLegalService{
 		RepresentanteLegalEntity representanteGuardar = null;
 		try {
 			representanteGuardar = representanteConverter.ModelToEntity(datosRepresentanteLegal);
-			representanteLegalRepository.save(representanteGuardar);
+			representanteGuardar = representanteLegalRepository.save(representanteGuardar);
+			datosRepresentanteLegal.setId(representanteGuardar.getId());
 		} catch (DataException e) {
 			throw new DataException(CatalogoMensajesRepresentanteLegal.ERROR_GUARDAR_REPRESENTANTE, HttpStatus.INTERNAL_SERVER_ERROR);
 		} catch (BindException e) {
