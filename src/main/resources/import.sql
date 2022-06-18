@@ -4,8 +4,9 @@ INSERT INTO representante_legal (id, tipo_documento, documento, nombre, apellido
 INSERT INTO categorias (id, tipo_categoria) VALUES (9,'muebles');
 
 /*MEMBRESIAS*/
-INSERT INTO membresias (id, suscripcion, vigencia) VALUES (1, 'Membresia express','15 dias');
-INSERT INTO membresias (id, suscripcion, vigencia) VALUES (2, 'Membresia premium','1 año');
+INSERT INTO membresias (id, suscripcion, dias_vigencia) VALUES (1, 'Membresia express', 60);
+INSERT INTO membresias (id, suscripcion, dias_vigencia) VALUES (2, 'Membresia premium', 36);
+INSERT INTO membresias (id, suscripcion, dias_vigencia) VALUES (3, 'Membresia inicial', 30);
 
 /*REGISTROS*/
 INSERT INTO registros (id, actividad_principal, celular, codigo_ciu,  email, nit, nombre_empresa, razon_social,  tipo_persona) VALUES (1, 'comercio','3105332562', '1256', 'santiagocampo163@gmail.com', '1525','IES','IES', 'Natural');

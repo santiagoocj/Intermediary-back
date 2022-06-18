@@ -8,5 +8,5 @@ import lombok.Setter;
 public class MembresiaDTO {
 	private Long id;
 	private String suscripcion;
-	private String vigencia;
+	private int diasVigencia;
 }

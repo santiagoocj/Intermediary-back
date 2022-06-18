@@ -54,6 +54,11 @@ public class EmpresaEntity extends AbstractEntidadComun {
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "membresia")
 	private MembresiaEntity membresiaEntity;
+	
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "vigencia")
+	private VigenciaEntity vigenciaEntity;
 
 	
 	public Long getId() {
@@ -144,6 +149,16 @@ public class EmpresaEntity extends AbstractEntidadComun {
 	public void setMembresiaEntity(MembresiaEntity membresiaEntity) {
 		this.membresiaEntity = membresiaEntity;
 	}
+
+	public VigenciaEntity getVigenciaEntity() {
+		return vigenciaEntity;
+	}
+
+	public void setVigenciaEntity(VigenciaEntity vigenciaEntity) {
+		this.vigenciaEntity = vigenciaEntity;
+	}
+
+
 
 
 	/**

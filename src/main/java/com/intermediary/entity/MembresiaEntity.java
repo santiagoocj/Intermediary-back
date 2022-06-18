@@ -1,5 +1,6 @@
 package com.intermediary.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -23,7 +24,8 @@ public class MembresiaEntity extends AbstractEntidadComun{
 	
 	private String suscripcion;
 	
-	private String vigencia;
+	@Column(name = "dias_vigencia")
+	private int diasVigencia;
 
 	public Long getId() {
 		return id;
@@ -41,13 +43,12 @@ public class MembresiaEntity extends AbstractEntidadComun{
 		this.suscripcion = suscripcion;
 	}
 
-	public String getVigencia() {
-		return vigencia;
+	public int getDiasVigencia() {
+		return diasVigencia;
 	}
 
-	public void setVigencia(String vigencia) {
-		this.vigencia = vigencia;
+	public void setDiasVigencia(int diasVigencia) {
+		this.diasVigencia = diasVigencia;
 	}
-	
 
 }

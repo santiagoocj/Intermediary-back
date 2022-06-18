@@ -15,4 +15,5 @@ public class EmpresaDTO {
 	private String Correo;
 	private RepresentanteLegalDTO representanteLegalDTO;
 	private MembresiaDTO membresiaDTO;
+	private VigenciaDTO vigenciaDTO;
 }

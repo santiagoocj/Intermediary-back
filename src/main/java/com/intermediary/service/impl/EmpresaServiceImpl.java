@@ -20,6 +20,7 @@ import com.intermediary.entity.EmpresaEntity;
 import com.intermediary.entity.MembresiaEntity;
 import com.intermediary.entity.RegistroEntity;
 import com.intermediary.entity.RepresentanteLegalEntity;
+import com.intermediary.entity.VigenciaEntity;
 import com.intermediary.enums.EstadoEntidad;
 import com.intermediary.exception.DataException;
 import com.intermediary.repository.EmpresaRepository;
@@ -45,6 +46,10 @@ public class EmpresaServiceImpl implements EmpresaService{
 	@Autowired
 	@Qualifier("RegistroRepository")
 	private RegistroRepository registroRepository;
+	
+	@Autowired
+	@Qualifier("VigenciaService")
+	private VigenciaServiceImpl vigenciaServiceImpl;
 	
 	@Autowired
 	private EmpresaConverter converter;
@@ -76,11 +81,13 @@ public class EmpresaServiceImpl implements EmpresaService{
 		MembresiaEntity membresia = null;
 		RegistroEntity registro = null;
 		RespuestaEmpresaDTO retorno = null;
+		VigenciaEntity vigencia = null;
 		try {
 			representante = RepresentanteLegalServiceImpl.buscarXId(idRepresentante);
 			membresia = membresiaService.buscarXId(idMembresia);
 			registro = registroRepository.findById(idRegistro).orElse(null);
-			empresa = crearEmpresa(representante, membresia, registro);
+			vigencia = vigenciaServiceImpl.registroVigencia(membresia);
+			empresa = crearEmpresa(representante, membresia, registro, vigencia);
 			empresaRepository.save(empresa);
 			retorno = new RespuestaEmpresaDTO();
 			retorno.setEmpresa(converter.EntityToModel(empresa));
@@ -91,7 +98,7 @@ public class EmpresaServiceImpl implements EmpresaService{
 		return new ResponseEntity<RespuestaEmpresaDTO>(retorno, HttpStatus.CREATED);
 	}
 	
-	private EmpresaEntity crearEmpresa(RepresentanteLegalEntity representante, MembresiaEntity membresia, RegistroEntity registro) {
+	private EmpresaEntity crearEmpresa(RepresentanteLegalEntity representante, MembresiaEntity membresia, RegistroEntity registro, VigenciaEntity vigencia) {
 		EmpresaEntity empresa = new EmpresaEntity();
 		empresa.setNombre(registro.getNombreEmpresa());
 		empresa.setNit(registro.getNit());
@@ -103,6 +110,7 @@ public class EmpresaServiceImpl implements EmpresaService{
 		empresa.setCorreo(registro.getEmail());
 		empresa.setRepresentanteLegalEntity(representante);
 		empresa.setMembresiaEntity(membresia);
+		empresa.setVigenciaEntity(vigencia);
 		return empresa;
 	}
 

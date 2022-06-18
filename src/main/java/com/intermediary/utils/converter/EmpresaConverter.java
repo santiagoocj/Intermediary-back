@@ -23,6 +23,9 @@ public class EmpresaConverter {
 	@Autowired
 	private MembresiaConverter membresiaConverter;
 	
+	@Autowired
+	private VigenciaConverter vigenciaConverter;
+	
 	public List<EmpresaDTO> EntityToModel(List<EmpresaEntity> empresaEntity) throws BindException{
 		List<EmpresaDTO> empresasDTO = null;
 		if(!empresaEntity.isEmpty()) {
@@ -49,6 +52,8 @@ public class EmpresaConverter {
 			empresaDTO.setCorreo(empresaEntity.getCorreo());
 			empresaDTO.setRepresentanteLegalDTO(representanteLegalConverter.EntityToModel(empresaEntity.getRepresentanteLegalEntity()));
 			empresaDTO.setMembresiaDTO(membresiaConverter.EntityToModel(empresaEntity.getMembresiaEntity()));
+			empresaDTO.setVigenciaDTO(vigenciaConverter.entityToModel(empresaEntity.getVigenciaEntity()));
+			
 		}
 		genericValidator.validate(empresaEntity);
 		return empresaDTO;
@@ -69,6 +74,7 @@ public class EmpresaConverter {
 			empresaEntity.setCorreo(empresaDTO.getCorreo());
 			empresaEntity.setRepresentanteLegalEntity(representanteLegalConverter.ModelToEntity(empresaDTO.getRepresentanteLegalDTO()));
 			empresaEntity.setMembresiaEntity(membresiaConverter.ModelToEntity(empresaDTO.getMembresiaDTO()));
+			empresaEntity.setVigenciaEntity(vigenciaConverter.modelToEntity(empresaDTO.getVigenciaDTO()));
 		}
 		genericValidator.validate(empresaEntity);
 		return empresaEntity;
