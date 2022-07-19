@@ -60,7 +60,7 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService{
 	public void validarInformacionUsuario(InfoBasicaUsuarioDTO infoUsuario) {
 		UsuarioEntity validacionesUsuario = findByUserName(infoUsuario.getUserName());
 		if(validacionesUsuario != null) {
-			throw new DataException("EL nombre de usuario ya existe en el sistema", HttpStatus.OK);
+			throw new DataException("EL nombre de usuario ya existe en el sistema", HttpStatus.BAD_REQUEST);
 		}
 	}
 
