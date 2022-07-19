@@ -1,9 +1,11 @@
 package com.intermediary.dto;
 
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
-public class EmpresaDTO {
+@Getter
+@Setter
+public class EmpresaDTO extends UsuarioDTO{
 	private Long id;
 	private String nit;
 	private String nombre;

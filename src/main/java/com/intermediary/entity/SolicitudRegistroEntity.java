@@ -11,6 +11,7 @@ import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 import com.intermediary.entity.comun.AbstractEntidadComun;
+import com.intermediary.enums.EstadoSolicitudEnum;
 
 @Entity
 @Table(name = "solicitudes_de_registro")
@@ -27,11 +28,15 @@ public class SolicitudRegistroEntity extends AbstractEntidadComun{
 	private String nombre;
 	
 	@Column(name = "estado_solicitud")
-	private String estadoSolicitud;
+	private EstadoSolicitudEnum estadoSolicitud;
 	
 	@OneToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "id_registro")
 	private RegistroEntity registro;
+	
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "id_representante")
+	private RepresentanteLegalEntity representanteLegal;
 
 	public long getId() {
 		return id;
@@ -49,11 +54,11 @@ public class SolicitudRegistroEntity extends AbstractEntidadComun{
 		this.nombre = nombre;
 	}
 
-	public String getEstadoSolicitud() {
+	public EstadoSolicitudEnum getEstadoSolicitud() {
 		return estadoSolicitud;
 	}
 
-	public void setEstadoSolicitud(String estadoSolicitud) {
+	public void setEstadoSolicitud(EstadoSolicitudEnum estadoSolicitud) {
 		this.estadoSolicitud = estadoSolicitud;
 	}
 
@@ -64,8 +69,12 @@ public class SolicitudRegistroEntity extends AbstractEntidadComun{
 	public void setRegistro(RegistroEntity registro) {
 		this.registro = registro;
 	}
-	
-	
-	
 
+	public RepresentanteLegalEntity getRepresentanteLegal() {
+		return representanteLegal;
+	}
+
+	public void setRepresentanteLegal(RepresentanteLegalEntity representanteLegal) {
+		this.representanteLegal = representanteLegal;
+	}
 }

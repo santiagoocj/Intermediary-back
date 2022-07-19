@@ -1,5 +1,6 @@
 package com.intermediary.service.impl;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,16 +16,18 @@ import org.springframework.validation.BindException;
 
 import com.intermediary.catalogo.mensajes.CatalogoMensajesEmpresa;
 import com.intermediary.dto.EmpresaDTO;
+import com.intermediary.dto.InfoBasicaUsuarioDTO;
 import com.intermediary.dto.respuestas.RespuestaEmpresaDTO;
 import com.intermediary.entity.EmpresaEntity;
 import com.intermediary.entity.MembresiaEntity;
 import com.intermediary.entity.RegistroEntity;
 import com.intermediary.entity.RepresentanteLegalEntity;
+import com.intermediary.entity.SolicitudRegistroEntity;
 import com.intermediary.entity.VigenciaEntity;
 import com.intermediary.enums.EstadoEntidad;
+import com.intermediary.enums.RoleEnum;
 import com.intermediary.exception.DataException;
 import com.intermediary.repository.EmpresaRepository;
-import com.intermediary.repository.RegistroRepository;
 import com.intermediary.service.EmpresaService;
 import com.intermediary.utils.converter.EmpresaConverter;
 
@@ -44,12 +47,20 @@ public class EmpresaServiceImpl implements EmpresaService{
 	private MembresiaServiceImpl membresiaService;
 	
 	@Autowired
-	@Qualifier("RegistroRepository")
-	private RegistroRepository registroRepository;
-	
-	@Autowired
 	@Qualifier("VigenciaService")
 	private VigenciaServiceImpl vigenciaServiceImpl;
+	
+	@Autowired
+	@Qualifier("SolicitudRegistroService")
+	private SolicitudRegistroServiceImpl solicitudRegistroServiceImpl;
+	
+	@Autowired
+	@Qualifier("UsuarioService")
+	private UsuarioServiceImpl usuarioService;
+	
+	@Autowired
+	@Qualifier("RoleService")
+	private RoleServiceImpl roleService;
 	
 	@Autowired
 	private EmpresaConverter converter;
@@ -75,27 +86,17 @@ public class EmpresaServiceImpl implements EmpresaService{
 
 	@Override
 	@Transactional
-	public ResponseEntity<RespuestaEmpresaDTO> registroEmpresa(Long idRepresentante, Long idMembresia, Long idRegistro) {
-		EmpresaEntity empresa = null;
-		RepresentanteLegalEntity representante = null;
-		MembresiaEntity membresia = null;
-		RegistroEntity registro = null;
-		RespuestaEmpresaDTO retorno = null;
-		VigenciaEntity vigencia = null;
-		try {
-			representante = RepresentanteLegalServiceImpl.buscarXId(idRepresentante);
-			membresia = membresiaService.buscarXId(idMembresia);
-			registro = registroRepository.findById(idRegistro).orElse(null);
-			vigencia = vigenciaServiceImpl.registroVigencia(membresia);
-			empresa = crearEmpresa(representante, membresia, registro, vigencia);
-			empresaRepository.save(empresa);
-			retorno = new RespuestaEmpresaDTO();
-			retorno.setEmpresa(converter.EntityToModel(empresa));
-			retorno.setMensaje(CatalogoMensajesEmpresa.EMPRESA_CREADA_CON_EXITO);
-		} catch (BindException e) {
-			throw new DataException(CatalogoMensajesEmpresa.ERROR_INSERTAR_EMPRESAS, HttpStatus.INTERNAL_SERVER_ERROR);
-		} 
-		return new ResponseEntity<RespuestaEmpresaDTO>(retorno, HttpStatus.CREATED);
+	public ResponseEntity<RespuestaEmpresaDTO> registroEmpresa(Long idSolicitudRegistro, InfoBasicaUsuarioDTO infoBasicaUsuario) {
+		SolicitudRegistroEntity solicitudRegistro = solicitudRegistroServiceImpl.findById(idSolicitudRegistro);
+		RegistroEntity informacionEmpresa = solicitudRegistro.getRegistro();
+		RepresentanteLegalEntity representanteLegal = solicitudRegistro.getRepresentanteLegal();
+		usuarioService.validarInformacionUsuario(infoBasicaUsuario);
+		MembresiaEntity membresiaInicial = membresiaService.obtenerMembresiaBasica();
+		VigenciaEntity vigenciaMembresia = vigenciaServiceImpl.registroVigencia(membresiaInicial);
+		EmpresaEntity empresa = crearEmpresa(representanteLegal, membresiaInicial, informacionEmpresa, vigenciaMembresia);
+		agregarInformacionUsuario(empresa, infoBasicaUsuario);
+		empresaRepository.save(empresa);
+		return crearMensajeRetornoRegistroEmpresa(empresa);
 	}
 	
 	private EmpresaEntity crearEmpresa(RepresentanteLegalEntity representante, MembresiaEntity membresia, RegistroEntity registro, VigenciaEntity vigencia) {
@@ -112,6 +113,24 @@ public class EmpresaServiceImpl implements EmpresaService{
 		empresa.setMembresiaEntity(membresia);
 		empresa.setVigenciaEntity(vigencia);
 		return empresa;
+	}
+	
+	private void agregarInformacionUsuario(EmpresaEntity empresa, InfoBasicaUsuarioDTO infoUsuario) {
+		empresa.setUserName(infoUsuario.getUserName());
+		empresa.setPassword(usuarioService.codificarContrasena(infoUsuario.getPassword()));
+		empresa.setRoles(Arrays.asList(roleService.obtenerRolPorNombre(RoleEnum.EMPRESA_INICIAL.getRol())));
+		empresa.setEnabled(true);
+	}
+	
+	private ResponseEntity<RespuestaEmpresaDTO> crearMensajeRetornoRegistroEmpresa(EmpresaEntity empresa){
+		RespuestaEmpresaDTO retorno = new RespuestaEmpresaDTO();
+		try {
+			retorno.setEmpresa(converter.EntityToModel(empresa));
+		} catch (BindException e) {
+			throw new DataException(CatalogoMensajesEmpresa.ERROR_INSERTAR_EMPRESAS, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
+		retorno.setMensaje(CatalogoMensajesEmpresa.EMPRESA_CREADA_CON_EXITO);
+		return new ResponseEntity<RespuestaEmpresaDTO>(retorno, HttpStatus.CREATED);
 	}
 
 	@Override
@@ -190,7 +209,5 @@ public class EmpresaServiceImpl implements EmpresaService{
 		}
 		return new ResponseEntity<RespuestaEmpresaDTO>(respuestaRetorno, HttpStatus.OK);
 	}
-
-
 
 }

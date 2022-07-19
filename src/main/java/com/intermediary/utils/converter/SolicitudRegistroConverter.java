@@ -20,6 +20,9 @@ public class SolicitudRegistroConverter {
 	@Autowired
 	private RegistroConverter registroConverter;
 	
+	@Autowired
+	private RepresentanteLegalConverter representanteConverter;
+	
 	public List<SolicitudRegistroDTO> EntityToModel(List<SolicitudRegistroEntity> solicitudesRegistro) throws BindException{
 		List<SolicitudRegistroDTO> solicitudesRespuesta = null;
 		if(!solicitudesRegistro.isEmpty()) {
@@ -39,6 +42,7 @@ public class SolicitudRegistroConverter {
 			solicitudRegistroDTO.setNombre(solicitudRegistroEntity.getNombre());
 			solicitudRegistroDTO.setEstado(solicitudRegistroEntity.getEstadoSolicitud());
 			solicitudRegistroDTO.setRegistroDTO(registroConverter.EntityToModel(solicitudRegistroEntity.getRegistro()));
+			solicitudRegistroDTO.setRepresentanteLegalDTO(representanteConverter.EntityToModel(solicitudRegistroEntity.getRepresentanteLegal()));
 		}
 		genericValidator.validate(solicitudRegistroEntity);
 		return solicitudRegistroDTO;
@@ -53,6 +57,7 @@ public class SolicitudRegistroConverter {
 			solicitudRegistroEntity.setNombre(solicitudRegistroDTO.getNombre());
 			solicitudRegistroEntity.setEstadoSolicitud(solicitudRegistroDTO.getEstado());
 			solicitudRegistroEntity.setRegistro(registroConverter.ModelToEntity(solicitudRegistroDTO.getRegistroDTO()));
+			solicitudRegistroEntity.setRepresentanteLegal(representanteConverter.ModelToEntity(solicitudRegistroDTO.getRepresentanteLegalDTO()));
 		}
 		genericValidator.validate(solicitudRegistroEntity);
 		return solicitudRegistroEntity;

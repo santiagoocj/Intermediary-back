@@ -26,6 +26,9 @@ public class EmpresaConverter {
 	@Autowired
 	private VigenciaConverter vigenciaConverter;
 	
+	@Autowired
+	private RolConverter rolConverter;
+	
 	public List<EmpresaDTO> EntityToModel(List<EmpresaEntity> empresaEntity) throws BindException{
 		List<EmpresaDTO> empresasDTO = null;
 		if(!empresaEntity.isEmpty()) {
@@ -53,7 +56,10 @@ public class EmpresaConverter {
 			empresaDTO.setRepresentanteLegalDTO(representanteLegalConverter.EntityToModel(empresaEntity.getRepresentanteLegalEntity()));
 			empresaDTO.setMembresiaDTO(membresiaConverter.EntityToModel(empresaEntity.getMembresiaEntity()));
 			empresaDTO.setVigenciaDTO(vigenciaConverter.entityToModel(empresaEntity.getVigenciaEntity()));
-			
+			empresaDTO.setUserName(empresaEntity.getUserName());
+			empresaDTO.setPassword(empresaEntity.getPassword());
+			empresaDTO.setEnabled(empresaEntity.getEnabled());
+			empresaDTO.setRoles(rolConverter.entityToModel(empresaEntity.getRoles()));
 		}
 		genericValidator.validate(empresaEntity);
 		return empresaDTO;
@@ -75,6 +81,10 @@ public class EmpresaConverter {
 			empresaEntity.setRepresentanteLegalEntity(representanteLegalConverter.ModelToEntity(empresaDTO.getRepresentanteLegalDTO()));
 			empresaEntity.setMembresiaEntity(membresiaConverter.ModelToEntity(empresaDTO.getMembresiaDTO()));
 			empresaEntity.setVigenciaEntity(vigenciaConverter.modelToEntity(empresaDTO.getVigenciaDTO()));
+			empresaEntity.setUserName(empresaDTO.getUserName());
+			empresaEntity.setPassword(empresaDTO.getPassword());
+			empresaEntity.setEnabled(empresaDTO.getEnabled());
+			empresaEntity.setRoles(rolConverter.modelToEntities(empresaDTO.getRoles()));
 		}
 		genericValidator.validate(empresaEntity);
 		return empresaEntity;

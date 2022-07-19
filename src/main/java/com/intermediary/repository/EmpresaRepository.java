@@ -7,5 +7,7 @@ import com.intermediary.entity.EmpresaEntity;
 
 @Repository("EmpresaRepository")
 public interface EmpresaRepository extends JpaRepository<EmpresaEntity, Long>{
+	
+	
 
 }

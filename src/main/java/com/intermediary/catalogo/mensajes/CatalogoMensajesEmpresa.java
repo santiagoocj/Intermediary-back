@@ -5,8 +5,7 @@ public class CatalogoMensajesEmpresa {
 	//Validaciones de empresa
 	public static final String MENSAJE ="mensaje";
 	public static final String EMPRESA = "Empresa";
-	public static final String REPRESENTANTE_REQUERIDO = "La identificación del representante es requerida";
-	public static final String MEMBRESIA_REQUERIDA = "La identificación de la membresia es requerida";
+	public static final String URL_INCORRECTA = "Url incorrecta";
 	
 	//Validaciones base de datos
 	public static final String ERROR_INSERTAR_EMPRESAS = "Error al realizar el insert en la base de datos";
@@ -23,6 +22,8 @@ public class CatalogoMensajesEmpresa {
 	public static final String EMPRESA_NO_EXISTE = "La empresa no existe en la base de datos";
 	public static final String EMPRESA_MODIFICADA_CON_EXITO = "La empresa ha sido modificada con exito";
 	public static final String EMPRESA_ELIMINADA_EXITOSA = "La empresa se ha eliminado de manera exitosa";
+	public static final String USER_NAME_NULO = "El nombre de usuario no puede ser vacío";
+	public static final String PASSWORD_NULO = "La contraseña no puede ser vacía";
 	
 	
 }

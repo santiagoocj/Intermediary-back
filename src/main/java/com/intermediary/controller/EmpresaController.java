@@ -2,6 +2,7 @@ package com.intermediary.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.intermediary.catalogo.mensajes.CatalogoMensajesEmpresa;
 import com.intermediary.dto.EmpresaDTO;
+import com.intermediary.dto.InfoBasicaUsuarioDTO;
 import com.intermediary.dto.respuestas.RespuestaEmpresaDTO;
 import com.intermediary.exception.BusinessExecption;
 import com.intermediary.exception.util.ValidatorParameters;
@@ -30,25 +32,29 @@ public class EmpresaController {
 		return empresaService.encontrarTodos();
 	}
 	
-	@PostMapping("/empresas/{idRepresentante}/{idMembresia}/{idRegistro}")
-	public ResponseEntity<RespuestaEmpresaDTO> registrarEmpresa(@PathVariable Long idRepresentante, @PathVariable Long idMembresia, @PathVariable Long idRegistro) throws BusinessExecption{
-		ValidatorParameters.validarIdNulo(idRepresentante, CatalogoMensajesEmpresa.REPRESENTANTE_REQUERIDO);
-		ValidatorParameters.validarIdNulo(idMembresia, CatalogoMensajesEmpresa.MEMBRESIA_REQUERIDA);
-		return empresaService.registroEmpresa(idRepresentante, idMembresia, idRegistro);
+	@PostMapping("/empresas/registro/{id-solicitud-registro}")
+	public ResponseEntity<RespuestaEmpresaDTO> registrarEmpresa(@PathVariable(name = "id-solicitud-registro") Long idSolicitudRegistro, @RequestBody InfoBasicaUsuarioDTO infoRegistroUsuario) throws BusinessExecption{
+		ValidatorParameters.validarIdNulo(idSolicitudRegistro, CatalogoMensajesEmpresa.URL_INCORRECTA);
+		ValidatorParameters.validarNombreNulo(infoRegistroUsuario.getUserName(), CatalogoMensajesEmpresa.USER_NAME_NULO);
+		ValidatorParameters.validarNombreNulo(infoRegistroUsuario.getPassword(), CatalogoMensajesEmpresa.PASSWORD_NULO);
+		return empresaService.registroEmpresa(idSolicitudRegistro, infoRegistroUsuario);
 	}
 	
-	@PutMapping("/empresas/{idEmpresa}")
-	public ResponseEntity<RespuestaEmpresaDTO> editarInformacionEmpresa(@PathVariable Long idEmpresa, @RequestBody EmpresaDTO empresa){
+	@Secured({"ROLE_ADMINISTRADOR", "ROLE_EMPRESA_INICIAL", "ROLE_EMPRESA"})
+	@PutMapping("/empresas/{id-empresa}")
+	public ResponseEntity<RespuestaEmpresaDTO> editarInformacionEmpresa(@PathVariable(name = "id-empresa") Long idEmpresa, @RequestBody EmpresaDTO empresa){
 		return empresaService.editarInformacion(idEmpresa, empresa);
 	}
 	
-	@PostMapping("/empresas/{idMembresia}/{idEmpresa}")
-	public ResponseEntity<RespuestaEmpresaDTO> renovarMembresia(@PathVariable Long idMembresia, @PathVariable Long idEmpresa){
+	@Secured({"ROLE_ADMINISTRADOR", "ROLE_EMPRESA_INICIAL", "ROLE_EMPRESA"})
+	@PostMapping("/empresas/{id-membresia}/{id-empresa}")
+	public ResponseEntity<RespuestaEmpresaDTO> renovarMembresia(@PathVariable(name = "id-membresia") Long idMembresia, @PathVariable(name = "id-empresa") Long idEmpresa){
 		return empresaService.renovarMembresia(idEmpresa, idMembresia);
 	}
 	
-	@PostMapping("/empresas/{idEmpresa}")
-	public ResponseEntity<RespuestaEmpresaDTO> inactivarEmpresa(@PathVariable Long idEmpresa){
+	@Secured("ROLE_ADMINISTRADOR")
+	@PostMapping("/empresas/{id-empresa}")
+	public ResponseEntity<RespuestaEmpresaDTO> inactivarEmpresa(@PathVariable(name = "id-empresa") Long idEmpresa){
 		return empresaService.inactivar(idEmpresa);
 	}
 }

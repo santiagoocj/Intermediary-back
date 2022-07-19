@@ -2,6 +2,7 @@ package com.intermediary.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -33,6 +34,7 @@ public class RepresentanteLegalController {
 		return representantelegalService.registrarRepresentantelegal(datosRepresentanteLegal);
 	}
 	
+	@Secured("ROLE_ADMINISTRADOR")
 	@GetMapping("/representantelegal/{id}")
 	public ResponseEntity<?> buscarPorId(@PathVariable Long id){
 		return representantelegalService.buscar(id);

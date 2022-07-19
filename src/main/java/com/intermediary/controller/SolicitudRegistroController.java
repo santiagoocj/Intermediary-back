@@ -1,9 +1,13 @@
 package com.intermediary.controller;
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
+import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,11 +31,13 @@ public class SolicitudRegistroController {
 	@Autowired
 	private SolicitudRegistroServiceImpl solicitudRegistroServiceImpl;
 	
+	@Secured("ROLE_ADMINISTRADOR")
 	@GetMapping("/solicitud-registro")
 	public ResponseEntity<ListarSolicitudRegistroDTO> listarTodo(){
 		return solicitudRegistroServiceImpl.listarTodo();
 	}
 	
+	@Secured("ROLE_ADMINISTRADOR")
 	@PostMapping("/solicitud-registro/{id}")
 	public ResponseEntity<RespuestaEstadoSolicitudRegistroDTO> cambiarEstado(@RequestBody CambiarEstadoSolicitudRegistroDTO solicitudRegistro, @PathVariable Long id) throws BusinessExecption{
 		if(!solicitudRegistroServiceImpl.existeSolicitud(id)) {
@@ -40,6 +46,14 @@ public class SolicitudRegistroController {
 		ValidatorParameters.validarContenidoCorreoNulo(solicitudRegistro.getContenidoCorreoEstadoSolicitud(), CatalogoMensajesGenerales.CONTENIDO_CORREO_NULO);
 		ValidatorParameters.validarContenidoCorreoVacio(solicitudRegistro.getContenidoCorreoEstadoSolicitud(), CatalogoMensajesGenerales.CONTENIDO_CORREO_VACIO);
 		return solicitudRegistroServiceImpl.modificar(id,solicitudRegistro);
+	}
+	
+	@PostMapping("/solicitud-registro/{id-empresa}/{id-representante}")
+	public ResponseEntity<Map<String, String>> crearSolicitud(@PathVariable(name = "id-empresa") long idEmpresa, @PathVariable(name = "id-representante") long idRepresentante) throws BusinessExecption, BindException{
+		ValidatorParameters.validarIdNulo(idEmpresa, CatalogoMensajesGenerales.ID_NULO);
+		ValidatorParameters.validarIdNulo(idRepresentante, CatalogoMensajesGenerales.ID_NULO);
+		return solicitudRegistroServiceImpl.crearSolicitud(idEmpresa, idRepresentante);
+		
 	}
 
 }

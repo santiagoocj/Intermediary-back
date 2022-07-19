@@ -20,4 +20,9 @@ public class MembresiaServiceImpl implements MembresiaService{
 		return membresiaRepository.findById(id).orElse(null);
 	}
 
+	@Override
+	public MembresiaEntity obtenerMembresiaBasica() {
+		return membresiaRepository.obtenerMembresiaBasica();
+	}
+
 }

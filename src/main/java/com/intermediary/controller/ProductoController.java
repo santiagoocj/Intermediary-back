@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,6 +29,7 @@ public class ProductoController {
 	@Autowired
 	private ProductoServiceImpl productoService;
 	
+	@Secured({"ROLE_ADMINISTRADOR", "ROLE_EMPRESA"})
 	@PostMapping("/producto/registro/{idCategoria}")
 	public ResponseEntity<RespuestaProductoDTO> registrarProducto(@RequestBody ProductoDTO producto, @PathVariable Long idCategoria) throws BusinessExecption{
 		ValidatorParameters.validarNombreNulo(producto.getNombre(), CatalogoMensajesProducto.NOMBRE_NULO);
@@ -36,21 +38,25 @@ public class ProductoController {
 		return productoService.registrarProducto(producto, idCategoria);
 	}
 	
+	@Secured({"ROLE_ADMINISTRADOR", "ROLE_EMPRESA"})
 	@PostMapping("/producto/{idProducto}")
 	public ResponseEntity<RespuestaProductoDTO> inactivarproducto(@PathVariable Long idProducto){
 		return productoService.inactivarProducto(idProducto);
 	}
 	
+	@Secured({"ROLE_ADMINISTRADOR", "ROLE_EMPRESA"})
 	@PutMapping("/producto")
 	public ResponseEntity<RespuestaProductoDTO> actualizarProducto(@RequestBody ProductoDTO producto){
 		return productoService.actualizarInformacionBasicaProducto(producto);
 	}
 	
+	@Secured({"ROLE_ADMINISTRADOR", "ROLE_EMPRESA"})
 	@GetMapping("/producto")
 	public ResponseEntity<List<ProductoEntity>> listarProductos(){
 		return productoService.listarProductos();
 	}
 	
+	@Secured({"ROLE_ADMINISTRADOR", "ROLE_EMPRESA"})
 	@GetMapping("/producto/activo")
 	public ResponseEntity<List<ProductoEntity>> listarProductosActivos(){
 		return productoService.listarActivos();

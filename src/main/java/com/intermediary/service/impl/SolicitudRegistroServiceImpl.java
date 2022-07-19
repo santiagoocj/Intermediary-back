@@ -1,6 +1,8 @@
 package com.intermediary.service.impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -17,6 +19,7 @@ import com.intermediary.dto.SolicitudRegistroDTO;
 import com.intermediary.dto.respuestas.ListarSolicitudRegistroDTO;
 import com.intermediary.dto.respuestas.RespuestaEstadoSolicitudRegistroDTO;
 import com.intermediary.entity.RegistroEntity;
+import com.intermediary.entity.RepresentanteLegalEntity;
 import com.intermediary.entity.SolicitudRegistroEntity;
 import com.intermediary.enums.EstadoSolicitudEnum;
 import com.intermediary.exception.DataException;
@@ -36,15 +39,12 @@ public class SolicitudRegistroServiceImpl implements SolicitudRegistroService{
 	
 	@Autowired(required = true)
 	private EmailServiceImpl emailServiceImpl;
-
-	@Override
-	public void guardarSolicitud(RegistroEntity registro) throws BindException {
-		SolicitudRegistroEntity solicitudGuardar = new SolicitudRegistroEntity();
-		solicitudGuardar.setNombre(registro.getNombreEmpresa());
-		solicitudGuardar.setEstadoSolicitud(EstadoSolicitudEnum.PENDIENTE.toString());
-		solicitudGuardar.setRegistro(registro);
-		solicitudRegistroRepository.save(solicitudGuardar);
-	}
+	
+	@Autowired
+	private RegistroServiceImpl registroEmpresaServiceImpl;
+	
+	@Autowired
+	private RepresentanteLegalServiceImpl representanteLegalServiceImpl;
 
 	@Override
 	public ResponseEntity<ListarSolicitudRegistroDTO> listarTodo() {
@@ -94,6 +94,34 @@ public class SolicitudRegistroServiceImpl implements SolicitudRegistroService{
 	@Override
 	public boolean existeSolicitud(Long id) {
 		return solicitudRegistroRepository.findById(id).orElse(null) == null? false:true;
+	}
+
+	@Override
+	public ResponseEntity<Map<String, String>> crearSolicitud(Long idEmpresa, Long idRepresentante) throws BindException {
+		RegistroEntity empresa = registroEmpresaServiceImpl.buscarXId(idEmpresa);
+		RepresentanteLegalEntity representante = representanteLegalServiceImpl.buscarXId(idRepresentante);
+		guardarSolicitud(empresa, representante);
+		return crearRespuestaExitoCrearSolicitud();
+	}
+	
+	private ResponseEntity<Map<String, String>> crearRespuestaExitoCrearSolicitud(){
+		Map<String, String> respuesta = new HashMap<>();
+		respuesta.put("mensaje", "¡El registro se a realizado de manera exitosa!, la empresa pasará a un proceso de verificación para validar los datos, una vez verificado los datos, será informado a travez de correo electrónico");
+		return new ResponseEntity<>(respuesta, HttpStatus.OK);
+	}
+	
+	private void guardarSolicitud(RegistroEntity registro, RepresentanteLegalEntity representante) throws BindException {
+		SolicitudRegistroEntity solicitudGuardar = new SolicitudRegistroEntity();
+		solicitudGuardar.setNombre(registro.getNombreEmpresa());
+		solicitudGuardar.setEstadoSolicitud(EstadoSolicitudEnum.PENDIENTE);
+		solicitudGuardar.setRegistro(registro);
+		solicitudGuardar.setRepresentanteLegal(representante);
+		solicitudRegistroRepository.save(solicitudGuardar);
+	}
+
+	@Override
+	public SolicitudRegistroEntity findById(Long idSolicitudRegistro) {
+		return solicitudRegistroRepository.findById(idSolicitudRegistro).orElseThrow();
 	}
 
 }

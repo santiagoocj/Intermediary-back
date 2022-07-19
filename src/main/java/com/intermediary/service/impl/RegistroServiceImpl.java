@@ -25,9 +25,6 @@ public class RegistroServiceImpl implements RegistroService{
 	private RegistroRepository registroRepository;
 	
 	@Autowired
-	private SolicitudRegistroServiceImpl solicitudRegistroServiceImpl;
-	
-	@Autowired
 	private RegistroConverter registroConverter;
 
 	@Override
@@ -38,7 +35,6 @@ public class RegistroServiceImpl implements RegistroService{
 			registroEntity = registroConverter.ModelToEntity(datosRegistro);
 			Long idDatosRegistro = registroRepository.save(registroEntity).getId();
 			datosRegistro.setId(idDatosRegistro);
-			solicitudRegistroServiceImpl.guardarSolicitud(registroEntity);
 			respuesta = RespuestaRegistroDTO.builder().registro(datosRegistro).mensaje(CatalogoMensajesRegistro.REGISTRO_EXITOSO).build();
 		}catch (Exception e) {
 			throw new DataException(CatalogoMensajesRegistro.REGISTRO_FALLIDO, HttpStatus.BAD_REQUEST);
@@ -55,6 +51,12 @@ public class RegistroServiceImpl implements RegistroService{
 			throw new DataException(CatalogoMensajesRegistro.ERROR_LISTAR_REGISTRO, HttpStatus.BAD_REQUEST);
 		}
 		return new ResponseEntity<List<RegistroDTO>>(registros, HttpStatus.OK);
+	}
+
+	@Override
+	public RegistroEntity buscarXId(Long idRegistro) {
+		RegistroEntity registro = registroRepository.findById(idRegistro).orElseThrow();
+		return registro;
 	}
 
 }

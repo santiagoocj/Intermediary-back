@@ -1,5 +1,7 @@
 package com.intermediary.dto;
 
+import com.intermediary.enums.EstadoSolicitudEnum;
+
 import lombok.Getter;
 import lombok.Setter;
 
@@ -7,6 +9,6 @@ import lombok.Setter;
 @Setter
 public class CambiarEstadoSolicitudRegistroDTO {
 	String nombreSolicitud;
-	String estado;
+	EstadoSolicitudEnum estado;
 	String contenidoCorreoEstadoSolicitud;
 }

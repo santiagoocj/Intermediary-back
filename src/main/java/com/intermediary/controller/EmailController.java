@@ -1,6 +1,7 @@
 package com.intermediary.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -16,6 +17,7 @@ public class EmailController {
 	@Autowired
 	public EmailServiceImpl emailServiceImpl;
 	
+	@Secured("ROLE_ADMINISTRADOR")
 	@PostMapping("/send")
 	public void sendEmail(@RequestBody EmailDTO emailDTO) {
 		emailServiceImpl.sendEmail(emailDTO);
