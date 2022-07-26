@@ -88,6 +88,7 @@ public class EmpresaServiceImpl implements EmpresaService{
 	@Transactional
 	public ResponseEntity<RespuestaEmpresaDTO> registroEmpresa(Long idSolicitudRegistro, InfoBasicaUsuarioDTO infoBasicaUsuario) {
 		SolicitudRegistroEntity solicitudRegistro = solicitudRegistroServiceImpl.findById(idSolicitudRegistro);
+		solicitudRegistroServiceImpl.validarEstadoSolicitud(solicitudRegistro);
 		RegistroEntity informacionEmpresa = solicitudRegistro.getRegistro();
 		RepresentanteLegalEntity representanteLegal = solicitudRegistro.getRepresentanteLegal();
 		usuarioService.validarInformacionUsuario(infoBasicaUsuario);
@@ -110,6 +111,7 @@ public class EmpresaServiceImpl implements EmpresaService{
 		empresa.setCelular(registro.getCelular());
 		empresa.setCorreo(registro.getEmail());
 		empresa.setRepresentanteLegalEntity(representante);
+		empresa.setAnexo(registro.getAnexo());
 		empresa.setMembresiaEntity(membresia);
 		empresa.setVigenciaEntity(vigencia);
 		return empresa;

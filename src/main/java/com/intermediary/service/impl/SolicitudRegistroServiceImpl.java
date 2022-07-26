@@ -84,9 +84,6 @@ public class SolicitudRegistroServiceImpl implements SolicitudRegistroService{
 	
 
 	private void modificarEstadoSolicitudRegistro(SolicitudRegistroEntity solicitud ,CambiarEstadoSolicitudRegistroDTO solicitudCambiar) throws BindException {
-		if(solicitudCambiar.getNombreSolicitud() != null) {
-			solicitud.setNombre(solicitudCambiar.getNombreSolicitud());
-		}
 		solicitud.setEstadoSolicitud(solicitudCambiar.getEstado());
 		solicitudRegistroRepository.save(solicitud);
 	}
@@ -122,6 +119,13 @@ public class SolicitudRegistroServiceImpl implements SolicitudRegistroService{
 	@Override
 	public SolicitudRegistroEntity findById(Long idSolicitudRegistro) {
 		return solicitudRegistroRepository.findById(idSolicitudRegistro).orElseThrow();
+	}
+
+	@Override
+	public void validarEstadoSolicitud(SolicitudRegistroEntity solicitudRegistro) {
+		if(solicitudRegistro.getEstadoSolicitud() != EstadoSolicitudEnum.APROVADA) {
+			throw new DataException(CatalogoMensajesSolicitudRegistro.EMPRESA_NO_VALIDADA, HttpStatus.BAD_REQUEST);
+		}
 	}
 
 }

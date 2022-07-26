@@ -39,6 +39,7 @@ public class RegistroConverter {
 			registroDTO.setCodigoCiu(registroEntity.getCodigoCiu());
 			registroDTO.setActividadPrincipal(registroEntity.getActividadPrincipal());
 			registroDTO.setTipoPersona(registroEntity.getTipoPersona());
+			registroDTO.setAnexo(registroEntity.getAnexo());
 			registroDTO.setCelular(registroEntity.getCelular());
 			registroDTO.setEmail(registroEntity.getEmail());
 		}
@@ -57,6 +58,7 @@ public class RegistroConverter {
 			registroEntity.setCodigoCiu(registroDTO.getCodigoCiu());
 			registroEntity.setActividadPrincipal(registroDTO.getActividadPrincipal());
 			registroEntity.setTipoPersona(registroDTO.getTipoPersona());
+			registroEntity.setAnexo(registroDTO.getAnexo());
 			registroEntity.setCelular(registroDTO.getCelular());
 			registroEntity.setEmail(registroDTO.getEmail());
 		}

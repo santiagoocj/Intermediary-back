@@ -51,6 +51,7 @@ public class EmpresaConverter {
 			empresaDTO.setCodigoCiu(empresaEntity.getCodigoCiu());
 			empresaDTO.setActividadPrincipal(empresaEntity.getActividadPrincipal());
 			empresaDTO.setTipoPersona(empresaEntity.getTipoPersona());
+			empresaDTO.setAnexo(empresaEntity.getAnexo());
 			empresaDTO.setCelular(empresaEntity.getCelular());
 			empresaDTO.setCorreo(empresaEntity.getCorreo());
 			empresaDTO.setRepresentanteLegalDTO(representanteLegalConverter.EntityToModel(empresaEntity.getRepresentanteLegalEntity()));
@@ -76,6 +77,7 @@ public class EmpresaConverter {
 			empresaEntity.setCodigoCiu(empresaDTO.getCodigoCiu());
 			empresaEntity.setActividadPrincipal(empresaDTO.getActividadPrincipal());
 			empresaEntity.setTipoPersona(empresaDTO.getTipoPersona());
+			empresaEntity.setAnexo(empresaDTO.getAnexo());
 			empresaEntity.setCelular(empresaDTO.getCelular());
 			empresaEntity.setCorreo(empresaDTO.getCorreo());
 			empresaEntity.setRepresentanteLegalEntity(representanteLegalConverter.ModelToEntity(empresaDTO.getRepresentanteLegalDTO()));

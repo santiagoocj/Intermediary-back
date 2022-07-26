@@ -13,6 +13,7 @@ public class EmpresaDTO extends UsuarioDTO{
 	private String codigoCiu;
 	private String actividadPrincipal;
 	private String tipoPersona;
+	private String anexo;
 	private String celular;
 	private String Correo;
 	private RepresentanteLegalDTO representanteLegalDTO;

@@ -18,4 +18,5 @@ public class CatalogoMensajesRegistro {
 	public static final String EMAIL_NO_VALIDO = "El formato del email no es válido";
 	public static final String NOMBRE_REQUERIDO = "El campo nombre es requerido";
 	public static final String ERROR_LISTAR_REGISTRO = "Ocurrió un error al listar los registros";
+	public static final String ANEXO_INVALIDO = "El archivo de anexo de datos de la empresa no puede ser vacio";
 }

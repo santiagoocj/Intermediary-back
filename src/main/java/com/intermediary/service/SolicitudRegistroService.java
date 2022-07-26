@@ -21,4 +21,6 @@ public interface SolicitudRegistroService {
 	public ResponseEntity<Map<String, String>> crearSolicitud(Long idEmpresa, Long idRepresentante) throws BindException;
 	
 	public SolicitudRegistroEntity findById(Long idSolicitudRegistro);
+	
+	public void validarEstadoSolicitud(SolicitudRegistroEntity solicitudRegistro);
 }

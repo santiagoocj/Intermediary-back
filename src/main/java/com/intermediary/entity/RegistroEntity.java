@@ -32,6 +32,9 @@ public class RegistroEntity extends AbstractEntidadComun{
 	@Column(name = "codigo_ciu")
 	private String codigoCiu;
 	
+	@Column(length = 500000)
+	private String anexo;
+	
 	@Column(name = "actividad_principal")
 	private String actividadPrincipal;
 	
@@ -80,6 +83,15 @@ public class RegistroEntity extends AbstractEntidadComun{
 
 	public void setCodigoCiu(String codigoCiu) {
 		this.codigoCiu = codigoCiu;
+	}
+
+	
+	public String getAnexo() {
+		return anexo;
+	}
+
+	public void setAnexo(String anexo) {
+		this.anexo = anexo;
 	}
 
 	public String getActividadPrincipal() {

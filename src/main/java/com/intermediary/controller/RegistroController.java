@@ -36,6 +36,7 @@ public class RegistroController {
 		ValidatorParameters.validarCelularNulo(registroDTO.getCelular(), CatalogoMensajesRegistro.CELULAR_REQUERIDO);
 		ValidatorParameters.validarEmailNulo(registroDTO.getEmail(), CatalogoMensajesRegistro.EMAIL_REQUERIDO);
 		ValidatorParameters.validarEmailPermitido(registroDTO.getEmail(), CatalogoMensajesRegistro.EMAIL_NO_VALIDO);
+		ValidatorParameters.validarContenidoNulo(registroDTO.getAnexo(), CatalogoMensajesRegistro.ANEXO_INVALIDO);
 		return registroServiceImpl.realizarRegistro(registroDTO);
 	}
 	

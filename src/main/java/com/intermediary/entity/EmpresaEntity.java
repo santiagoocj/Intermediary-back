@@ -36,6 +36,10 @@ public class EmpresaEntity extends UsuarioEntity {
 	
 	@NotNull
 	private String correo;
+	
+	@NotNull
+	@Column(length = 500000)
+	private String anexo;
 
 	private String celular;
 	
@@ -101,6 +105,14 @@ public class EmpresaEntity extends UsuarioEntity {
 
 	public void setTipoPersona(String tipoPersona) {
 		this.tipoPersona = tipoPersona;
+	}
+
+	public String getAnexo() {
+		return anexo;
+	}
+
+	public void setAnexo(String anexo) {
+		this.anexo = anexo;
 	}
 
 	public String getCelular() {
