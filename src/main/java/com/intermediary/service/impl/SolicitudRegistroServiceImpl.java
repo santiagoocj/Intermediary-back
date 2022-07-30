@@ -123,7 +123,7 @@ public class SolicitudRegistroServiceImpl implements SolicitudRegistroService{
 
 	@Override
 	public void validarEstadoSolicitud(SolicitudRegistroEntity solicitudRegistro) {
-		if(solicitudRegistro.getEstadoSolicitud() != EstadoSolicitudEnum.APROVADA) {
+		if(solicitudRegistro.getEstadoSolicitud() != EstadoSolicitudEnum.APROBADA) {
 			throw new DataException(CatalogoMensajesSolicitudRegistro.EMPRESA_NO_VALIDADA, HttpStatus.BAD_REQUEST);
 		}
 	}
