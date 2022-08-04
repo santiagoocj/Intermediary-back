@@ -40,4 +40,21 @@ public class EmpresaController {
 		return empresaService.registroEmpresa(idSolicitudRegistro, infoRegistroUsuario);
 	}
 	
+	@Secured({"ROLE_ADMINISTRADOR", "ROLE_EMPRESA_INICIAL", "ROLE_EMPRESA"})
+	@PutMapping("/empresas/{id-empresa}")
+	public ResponseEntity<RespuestaEmpresaDTO> editarInformacionEmpresa(@PathVariable(name = "id-empresa") Long idEmpresa, @RequestBody EmpresaDTO empresa){
+		return empresaService.editarInformacion(idEmpresa, empresa);
+	}
+	
+	@Secured({"ROLE_ADMINISTRADOR", "ROLE_EMPRESA_INICIAL", "ROLE_EMPRESA"})
+	@PostMapping("/empresas/{id-membresia}/{id-empresa}")
+	public ResponseEntity<RespuestaEmpresaDTO> renovarMembresia(@PathVariable(name = "id-membresia") Long idMembresia, @PathVariable(name = "id-empresa") Long idEmpresa){
+		return empresaService.renovarMembresia(idEmpresa, idMembresia);
+	}
+	
+	@Secured("ROLE_ADMINISTRADOR")
+	@PostMapping("/empresas/{id-empresa}")
+	public ResponseEntity<RespuestaEmpresaDTO> inactivarEmpresa(@PathVariable(name = "id-empresa") Long idEmpresa){
+		return empresaService.inactivar(idEmpresa);
+	}
 }
