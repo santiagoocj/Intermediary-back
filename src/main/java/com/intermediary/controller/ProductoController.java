@@ -37,5 +37,34 @@ public class ProductoController {
 		ValidatorParameters.validarNombreNulo(String.valueOf(producto.getPrecioUnidad()), CatalogoMensajesProducto.PRECIO_UNIDAD_NULO);
 		return productoService.registrarProducto(producto, idCategoria);
 	}
+	
+	@Secured({"ROLE_ADMINISTRADOR", "ROLE_EMPRESA"})
+	@PostMapping("/producto/{idProducto}")
+	public ResponseEntity<RespuestaProductoDTO> inactivarproducto(@PathVariable Long idProducto){
+		return productoService.inactivarProducto(idProducto);
+	}
+	
+	@Secured({"ROLE_ADMINISTRADOR", "ROLE_EMPRESA"})
+	@PutMapping("/producto")
+	public ResponseEntity<RespuestaProductoDTO> actualizarProducto(@RequestBody ProductoDTO producto){
+		return productoService.actualizarInformacionBasicaProducto(producto);
+	}
+	
+	@Secured({"ROLE_ADMINISTRADOR", "ROLE_EMPRESA"})
+	@GetMapping("/producto")
+	public ResponseEntity<List<ProductoEntity>> listarProductos(){
+		return productoService.listarProductos();
+	}
+	
+	@Secured({"ROLE_ADMINISTRADOR", "ROLE_EMPRESA"})
+	@GetMapping("/producto/activo")
+	public ResponseEntity<List<ProductoEntity>> listarProductosActivos(){
+		return productoService.listarActivos();
+	}
+	
+	@GetMapping("/producto/{idProducto}")
+	public ResponseEntity<ProductoDTO> visualizarProducto(@PathVariable Long idProducto) throws BindException{
+		return productoService.visualizarProducto(idProducto);
+	}
 
 }
