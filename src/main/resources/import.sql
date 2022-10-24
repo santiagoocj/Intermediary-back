@@ -1,17 +1,17 @@
-INSERT INTO categorias (id, tipo_categoria) VALUES (9,'muebles');
-
 /*MEMBRESIAS*/
-INSERT INTO membresias (id, suscripcion, dias_vigencia) VALUES (3, 'Membresia express', 60);
-INSERT INTO membresias (id, suscripcion, dias_vigencia) VALUES (2, 'Membresia premium', 36);
-INSERT INTO membresias (id, suscripcion, dias_vigencia) VALUES (1, 'Membresia inicial', 30);
-
-/*VIGENCIA MEMBRESIAS*/
-INSERT INTO vigencias (id, membresia) VALUES (1, 1);
+INSERT INTO membresias (id, suscripcion, dias_vigencia, valor) VALUES (3, 'Membresia express', 30, 30.000);
+INSERT INTO membresias (id, suscripcion, dias_vigencia, valor) VALUES (2, 'Membresia premium', 60, 50.000);
+INSERT INTO membresias (id, suscripcion, dias_vigencia, valor) VALUES (1, 'Membresia inicial', 30, 0);
 
 
 INSERT INTO roles (nombre) VALUES ('ROLE_EMPRESA_INICIAL');
 INSERT INTO roles (nombre) VALUES ('ROLE_ADMINISTRADOR');
 INSERT INTO roles (nombre) VALUES ('ROLE_EMPRESA');
+
+/*CATEGORIAS DE PRUEBA*/
+INSERT INTO categorias (id, tipo_categoria) VALUES (1, 'Ropa');
+INSERT INTO categorias (id, tipo_categoria) VALUES (2, 'Tecnología');
+INSERT INTO categorias (id, tipo_categoria) VALUES (3,'vehículos');
 
 
 /*ADMINISTRADOR*/

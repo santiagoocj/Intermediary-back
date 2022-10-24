@@ -212,4 +212,9 @@ public class EmpresaServiceImpl implements EmpresaService{
 		return new ResponseEntity<RespuestaEmpresaDTO>(respuestaRetorno, HttpStatus.OK);
 	}
 
+	@Override
+	public EmpresaEntity buscarXId(Long idEmpresa) {
+		return empresaRepository.findById(idEmpresa).orElse(null);
+	}
+
 }

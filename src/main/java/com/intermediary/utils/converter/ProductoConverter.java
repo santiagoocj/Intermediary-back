@@ -30,7 +30,7 @@ public class ProductoConverter {
 			productoDTO.setDimensiones(productoEntity.getDimensiones());
 			productoDTO.setPeso(productoEntity.getPeso());
 			productoDTO.setPrecio(productoEntity.getPrecio());
-			productoDTO.setImagenes(imagenProductoConverter.entityToModel(productoEntity.getImagenes()));
+			//productoDTO.setImagenes(imagenProductoConverter.entityToModel(productoEntity.getImagenes()));
 			productoDTO.setPrecioUnidad(productoEntity.getPrecioUnidad());
 			productoDTO.setCategoriaDTO(categoriaConverter.EntityToModel(productoEntity.getCategoria()));
 		}
@@ -48,7 +48,7 @@ public class ProductoConverter {
 			productoEntity.setDimensiones(productoDTO.getDescripcion());
 			productoEntity.setPeso(productoDTO.getPeso());
 			productoEntity.setPrecio(productoDTO.getPrecio());
-			productoEntity.setImagenes(imagenProductoConverter.modelToEntity(productoDTO.getImagenes()));
+			//productoEntity.setImagenes(imagenProductoConverter.modelToEntity(productoDTO.getImagenes()));
 			productoEntity.setPrecioUnidad(productoDTO.getPrecioUnidad());
 			productoEntity.setCategoria(categoriaConverter.ModelToEntity(productoDTO.getCategoriaDTO()));
 		}

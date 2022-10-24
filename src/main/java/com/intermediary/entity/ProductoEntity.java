@@ -52,6 +52,11 @@ public class ProductoEntity extends AbstractEntidadComun{
 	@JoinColumn(name = "categoria")
 	private CategoriaEntity categoria;
 	
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+	@OneToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "empresa")
+	private EmpresaEntity empresa;
+	
 	public ProductoEntity() {
 		this.imagenes = new ArrayList<>();
 	}
@@ -127,4 +132,13 @@ public class ProductoEntity extends AbstractEntidadComun{
 	public void setCategoria(CategoriaEntity categoria) {
 		this.categoria = categoria;
 	}
+
+	public EmpresaEntity getEmpresa() {
+		return empresa;
+	}
+
+	public void setEmpresa(EmpresaEntity empresa) {
+		this.empresa = empresa;
+	}
+	
 }

@@ -1,5 +1,7 @@
 package com.intermediary.entity;
 
+import java.math.BigDecimal;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -26,6 +28,8 @@ public class MembresiaEntity extends AbstractEntidadComun{
 	
 	@Column(name = "dias_vigencia")
 	private int diasVigencia;
+	
+	private BigDecimal valor;
 
 	public Long getId() {
 		return id;
@@ -51,4 +55,12 @@ public class MembresiaEntity extends AbstractEntidadComun{
 		this.diasVigencia = diasVigencia;
 	}
 
+	public BigDecimal getValor() {
+		return valor;
+	}
+
+	public void setValor(BigDecimal valor) {
+		this.valor = valor;
+	}
+	
 }

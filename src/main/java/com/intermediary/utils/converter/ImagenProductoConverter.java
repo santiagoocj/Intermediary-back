@@ -26,7 +26,7 @@ public class ImagenProductoConverter {
 			imagenProductoDTO = new ImagenProductoDTO();
 			imagenProductoDTO.setId(imagenProductoEntity.getId());
 			imagenProductoDTO.setRuta(imagenProductoEntity.getRuta());
-			imagenProductoDTO.setProducto(productoConverter.entityToModel(imagenProductoEntity.getProductoEntity()));
+			//imagenProductoDTO.setProducto(productoConverter.entityToModel(imagenProductoEntity.getProductoEntity()));
 		}
 		genericValidator.validate(imagenProductoEntity);
 		return imagenProductoDTO;
@@ -49,7 +49,7 @@ public class ImagenProductoConverter {
 			imagenProductoEntity = new ImagenProductoEntity();
 			imagenProductoEntity.setId(imagenProductoDTO.getId());
 			imagenProductoEntity.setRuta(imagenProductoDTO.getRuta());
-			imagenProductoEntity.setProductoEntity(productoConverter.modelToEntity(imagenProductoDTO.getProducto()));
+			//imagenProductoEntity.setProductoEntity(productoConverter.modelToEntity(imagenProductoDTO.getProducto()));
 		}
 		genericValidator.validate(imagenProductoEntity);
 		return imagenProductoEntity;

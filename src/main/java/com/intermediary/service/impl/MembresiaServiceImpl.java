@@ -1,5 +1,7 @@
 package com.intermediary.service.impl;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -23,6 +25,11 @@ public class MembresiaServiceImpl implements MembresiaService{
 	@Override
 	public MembresiaEntity obtenerMembresiaBasica() {
 		return membresiaRepository.obtenerMembresiaBasica();
+	}
+
+	@Override
+	public List<MembresiaEntity> listarMembresias() {
+		return membresiaRepository.findAll();
 	}
 
 }

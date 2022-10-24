@@ -21,6 +21,7 @@ public class MembresiaConverter {
 			membresiaDTO.setId(membresiaEntity.getId());
 			membresiaDTO.setSuscripcion(membresiaEntity.getSuscripcion());
 			membresiaDTO.setDiasVigencia(membresiaEntity.getDiasVigencia());
+			membresiaDTO.setValor(membresiaEntity.getValor());
 		}
 		genericValidator.validate(membresiaEntity);
 		return membresiaDTO;
@@ -33,6 +34,7 @@ public class MembresiaConverter {
 			membresiaEntity.setId(membresiaDTO.getId());
 			membresiaEntity.setSuscripcion(membresiaDTO.getSuscripcion());
 			membresiaEntity.setDiasVigencia(membresiaDTO.getDiasVigencia());
+			membresiaEntity.setValor(membresiaDTO.getValor());
 		}
 		genericValidator.validate(membresiaEntity);
 		return membresiaEntity;

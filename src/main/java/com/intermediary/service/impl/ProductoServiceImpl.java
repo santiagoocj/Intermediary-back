@@ -1,7 +1,9 @@
 package com.intermediary.service.impl;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -14,6 +16,8 @@ import com.intermediary.catalogo.mensajes.CatalogoMensajesProducto;
 import com.intermediary.dto.ProductoDTO;
 import com.intermediary.dto.respuestas.RespuestaProductoDTO;
 import com.intermediary.entity.CategoriaEntity;
+import com.intermediary.entity.EmpresaEntity;
+import com.intermediary.entity.ImagenProductoEntity;
 import com.intermediary.entity.ProductoEntity;
 import com.intermediary.enums.EstadoEntidad;
 import com.intermediary.exception.DataException;
@@ -35,13 +39,21 @@ public class ProductoServiceImpl implements ProductoService{
 	@Qualifier("CategoriaService")
 	private CategoriaServiceImpl categoriaServiceImpl;
 	
+	@Autowired
+	@Qualifier("EmpresaService")
+	private EmpresaServiceImpl empresaServiceImpl;
+	
 	@Override
-	public ResponseEntity<RespuestaProductoDTO> registrarProducto(ProductoDTO producto, Long idCategoria) {
+	public ResponseEntity<RespuestaProductoDTO> registrarProducto(ProductoDTO producto, Long idEmpresa, Long idCategoria) {
 		RespuestaProductoDTO respuesta = new RespuestaProductoDTO();
 		try {
 			CategoriaEntity categoriaSeleccionada = categoriaServiceImpl.buscarXId(idCategoria);
+			EmpresaEntity empresa = empresaServiceImpl.buscarXId(idEmpresa);
 			ProductoEntity productoGuardar = productoConverter.modelToEntity(producto);
+			productoGuardar.setEstado(EstadoEntidad.INACTIVO);
+			productoGuardar.setImagenes(new ArrayList<>());
 			productoGuardar.setCategoria(categoriaSeleccionada);
+			productoGuardar.setEmpresa(empresa);
 			productoRepository.save(productoGuardar);
 			respuesta.setProducto(producto);
 			respuesta.setMensaje(CatalogoMensajesProducto.PRODUCTO_REGISTRADO);
@@ -71,8 +83,8 @@ public class ProductoServiceImpl implements ProductoService{
 	}
 
 	@Override
-	public ResponseEntity<List<ProductoEntity>> listarProductos() {
-		return new ResponseEntity<List<ProductoEntity>>(productoRepository.findAll(), HttpStatus.OK);
+	public ResponseEntity<List<ProductoEntity>> listarProductos(Long idEmpresa) {
+		return new ResponseEntity<List<ProductoEntity>>(productoRepository.findAllByIdEmpresa(idEmpresa), HttpStatus.OK);
 	}
 
 	@Override
@@ -128,6 +140,40 @@ public class ProductoServiceImpl implements ProductoService{
 			productoActualizar.setPrecioUnidad(datosActualizar.getPrecioUnidad());
 		}
 		return productoActualizar;
+	}
+	
+	protected ProductoEntity obtenerProducto(Long idProducto) {
+		return productoRepository.findById(idProducto).orElse(null);
+	};
+	
+	protected void acutalizarProducto(ProductoEntity producto) {
+		productoRepository.save(producto);
+	}
+	
+	protected void asignarFoto(Long idProducto, ImagenProductoEntity imagen) {
+		ProductoEntity producto = obtenerProducto(idProducto);
+		producto.getImagenes().add(imagen);
+	}
+
+	@Override
+	public List<ImagenProductoEntity> obtenerImagenesDelProducto(Long idProducto) {
+		ProductoEntity producto = obtenerProducto(idProducto);
+		return producto.getImagenes();
+	}
+
+	@Override
+	public ResponseEntity<Map<String, Object>> activarProducto(Long idEmpresa, Long idProducto) {
+		Map<String, Object> respuesta = new HashMap<String, Object>();
+		ProductoEntity producto = productoRepository.findById(idProducto).orElse(null);
+		producto.setEstado(EstadoEntidad.ACTIVO);
+		productoRepository.save(producto);
+		respuesta.put("mensaje", "El producto ha sido activado con éxito.");
+		return new ResponseEntity<Map<String,Object>>(respuesta, HttpStatus.OK);
+	}
+
+	@Override
+	public List<ProductoEntity> buscarXCategoria(String categoria) {
+		return productoRepository.findByCategoria(categoria);
 	}
 
 }

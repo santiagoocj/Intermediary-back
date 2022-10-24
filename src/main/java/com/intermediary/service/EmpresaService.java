@@ -7,6 +7,7 @@ import org.springframework.validation.BindException;
 import com.intermediary.dto.EmpresaDTO;
 import com.intermediary.dto.InfoBasicaUsuarioDTO;
 import com.intermediary.dto.respuestas.RespuestaEmpresaDTO;
+import com.intermediary.entity.EmpresaEntity;
 
 
 public interface EmpresaService {
@@ -20,5 +21,7 @@ public interface EmpresaService {
 	public ResponseEntity<RespuestaEmpresaDTO> renovarMembresia(Long idEmpresa, Long idMembresia);
 	
 	public ResponseEntity<RespuestaEmpresaDTO> inactivar(Long idEmpresa);
+	
+	public EmpresaEntity buscarXId(Long idEmpresa);
 	
 }
