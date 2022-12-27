@@ -46,11 +46,6 @@ public class EmpresaController {
 		return empresaService.editarInformacion(idEmpresa, empresa);
 	}
 	
-	@Secured({"ROLE_ADMINISTRADOR", "ROLE_EMPRESA_INICIAL", "ROLE_EMPRESA"})
-	@PostMapping("/empresas/{id-membresia}/{id-empresa}")
-	public ResponseEntity<RespuestaEmpresaDTO> renovarMembresia(@PathVariable(name = "id-membresia") Long idMembresia, @PathVariable(name = "id-empresa") Long idEmpresa){
-		return empresaService.renovarMembresia(idEmpresa, idMembresia);
-	}
 	
 	@Secured("ROLE_ADMINISTRADOR")
 	@PostMapping("/empresas/{id-empresa}")

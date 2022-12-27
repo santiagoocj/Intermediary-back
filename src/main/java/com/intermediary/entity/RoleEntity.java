@@ -19,6 +19,16 @@ public class RoleEntity implements Serializable {
 	 */
 	private static final long serialVersionUID = -1871150375884855658L;
 
+	public RoleEntity(Long id, String nombre) {
+		super();
+		this.id = id;
+		this.nombre = nombre;
+	}
+	
+	public RoleEntity() {
+		super();
+	}
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;

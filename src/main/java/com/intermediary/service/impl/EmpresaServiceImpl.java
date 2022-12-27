@@ -19,7 +19,6 @@ import com.intermediary.dto.EmpresaDTO;
 import com.intermediary.dto.InfoBasicaUsuarioDTO;
 import com.intermediary.dto.respuestas.RespuestaEmpresaDTO;
 import com.intermediary.entity.EmpresaEntity;
-import com.intermediary.entity.MembresiaEntity;
 import com.intermediary.entity.RegistroEntity;
 import com.intermediary.entity.RepresentanteLegalEntity;
 import com.intermediary.entity.SolicitudRegistroEntity;
@@ -41,10 +40,6 @@ public class EmpresaServiceImpl implements EmpresaService{
 	@Autowired
 	@Qualifier("RepresentanteLegalService")
 	private RepresentanteLegalServiceImpl RepresentanteLegalServiceImpl;
-	
-	@Autowired
-	@Qualifier("MembresiaService")
-	private MembresiaServiceImpl membresiaService;
 	
 	@Autowired
 	@Qualifier("VigenciaService")
@@ -92,15 +87,14 @@ public class EmpresaServiceImpl implements EmpresaService{
 		RegistroEntity informacionEmpresa = solicitudRegistro.getRegistro();
 		RepresentanteLegalEntity representanteLegal = solicitudRegistro.getRepresentanteLegal();
 		usuarioService.validarInformacionUsuario(infoBasicaUsuario);
-		MembresiaEntity membresiaInicial = membresiaService.obtenerMembresiaBasica();
-		VigenciaEntity vigenciaMembresia = vigenciaServiceImpl.registroVigencia(membresiaInicial);
-		EmpresaEntity empresa = crearEmpresa(representanteLegal, membresiaInicial, informacionEmpresa, vigenciaMembresia);
+		VigenciaEntity vigenciaMembresia = vigenciaServiceImpl.registroPrimeraVigencia();
+		EmpresaEntity empresa = crearEmpresa(representanteLegal, informacionEmpresa, vigenciaMembresia);
 		agregarInformacionUsuario(empresa, infoBasicaUsuario);
 		empresaRepository.save(empresa);
 		return crearMensajeRetornoRegistroEmpresa(empresa);
 	}
 	
-	private EmpresaEntity crearEmpresa(RepresentanteLegalEntity representante, MembresiaEntity membresia, RegistroEntity registro, VigenciaEntity vigencia) {
+	private EmpresaEntity crearEmpresa(RepresentanteLegalEntity representante,  RegistroEntity registro, VigenciaEntity vigencia) {
 		EmpresaEntity empresa = new EmpresaEntity();
 		empresa.setNombre(registro.getNombreEmpresa());
 		empresa.setNit(registro.getNit());
@@ -112,7 +106,6 @@ public class EmpresaServiceImpl implements EmpresaService{
 		empresa.setCorreo(registro.getEmail());
 		empresa.setRepresentanteLegalEntity(representante);
 		empresa.setAnexo(registro.getAnexo());
-		empresa.setMembresiaEntity(membresia);
 		empresa.setVigenciaEntity(vigencia);
 		return empresa;
 	}
@@ -183,20 +176,6 @@ public class EmpresaServiceImpl implements EmpresaService{
 	}
 
 	@Override
-	public ResponseEntity<RespuestaEmpresaDTO> renovarMembresia(Long idEmpresa, Long idMembresia) {
-		RespuestaEmpresaDTO respuestaRetorno = new RespuestaEmpresaDTO();
-		EmpresaEntity empresaRenovar = empresaRepository.findById(idEmpresa).orElse(null);
-		if(empresaRenovar == null) {
-			respuestaRetorno.setMensaje(CatalogoMensajesEmpresa.EMPRESA_NO_EXISTE);
-		}else {
-			MembresiaEntity membresiaNueva = membresiaService.buscarXId(idMembresia);
-			empresaRenovar.setMembresiaEntity(membresiaNueva);
-			empresaRepository.save(empresaRenovar);
-		}
-		return new ResponseEntity<RespuestaEmpresaDTO>(respuestaRetorno, HttpStatus.OK);
-	}
-
-	@Override
 	public ResponseEntity<RespuestaEmpresaDTO> inactivar(Long idEmpresa) {
 		RespuestaEmpresaDTO respuestaRetorno = new RespuestaEmpresaDTO();
 		EmpresaEntity empresa = empresaRepository.findById(idEmpresa).orElse(null);
@@ -215,6 +194,11 @@ public class EmpresaServiceImpl implements EmpresaService{
 	@Override
 	public EmpresaEntity buscarXId(Long idEmpresa) {
 		return empresaRepository.findById(idEmpresa).orElse(null);
+	}
+
+	@Override
+	public EmpresaEntity actualizarEmpresa(EmpresaEntity empresa) {
+		return empresaRepository.save(empresa);
 	}
 
 }

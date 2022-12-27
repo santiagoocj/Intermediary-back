@@ -38,6 +38,9 @@ public class VigenciaEntity extends AbstractEntidadComun{
 	@JoinColumn(name = "membresia")
 	private MembresiaEntity membresia;
 	
+	@Column(name = "comprobante_pago")
+	private String ComprobantePago;
+	
 	public VigenciaEntity(MembresiaEntity membresia) {
 		this.fechaVigencia = calcularDiasDeVigencia(membresia.getDiasVigencia());
 		this.membresia = membresia;
@@ -76,7 +79,13 @@ public class VigenciaEntity extends AbstractEntidadComun{
 	public void setMembresia(MembresiaEntity membresia) {
 		this.membresia = membresia;
 	}
-	
-	
+
+	public String getComprobantePago() {
+		return ComprobantePago;
+	}
+
+	public void setComprobantePago(String comprobantePago) {
+		ComprobantePago = comprobantePago;
+	}
 	
 }

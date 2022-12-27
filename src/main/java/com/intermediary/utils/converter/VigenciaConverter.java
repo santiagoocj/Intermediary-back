@@ -24,6 +24,7 @@ public class VigenciaConverter {
 			vigenciaDTO.setId(vigenciaEntity.getId());
 			vigenciaDTO.setFechaVigencia(vigenciaEntity.getFechaVigencia());
 			vigenciaDTO.setMembresiaDTO(membresiaConverter.EntityToModel(vigenciaEntity.getMembresia()));
+			vigenciaDTO.setComprobantePago(vigenciaDTO.getComprobantePago());
 		}
 		genericValidator.validate(vigenciaEntity);
 		return vigenciaDTO;
@@ -36,6 +37,7 @@ public class VigenciaConverter {
 			vigenciaEntity.setId(vigenciaDTO.getId());
 			vigenciaEntity.setFechaVigencia(vigenciaDTO.getFechaVigencia());
 			vigenciaEntity.setMembresia(membresiaConverter.ModelToEntity(vigenciaDTO.getMembresiaDTO()));
+			vigenciaEntity.setComprobantePago(vigenciaDTO.getComprobantePago());
 		}
 		genericValidator.validate(vigenciaEntity);
 		return vigenciaEntity;

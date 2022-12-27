@@ -21,9 +21,6 @@ public class EmpresaConverter {
 	private RepresentanteLegalConverter representanteLegalConverter;
 	
 	@Autowired
-	private MembresiaConverter membresiaConverter;
-	
-	@Autowired
 	private VigenciaConverter vigenciaConverter;
 	
 	@Autowired
@@ -55,7 +52,6 @@ public class EmpresaConverter {
 			empresaDTO.setCelular(empresaEntity.getCelular());
 			empresaDTO.setCorreo(empresaEntity.getCorreo());
 			empresaDTO.setRepresentanteLegalDTO(representanteLegalConverter.EntityToModel(empresaEntity.getRepresentanteLegalEntity()));
-			empresaDTO.setMembresiaDTO(membresiaConverter.EntityToModel(empresaEntity.getMembresiaEntity()));
 			empresaDTO.setVigenciaDTO(vigenciaConverter.entityToModel(empresaEntity.getVigenciaEntity()));
 			empresaDTO.setUserName(empresaEntity.getUserName());
 			empresaDTO.setPassword(empresaEntity.getPassword());
@@ -81,7 +77,6 @@ public class EmpresaConverter {
 			empresaEntity.setCelular(empresaDTO.getCelular());
 			empresaEntity.setCorreo(empresaDTO.getCorreo());
 			empresaEntity.setRepresentanteLegalEntity(representanteLegalConverter.ModelToEntity(empresaDTO.getRepresentanteLegalDTO()));
-			empresaEntity.setMembresiaEntity(membresiaConverter.ModelToEntity(empresaDTO.getMembresiaDTO()));
 			empresaEntity.setVigenciaEntity(vigenciaConverter.modelToEntity(empresaDTO.getVigenciaDTO()));
 			empresaEntity.setUserName(empresaDTO.getUserName());
 			empresaEntity.setPassword(empresaDTO.getPassword());

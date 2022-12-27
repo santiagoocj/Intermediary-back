@@ -48,10 +48,6 @@ public class EmpresaEntity extends UsuarioEntity {
 	@JoinColumn(name = "representante_legal")
 	private RepresentanteLegalEntity representanteLegalEntity;
 	
-	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-	@OneToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "membresia")
-	private MembresiaEntity membresiaEntity;
 	
 	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	@OneToOne(fetch = FetchType.LAZY)
@@ -137,15 +133,6 @@ public class EmpresaEntity extends UsuarioEntity {
 
 	public void setRepresentanteLegalEntity(RepresentanteLegalEntity representanteLegalEntity) {
 		this.representanteLegalEntity = representanteLegalEntity;
-	}
-	
-
-	public MembresiaEntity getMembresiaEntity() {
-		return membresiaEntity;
-	}
-
-	public void setMembresiaEntity(MembresiaEntity membresiaEntity) {
-		this.membresiaEntity = membresiaEntity;
 	}
 
 	public VigenciaEntity getVigenciaEntity() {

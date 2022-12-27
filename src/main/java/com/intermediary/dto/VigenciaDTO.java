@@ -12,4 +12,5 @@ public class VigenciaDTO {
 	private Long id;
 	private LocalDate fechaVigencia;
 	private MembresiaDTO membresiaDTO;
+	private String comprobantePago;
 }
