@@ -13,10 +13,8 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.intermediary.entity.EmpresaEntity;
 import com.intermediary.entity.MembresiaEntity;
-import com.intermediary.entity.RoleEntity;
 import com.intermediary.entity.VigenciaEntity;
 import com.intermediary.enums.EstadoEntidad;
-import com.intermediary.enums.RoleEnum;
 import com.intermediary.exception.DataException;
 import com.intermediary.repository.MembresiaRepository;
 import com.intermediary.service.MembresiaService;
@@ -35,6 +33,10 @@ public class MembresiaServiceImpl implements MembresiaService{
 	@Autowired
 	@Qualifier("EmpresaService")
 	private EmpresaServiceImpl empresaServiceImpl;
+	
+	@Autowired
+	@Qualifier("RoleService")
+	private RoleServiceImpl roleServiceImpl;
 	
 	@Override
 	public MembresiaEntity buscarXId(Long id) {
@@ -88,12 +90,7 @@ public class MembresiaServiceImpl implements MembresiaService{
 	
 	private EmpresaEntity actualizarRolEmpresa(Long idEmpresa) {
 		EmpresaEntity empresa = empresaServiceImpl.buscarXId(idEmpresa);
-		List<RoleEntity> roles = empresa.getRoles();
-		roles.clear();
-		//El rol empresa tiene el id 3
-		roles.add(new RoleEntity(3L, RoleEnum.EMPRESA.toString()));
-
-		empresa.setRoles(roles);
+		empresa.setRoles(roleServiceImpl.actualizarEmpresaARolEmpresa(empresa));
 		return empresa;
 	}
 	

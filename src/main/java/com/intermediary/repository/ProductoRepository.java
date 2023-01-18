@@ -20,4 +20,7 @@ public interface ProductoRepository extends JpaRepository<ProductoEntity, Long> 
 	@Query(value = "SELECT * from productos p join categorias c ON p.categoria = c.id where c.tipo_categoria = ?1", nativeQuery = true)
 	List<ProductoEntity> findByCategoria(String categoria);
 
+	@Query(value = "UPDATE productos p SET estado='INACTIVO' WHERE p.empresa = ?1", nativeQuery = true)
+	void inactivarTodosLosProductos(Long id);
+
 }

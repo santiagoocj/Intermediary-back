@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.intermediary.dto.InformacionCompraMembresiaEmpresaDTO;
+import com.intermediary.entity.EmpresaEntity;
 import com.intermediary.entity.MembresiaEntity;
 import com.intermediary.entity.VigenciaEntity;
 
@@ -20,4 +21,5 @@ public interface VigenciaService {
 	
 	public void actualizarVigencia(VigenciaEntity vigencia);
 
+	public void validarVigenciaMembresiaEmpresa(EmpresaEntity empresa);
 }

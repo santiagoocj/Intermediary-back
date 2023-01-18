@@ -176,4 +176,9 @@ public class ProductoServiceImpl implements ProductoService{
 		return productoRepository.findByCategoria(categoria);
 	}
 
+	@Override
+	public void inactivarTodosLosProductosDeEmpresa(EmpresaEntity empresa) {
+		productoRepository.inactivarTodosLosProductos(empresa.getId());
+	}
+
 }

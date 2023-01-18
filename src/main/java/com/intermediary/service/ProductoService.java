@@ -8,6 +8,7 @@ import org.springframework.validation.BindException;
 
 import com.intermediary.dto.ProductoDTO;
 import com.intermediary.dto.respuestas.RespuestaProductoDTO;
+import com.intermediary.entity.EmpresaEntity;
 import com.intermediary.entity.ImagenProductoEntity;
 import com.intermediary.entity.ProductoEntity;
 
@@ -30,4 +31,6 @@ public interface ProductoService {
 	public ResponseEntity<Map<String, Object>> activarProducto(Long idEmpresa, Long idProducto);
 	
 	public List<ProductoEntity> buscarXCategoria(String categoria);
+	
+	public void inactivarTodosLosProductosDeEmpresa(EmpresaEntity empresa);
 }

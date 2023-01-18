@@ -3,6 +3,7 @@ package com.intermediary.service.impl;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
@@ -13,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.intermediary.dto.InformacionCompraMembresiaEmpresaDTO;
+import com.intermediary.entity.EmpresaEntity;
 import com.intermediary.entity.MembresiaEntity;
 import com.intermediary.entity.VigenciaEntity;
 import com.intermediary.enums.EstadoEntidad;
@@ -30,6 +32,14 @@ public class VigenciaServiceImpl implements VigenciaService{
 	@Autowired
 	@Qualifier("MembresiaService")
 	private MembresiaServiceImpl membresiaService;
+	
+	@Autowired
+	@Qualifier("RoleService")
+	private RoleServiceImpl roleServiceImpl;
+	
+	@Autowired
+	@Qualifier("ProductoService")
+	private ProductoServiceImpl productoServiceImpl;
 	
 	private static final String RUTA_BASE_COMPROBANTES_PAGO = "C:\\Users\\ASUS\\Documents\\Angular Projects\\Intermediary\\intermediary\\src\\assets\\img\\Comprobantes de pago\\";
 
@@ -69,6 +79,18 @@ public class VigenciaServiceImpl implements VigenciaService{
 	@Override
 	public void actualizarVigencia(VigenciaEntity vigencia) {
 		vigenciaRepository.save(vigencia);
+	}
+
+	@Override
+	public void validarVigenciaMembresiaEmpresa(EmpresaEntity empresa) {
+		LocalDate fechaActual = LocalDate.now();
+		if(fechaActual.isAfter(empresa.getVigenciaEntity().getFechaVigencia())) {
+			System.out.print("la fecha actual es mayor a la fecha de vencimiento");
+			empresa.setVigenciaEntity(registroPrimeraVigencia());
+			empresa.setRoles(roleServiceImpl.actualizarEmpresaARolEmpresaInicial(empresa));
+			productoServiceImpl.inactivarTodosLosProductosDeEmpresa(empresa);
+		}
+		
 	}
 
 }

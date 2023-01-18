@@ -50,7 +50,7 @@ public class EmpresaEntity extends UsuarioEntity {
 	
 	
 	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "vigencia")
 	private VigenciaEntity vigenciaEntity;
 
