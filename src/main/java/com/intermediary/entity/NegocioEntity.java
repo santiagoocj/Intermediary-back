@@ -1,11 +1,16 @@
 package com.intermediary.entity;
 
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.intermediary.entity.comun.AbstractEntidadComun;
 
 @Entity
@@ -20,14 +25,32 @@ public class NegocioEntity extends AbstractEntidadComun{
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+
+	@Column(name = "contra_oferta_comprador")
+	private String contraOfertaComprador;
 	
-	private String descripcion;
+	@Column(name = "contra_oferta_vendedor")
+	private String contraOfertaVendedor;
 	
-	private double valor;
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "producto")
+	private ProductoEntity producto;
 	
-	private double comision;
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "comprador")
+	private EmpresaEntity comprador;
 	
-	private int cantidad;
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "vendedor")
+	private EmpresaEntity vendedor;
+	
+	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+	@OneToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "solicitud_compra")
+	private SolicitudCompraEntity solicitudCompra;
 
 	public Long getId() {
 		return id;
@@ -37,36 +60,51 @@ public class NegocioEntity extends AbstractEntidadComun{
 		this.id = id;
 	}
 
-	public String getDescripcion() {
-		return descripcion;
+	public String getContraOfertaComprador() {
+		return contraOfertaComprador;
 	}
 
-	public void setDescripcion(String descripcion) {
-		this.descripcion = descripcion;
+	public void setContraOfertaComprador(String contraOfertaComprador) {
+		this.contraOfertaComprador = contraOfertaComprador;
 	}
 
-	public double getValor() {
-		return valor;
+	public String getContraOfertaVendedor() {
+		return contraOfertaVendedor;
 	}
 
-	public void setValor(double valor) {
-		this.valor = valor;
+	public void setContraOfertaVendedor(String contraOfertaVendedor) {
+		this.contraOfertaVendedor = contraOfertaVendedor;
 	}
 
-	public double getComision() {
-		return comision;
+	public ProductoEntity getProducto() {
+		return producto;
 	}
 
-	public void setComision(double comision) {
-		this.comision = comision;
+	public void setProducto(ProductoEntity producto) {
+		this.producto = producto;
 	}
 
-	public int getCantidad() {
-		return cantidad;
+	public EmpresaEntity getComprador() {
+		return comprador;
 	}
 
-	public void setCantidad(int cantidad) {
-		this.cantidad = cantidad;
+	public void setComprador(EmpresaEntity comprador) {
+		this.comprador = comprador;
 	}
 
+	public EmpresaEntity getVendedor() {
+		return vendedor;
+	}
+
+	public void setVendedor(EmpresaEntity vendedor) {
+		this.vendedor = vendedor;
+	}
+
+	public SolicitudCompraEntity getSolicitudCompra() {
+		return solicitudCompra;
+	}
+
+	public void setSolicitudCompra(SolicitudCompraEntity solicitudCompra) {
+		this.solicitudCompra = solicitudCompra;
+	}
 }
