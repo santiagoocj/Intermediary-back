@@ -38,7 +38,6 @@ public class EmpresaEntity extends UsuarioEntity {
 	private String correo;
 	
 	@NotNull
-	@Column(length = 500000)
 	private String anexo;
 
 	private String celular;

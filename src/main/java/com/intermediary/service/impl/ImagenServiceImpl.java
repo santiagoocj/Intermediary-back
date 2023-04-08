@@ -11,6 +11,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -26,7 +27,8 @@ import com.intermediary.service.ImagenService;
 @Service("ImagenServiceImpl")
 public class ImagenServiceImpl implements ImagenService{
 	
-	private static final String RUTA_BASE_IMAGENES = "C:\\Users\\ASUS\\Documents\\Angular Projects\\Intermediary\\intermediary\\src\\assets\\img\\";
+	@Value("${ruta.base.imagenes}")
+	private String rutaBaseImagenes;
 	
 	@Autowired
 	@Qualifier("ProductoService")
@@ -52,7 +54,7 @@ public class ImagenServiceImpl implements ImagenService{
 	
 	
 	private String crearDirectorioAlmacenarImagen(String nombreDirectorio, String nombreProducto) {
-		String ruta = RUTA_BASE_IMAGENES + nombreDirectorio.concat(nombreProducto);
+		String ruta = rutaBaseImagenes + nombreDirectorio.concat(nombreProducto);
 		File directorio = new File(ruta);
 		if(!directorio.exists()) {
 			directorio.mkdir();
@@ -92,7 +94,7 @@ public class ImagenServiceImpl implements ImagenService{
 	}
 	
 	private Path obtenerRutaFoto(String ruta) {
-		Path rutaFoto = Paths.get(RUTA_BASE_IMAGENES).resolve(ruta).toAbsolutePath();
+		Path rutaFoto = Paths.get(rutaBaseImagenes).resolve(ruta).toAbsolutePath();
 		return rutaFoto;
 	}
 	

@@ -9,6 +9,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -41,7 +42,12 @@ public class VigenciaServiceImpl implements VigenciaService{
 	@Qualifier("ProductoService")
 	private ProductoServiceImpl productoServiceImpl;
 	
-	private static final String RUTA_BASE_COMPROBANTES_PAGO = "C:\\Users\\ASUS\\Documents\\Angular Projects\\Intermediary\\intermediary\\src\\assets\\img\\Comprobantes de pago\\";
+	@Autowired
+	@Qualifier("EmpresaService")
+	private EmpresaServiceImpl empresaServiceImpl;
+	
+	@Value("${ruta.base.comprobante.pago}")
+	private String rutaBaseComprobantePago;
 
 	@Override
 	public VigenciaEntity registroVigencia(MembresiaEntity membresia, MultipartFile comprobantePago) {
@@ -49,7 +55,7 @@ public class VigenciaServiceImpl implements VigenciaService{
 		datosAGuardar.setEstado(EstadoEntidad.INACTIVO);
 		if(comprobantePago != null) {
 			String nombreImagen = UUID.randomUUID().toString() + "_" + comprobantePago.getOriginalFilename().replace(" ", "");
-			Path rutaImagen = Paths.get(RUTA_BASE_COMPROBANTES_PAGO).resolve(nombreImagen).toAbsolutePath();
+			Path rutaImagen = Paths.get(rutaBaseComprobantePago).resolve(nombreImagen).toAbsolutePath();
 			try {
 				Files.copy(comprobantePago.getInputStream(), rutaImagen);
 				datosAGuardar.setComprobantePago(nombreImagen);
@@ -86,9 +92,13 @@ public class VigenciaServiceImpl implements VigenciaService{
 		LocalDate fechaActual = LocalDate.now();
 		if(fechaActual.isAfter(empresa.getVigenciaEntity().getFechaVigencia())) {
 			System.out.print("la fecha actual es mayor a la fecha de vencimiento");
-			empresa.setVigenciaEntity(registroPrimeraVigencia());
-			empresa.setRoles(roleServiceImpl.actualizarEmpresaARolEmpresaInicial(empresa));
-			productoServiceImpl.inactivarTodosLosProductosDeEmpresa(empresa);
+			try {
+				empresa.setVigenciaEntity(registroPrimeraVigencia());
+				empresa.setRoles(roleServiceImpl.actualizarEmpresaARolEmpresaInicial(empresa));
+				productoServiceImpl.inactivarTodosLosProductosDeEmpresa(empresa);
+				empresaServiceImpl.actualizarEmpresa(empresa);
+			} catch (Exception e) {
+			}
 		}
 		
 	}

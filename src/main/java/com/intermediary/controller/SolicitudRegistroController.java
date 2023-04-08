@@ -6,13 +6,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.intermediary.catalogo.mensajes.CatalogoMensajesGenerales;
 import com.intermediary.catalogo.mensajes.CatalogoMensajesSolicitudRegistro;
@@ -22,14 +24,18 @@ import com.intermediary.dto.respuestas.RespuestaEstadoSolicitudRegistroDTO;
 import com.intermediary.exception.BusinessExecption;
 import com.intermediary.exception.DataException;
 import com.intermediary.exception.util.ValidatorParameters;
+import com.intermediary.service.impl.RegistroServiceImpl;
 import com.intermediary.service.impl.SolicitudRegistroServiceImpl;
 
-@Controller
+@RestController
 @RequestMapping("/api")
 public class SolicitudRegistroController {
 	
 	@Autowired
 	private SolicitudRegistroServiceImpl solicitudRegistroServiceImpl;
+	
+	@Autowired
+	private RegistroServiceImpl registroServiceImpl;
 	
 	@Secured("ROLE_ADMINISTRADOR")
 	@GetMapping("/solicitud-registro")
@@ -54,6 +60,11 @@ public class SolicitudRegistroController {
 		ValidatorParameters.validarIdNulo(idRepresentante, CatalogoMensajesGenerales.ID_NULO);
 		return solicitudRegistroServiceImpl.crearSolicitud(idEmpresa, idRepresentante);
 		
+	}
+	
+	@PostMapping("/solicitud-registro/registro/documento")
+	public void realizarRegistroDocumento(@RequestParam("documento") MultipartFile documento, @RequestParam("empresa") Long idEmpresa) {
+		registroServiceImpl.registrarDocumento(documento, idEmpresa);
 	}
 
 }
