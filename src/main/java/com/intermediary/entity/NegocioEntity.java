@@ -32,6 +32,8 @@ public class NegocioEntity extends AbstractEntidadComun{
 	@Column(name = "contra_oferta_vendedor")
 	private String contraOfertaVendedor;
 	
+	private int cantidad;
+	
 	@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 	@OneToOne(fetch = FetchType.EAGER)
 	@JoinColumn(name = "producto")
@@ -74,6 +76,14 @@ public class NegocioEntity extends AbstractEntidadComun{
 
 	public void setContraOfertaVendedor(String contraOfertaVendedor) {
 		this.contraOfertaVendedor = contraOfertaVendedor;
+	}
+
+	public int getCantidad() {
+		return cantidad;
+	}
+
+	public void setCantidad(int cantidad) {
+		this.cantidad = cantidad;
 	}
 
 	public ProductoEntity getProducto() {
