@@ -6,14 +6,37 @@ import com.intermediary.exception.BusinessExecption;
 
 public class ValidatorParameters {
 	private static final CharSequence CARACTER_ARROBA = "@";
+	private static final int TAMANO_MAXIMO_NIT = 7;
+	private static final int TAMANO_MINIMO_NIT = 4;
+	private static final int TAMANO_MAXIMO_NOMBRE_EMPRESA = 20;
 	
 	public static void validarNitNulo(String nit, String mensaje) throws BusinessExecption{
 		if(nit == null) {
 			throw new BusinessExecption(mensaje, HttpStatus.BAD_REQUEST);
 		}
 	}
+	public static void validarFormatoNit(String nit, String mensaje) throws BusinessExecption{
+		if(nit.matches("[a-zA-Z]*")) {
+			throw new BusinessExecption(mensaje, HttpStatus.BAD_REQUEST);
+		}
+	}
+	public static void validarTamanoMinimoNit(String nit, String mensaje) throws BusinessExecption{
+		if(nit.length() < TAMANO_MINIMO_NIT) {
+			throw new BusinessExecption(mensaje, HttpStatus.BAD_REQUEST);
+		}
+	}
+	public static void validarTamanoNit(String nit, String mensaje) throws BusinessExecption{
+		if(nit.length() > TAMANO_MAXIMO_NIT) {
+			throw new BusinessExecption(mensaje, HttpStatus.BAD_REQUEST);
+		}
+	}
 	public static void validarNombreNulo(String nombre, String mensaje) throws BusinessExecption{
 		if(nombre == null) {
+			throw new BusinessExecption(mensaje, HttpStatus.BAD_REQUEST);
+		}
+	}
+	public static void validartamanoMaximoNombre(String nombre, String mensaje) throws BusinessExecption{
+		if(nombre.length() > TAMANO_MAXIMO_NOMBRE_EMPRESA) {
 			throw new BusinessExecption(mensaje, HttpStatus.BAD_REQUEST);
 		}
 	}

@@ -97,6 +97,7 @@ public class SolicitudRegistroServiceImpl implements SolicitudRegistroService{
 	public ResponseEntity<Map<String, String>> crearSolicitud(Long idEmpresa, Long idRepresentante) throws BindException {
 		RegistroEntity empresa = registroEmpresaServiceImpl.buscarXId(idEmpresa);
 		RepresentanteLegalEntity representante = representanteLegalServiceImpl.buscarXId(idRepresentante);
+		validarRepresentanteSolicitudRegistro(empresa);
 		guardarSolicitud(empresa, representante);
 		return crearRespuestaExitoCrearSolicitud();
 	}
@@ -126,6 +127,16 @@ public class SolicitudRegistroServiceImpl implements SolicitudRegistroService{
 		if(solicitudRegistro.getEstadoSolicitud() != EstadoSolicitudEnum.APROBADA) {
 			throw new DataException(CatalogoMensajesSolicitudRegistro.EMPRESA_NO_VALIDADA, HttpStatus.BAD_REQUEST);
 		}
+	}
+	
+	private void validarRepresentanteSolicitudRegistro(RegistroEntity empresa) {
+		SolicitudRegistroEntity solicitudRegistroEntity = solicitudRegistroRepository.findByRegistro(empresa);
+		if(solicitudRegistroEntity != null) {
+			if(solicitudRegistroEntity.getRepresentanteLegal() != null) {
+				throw new DataException(CatalogoMensajesSolicitudRegistro.REPRESENTANTE_YA_REGISTRADO, HttpStatus.BAD_REQUEST);
+			}
+		}
+		
 	}
 
 }

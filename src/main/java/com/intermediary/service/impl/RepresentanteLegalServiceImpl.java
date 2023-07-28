@@ -28,6 +28,10 @@ public class RepresentanteLegalServiceImpl implements RepresentanteLegalService{
 	private RepresentanteLegalRepository representanteLegalRepository;
 	
 	@Autowired
+	@Qualifier("RegistroService")
+	private RegistroServiceImpl registroServiceImpl;
+	
+	@Autowired
 	private RepresentanteLegalConverter representanteConverter;
 
 	@Override

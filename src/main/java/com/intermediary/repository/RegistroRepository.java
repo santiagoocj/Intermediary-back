@@ -7,5 +7,7 @@ import com.intermediary.entity.RegistroEntity;
 
 @Repository("RegistroRepository")
 public interface RegistroRepository extends JpaRepository<RegistroEntity, Long>{
+	
+	public RegistroEntity findByNit(String nit);
 
 }

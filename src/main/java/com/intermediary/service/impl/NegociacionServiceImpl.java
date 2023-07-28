@@ -47,6 +47,7 @@ public class NegociacionServiceImpl implements NegociacionService{
 		EmpresaEntity vendedor = producto.getEmpresa();
 		SolicitudCompraEntity solicitudCompra = solicitudCompraServiceImpl.crearSolicitudCompra();
 		NegocioEntity negociacion = new NegocioEntity();
+		negociacion.setCantidad(negocio.getCantidad());
 		negociacion.setContraOfertaComprador(negocio.getContraOfertaComprador());
 		
 		negociacion.setProducto(producto);

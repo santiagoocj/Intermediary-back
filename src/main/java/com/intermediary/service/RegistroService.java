@@ -18,4 +18,7 @@ public interface RegistroService {
 	public RegistroEntity buscarXId(Long idRegistro);
 	
 	public void registrarDocumento(MultipartFile documento, Long idEmpresa);
+	
+	public void validarNitDuplicado(RegistroDTO datosRegistro);
+	
 }

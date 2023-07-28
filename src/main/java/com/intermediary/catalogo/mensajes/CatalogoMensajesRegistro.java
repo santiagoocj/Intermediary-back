@@ -19,4 +19,9 @@ public class CatalogoMensajesRegistro {
 	public static final String NOMBRE_REQUERIDO = "El campo nombre es requerido";
 	public static final String ERROR_LISTAR_REGISTRO = "Ocurrió un error al listar los registros";
 	public static final String ANEXO_INVALIDO = "El archivo de anexo de datos de la empresa no puede ser vacio";
+	public static final String FORMATO_NIT_INVALIDO = "El formato del Nit es invalido, solo se acepta numeros y carácteres especiales";
+	public static final String TAMANO_NIT_INVALIDO = "El tamaño del Nit es demasiado largo";
+	public static final String TAMANO_MINIMO_NIT_INVALIDO = "El tamaño del Nit es demasiado corto";
+	public static final String TAMANO_NOMBRE_EMPRESA_INVALIDO = "El tamaño del Nombre de la empresa es demasiado largo";
+	public static final String NIT_YA_REGISTRADO = "El NIT ya se encuentra registrado en la aplicación";
 }

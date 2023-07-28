@@ -38,9 +38,9 @@ public class NegociacionController {
 	}
 	
 	@Secured("ROLE_EMPRESA")
-	@PutMapping("/negociacion/cancelar/{id-solicitud-compra}")
-	public ResponseEntity<Map<String, Object>> cancelarNegocio(@PathVariable(name = "id-negocio") Long idSolicitudCompra){
-		return negociacionServiceImpl.cancelarNegociacion(idSolicitudCompra);
+	@PutMapping("/negociacion/cancelar/{id-negocio}")
+	public ResponseEntity<Map<String, Object>> cancelarNegocio(@PathVariable(name = "id-negocio") Long idNegocio){
+		return negociacionServiceImpl.cancelarNegociacion(idNegocio);
 	}
 	
 	@Secured("ROLE_EMPRESA")

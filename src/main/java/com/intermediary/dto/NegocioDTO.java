@@ -10,5 +10,6 @@ public class NegocioDTO {
 	private Long id;
 	private String contraOfertaComprador;
 	private String contraOfertaVendedor;
+	private int cantidad;
 
 }

@@ -38,6 +38,7 @@ public class RegistroServiceImpl implements RegistroService{
 
 	@Override
 	public ResponseEntity<RespuestaRegistroDTO> realizarRegistro(RegistroDTO datosRegistro) {
+		validarNitDuplicado(datosRegistro);
 		RespuestaRegistroDTO respuesta = null;
 		try {
 			RegistroEntity registroEntity = registroConverter.ModelToEntity(datosRegistro);
@@ -81,6 +82,16 @@ public class RegistroServiceImpl implements RegistroService{
 				throw new DataException(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		}
+		
+	}
+
+	@Override
+	public void validarNitDuplicado(RegistroDTO datosRegistro) {
+		RegistroEntity registroEntity = registroRepository.findByNit(datosRegistro.getNit());
+		if(registroEntity != null) {
+			throw new DataException(CatalogoMensajesRegistro.NIT_YA_REGISTRADO, HttpStatus.NOT_ACCEPTABLE);
+		}
+		
 		
 	}
 
