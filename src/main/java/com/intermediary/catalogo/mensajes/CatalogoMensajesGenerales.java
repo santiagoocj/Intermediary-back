@@ -9,4 +9,6 @@ public class CatalogoMensajesGenerales {
 	public static final String SOLICITUD_REGISTRO = "Solicitud de registro Intermediary";
 	public static final String MENSAJE= "mensaje";
 	public static final String ERROR= "Error";
+	public static final String URL_INCORRECTA = "Url incorrecta";
+	public static final String ERRORES = "errores";
 }

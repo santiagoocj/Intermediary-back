@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.intermediary.catalogo.mensajes.CatalogoMensajesEmpresa;
+import com.intermediary.catalogo.mensajes.CatalogoMensajesGenerales;
 import com.intermediary.dto.EmpresaDTO;
 import com.intermediary.dto.InfoBasicaUsuarioDTO;
 import com.intermediary.dto.respuestas.RespuestaEmpresaDTO;
@@ -34,7 +35,7 @@ public class EmpresaController {
 	
 	@PostMapping("/empresas/registro/{id-solicitud-registro}")
 	public ResponseEntity<RespuestaEmpresaDTO> registrarEmpresa(@PathVariable(name = "id-solicitud-registro") Long idSolicitudRegistro, @RequestBody InfoBasicaUsuarioDTO infoRegistroUsuario) throws BusinessExecption{
-		ValidatorParameters.validarIdNulo(idSolicitudRegistro, CatalogoMensajesEmpresa.URL_INCORRECTA);
+		ValidatorParameters.validarIdNulo(idSolicitudRegistro, CatalogoMensajesGenerales.URL_INCORRECTA);
 		ValidatorParameters.validarNombreNulo(infoRegistroUsuario.getUserName(), CatalogoMensajesEmpresa.USER_NAME_NULO);
 		ValidatorParameters.validarNombreNulo(infoRegistroUsuario.getPassword(), CatalogoMensajesEmpresa.PASSWORD_NULO);
 		return empresaService.registroEmpresa(idSolicitudRegistro, infoRegistroUsuario);

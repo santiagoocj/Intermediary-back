@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.validation.BindException;
 
 import com.intermediary.catalogo.mensajes.CatalogoMensajesEmpresa;
+import com.intermediary.catalogo.mensajes.CatalogoMensajesGenerales;
 import com.intermediary.dto.EmpresaDTO;
 import com.intermediary.dto.InfoBasicaUsuarioDTO;
 import com.intermediary.dto.respuestas.RespuestaEmpresaDTO;
@@ -73,7 +74,7 @@ public class EmpresaServiceImpl implements EmpresaService{
 			throw new DataException(CatalogoMensajesEmpresa.ERROR_SERVIDOR, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		if(empresasDTOs == null || empresasDTOs.isEmpty()) {
-			response.put(CatalogoMensajesEmpresa.MENSAJE, CatalogoMensajesEmpresa.SIN_EMPRESAS_EN_BASE_DATOS);
+			response.put(CatalogoMensajesGenerales.MENSAJE, CatalogoMensajesEmpresa.SIN_EMPRESAS_EN_BASE_DATOS);
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
 		}
 		return  new ResponseEntity<List<EmpresaDTO>>(empresasDTOs, HttpStatus.OK);
