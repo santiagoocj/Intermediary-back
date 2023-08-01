@@ -17,16 +17,12 @@ public class ImagenProductoConverter {
 	@Autowired
 	private GenericValidator<ImagenProductoEntity> genericValidator;
 	
-	@Autowired
-	private ProductoConverter productoConverter;
-	
 	public ImagenProductoDTO entityToModel (ImagenProductoEntity imagenProductoEntity) throws BindException {
 		ImagenProductoDTO imagenProductoDTO = null;
 		if(imagenProductoEntity != null) {
 			imagenProductoDTO = new ImagenProductoDTO();
 			imagenProductoDTO.setId(imagenProductoEntity.getId());
 			imagenProductoDTO.setRuta(imagenProductoEntity.getRuta());
-			//imagenProductoDTO.setProducto(productoConverter.entityToModel(imagenProductoEntity.getProductoEntity()));
 		}
 		genericValidator.validate(imagenProductoEntity);
 		return imagenProductoDTO;
@@ -49,7 +45,6 @@ public class ImagenProductoConverter {
 			imagenProductoEntity = new ImagenProductoEntity();
 			imagenProductoEntity.setId(imagenProductoDTO.getId());
 			imagenProductoEntity.setRuta(imagenProductoDTO.getRuta());
-			//imagenProductoEntity.setProductoEntity(productoConverter.modelToEntity(imagenProductoDTO.getProducto()));
 		}
 		genericValidator.validate(imagenProductoEntity);
 		return imagenProductoEntity;

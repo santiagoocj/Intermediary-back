@@ -18,6 +18,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.BindException;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.intermediary.catalogo.mensajes.CatalogoMensajesGenerales;
+import com.intermediary.catalogo.mensajes.CatalogoMensajesImagen;
 import com.intermediary.entity.ImagenProductoEntity;
 import com.intermediary.entity.ProductoEntity;
 import com.intermediary.exception.DataException;
@@ -84,7 +86,7 @@ public class ImagenServiceImpl implements ImagenService{
 		eliminarFotoCarpeta(obtenerRutaFoto(imagen.getRuta()));
 		actualizarImagenesEnElProducto(producto, posicionImagenEnLista);
 		imagenRepository.delete(imagen);
-		respuesta.put("mensaje", "imagen eliminada de manera exitosa");
+		respuesta.put(CatalogoMensajesGenerales.MENSAJE, CatalogoMensajesImagen.IMAGEN_ELIMINADA);
 		return new ResponseEntity<Map<String,Object>>(respuesta, HttpStatus.OK);
 	}
 	

@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindException;
 
+import com.intermediary.catalogo.mensajes.CatalogoMensajesGenerales;
 import com.intermediary.catalogo.mensajes.CatalogoMensajesProducto;
 import com.intermediary.dto.ProductoDTO;
 import com.intermediary.dto.respuestas.RespuestaProductoDTO;
@@ -167,7 +168,7 @@ public class ProductoServiceImpl implements ProductoService{
 		ProductoEntity producto = productoRepository.findById(idProducto).orElse(null);
 		producto.setEstado(EstadoEntidad.ACTIVO);
 		productoRepository.save(producto);
-		respuesta.put("mensaje", "El producto ha sido activado con éxito.");
+		respuesta.put(CatalogoMensajesGenerales.MENSAJE, CatalogoMensajesProducto.PRODUCTO_ACTIVADO);
 		return new ResponseEntity<Map<String,Object>>(respuesta, HttpStatus.OK);
 	}
 

@@ -7,5 +7,6 @@ public class CatalogoMensajesGenerales {
 	public static final String CONTENIDO_CORREO_VACIO = "El contenido para el envio de correo no puede ser vacio";
 	public static final String ID_NULO = "id nulo";
 	public static final String SOLICITUD_REGISTRO = "Solicitud de registro Intermediary";
-
+	public static final String MENSAJE= "mensaje";
+	public static final String ERROR= "Error";
 }

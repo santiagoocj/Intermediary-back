@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.intermediary.catalogo.mensajes.CatalogoMensajesGenerales;
+import com.intermediary.catalogo.mensajes.CatalogoMensajesMembresia;
 import com.intermediary.entity.EmpresaEntity;
 import com.intermediary.entity.MembresiaEntity;
 import com.intermediary.entity.VigenciaEntity;
@@ -63,11 +65,11 @@ public class MembresiaServiceImpl implements MembresiaService{
 			empresa.setVigenciaEntity(vigencia);
 			empresaServiceImpl.actualizarEmpresa(empresa);
 		} catch (Exception e) {
-			throw new DataException("Error " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
+			throw new DataException(CatalogoMensajesGenerales.ERROR + " " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		
 		Map<String, Object> respuesta = new HashMap<>();
-		respuesta.put("mensaje", "se actualizó la membresia de manera exitosa, se verificará el comprobante de pago y posteriormente se hará la activación.");
+		respuesta.put(CatalogoMensajesGenerales.MENSAJE, CatalogoMensajesMembresia.ACTUALIZACION_MEMBRESIA_NOTIFICACION);
 		return new ResponseEntity<Map<String,Object>>(respuesta, HttpStatus.OK);
 	}
 
@@ -84,7 +86,7 @@ public class MembresiaServiceImpl implements MembresiaService{
 		empresaServiceImpl.actualizarEmpresa(empresa);
 		vigenciaServiceImpl.actualizarVigencia(vigencia);
 		Map<String, Object> respuesta = new HashMap<>();
-		respuesta.put("mensaje", "se realizó la activación de la membresia de manera exitosa.");
+		respuesta.put(CatalogoMensajesGenerales.MENSAJE, CatalogoMensajesMembresia.ACTIVACION_MEMBRESIA_EXITOSA);
 		return new ResponseEntity<Map<String,Object>>(respuesta, HttpStatus.OK);
 	}
 	

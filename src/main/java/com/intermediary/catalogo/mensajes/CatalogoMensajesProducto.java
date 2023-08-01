@@ -12,5 +12,6 @@ public class CatalogoMensajesProducto {
 	public static final String PRODUCTO_NO_ENCONTRADO = "El producto no se encuentra registrado en la base de datos";
 	public static final String ERROR_INTERNO_DEL_SERVIDOR = "Ocurrio un error interno en el servidor, pero es posible que el producto se haya actualizado de manera exitosa";
 	public static final String PRODUCTO_MODIFICADO_EXITOSAMENTE = "El producto se ha modificado de manera exitosa";
+	public static final String PRODUCTO_ACTIVADO = "El producto ha sido activado con éxito.";
 
 }

@@ -14,6 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.intermediary.catalogo.mensajes.CatalogoMensajesVigencia;
 import com.intermediary.dto.InformacionCompraMembresiaEmpresaDTO;
 import com.intermediary.entity.EmpresaEntity;
 import com.intermediary.entity.MembresiaEntity;
@@ -91,7 +92,7 @@ public class VigenciaServiceImpl implements VigenciaService{
 	public void validarVigenciaMembresiaEmpresa(EmpresaEntity empresa) {
 		LocalDate fechaActual = LocalDate.now();
 		if(fechaActual.isAfter(empresa.getVigenciaEntity().getFechaVigencia())) {
-			System.out.print("la fecha actual es mayor a la fecha de vencimiento");
+			System.out.print(CatalogoMensajesVigencia.FECHA_ACTUAL_MAYOR_FECHA_VENCIMIENTO);
 			try {
 				empresa.setVigenciaEntity(registroPrimeraVigencia());
 				empresa.setRoles(roleServiceImpl.actualizarEmpresaARolEmpresaInicial(empresa));

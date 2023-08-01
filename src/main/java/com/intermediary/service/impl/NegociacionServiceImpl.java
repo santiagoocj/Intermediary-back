@@ -10,6 +10,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import com.intermediary.catalogo.mensajes.CatalogoMensajesGenerales;
+import com.intermediary.catalogo.mensajes.CatalogoMensajesNegociacion;
 import com.intermediary.dto.NegocioDTO;
 import com.intermediary.entity.EmpresaEntity;
 import com.intermediary.entity.NegocioEntity;
@@ -56,7 +58,7 @@ public class NegociacionServiceImpl implements NegociacionService{
 		negociacion.setSolicitudCompra(solicitudCompra);
 		
 		negociacionRepository.save(negociacion);
-		response.put("mensaje", "se crea la negociación de manera exitosa, se procede a enviar la información al vendedor, por favor este pendiente del correo ya que de esta manera le informaremos cuando responda el vendedor");
+		response.put(CatalogoMensajesGenerales.MENSAJE, CatalogoMensajesNegociacion.NEGOCIACION_CREADA);
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
 
@@ -68,7 +70,7 @@ public class NegociacionServiceImpl implements NegociacionService{
 	@Override
 	public ResponseEntity<Map<String, Object>> cancelarNegociacion(Long idNegocio) {
 		Map<String, Object> response = new HashMap<>();
-		response.put("mensaje", "Se canceló la solicitud de manera exitosa");
+		response.put(CatalogoMensajesGenerales.MENSAJE, CatalogoMensajesNegociacion.CANCELAR_NEGOCIACION);
 		response.put("solicitud de compra", solicitudCompraServiceImpl.cancelarSolicitud(idNegocio));
 		return new ResponseEntity<>(response, HttpStatus.OK);
 	}
@@ -77,13 +79,13 @@ public class NegociacionServiceImpl implements NegociacionService{
 	public ResponseEntity<Map<String, Object>> aceptarNegociacion(Long idNegocio, String contraOfertaVendedor) {
 		Map<String, Object> response = new HashMap<>();
 		if(contraOfertaVendedor == null) {
-			contraOfertaVendedor = "Aceptada";
+			contraOfertaVendedor = EstadoNegociacion.ACEPTADA.toString();
 		}
 		NegocioEntity negocio = negociacionRepository.findById(idNegocio).orElseThrow();
 		negocio.setContraOfertaVendedor(contraOfertaVendedor);
 		negocio.getSolicitudCompra().setEstadoNegociacion(EstadoNegociacion.ACEPTADA);
 		negociacionRepository.save(negocio);
-		response.put("mensaje", "La negociación se realizo de manera exitosa, pronto nos comunicameros con usted para efectuar la compra");
+		response.put(CatalogoMensajesGenerales.MENSAJE, CatalogoMensajesNegociacion.NEGOCIACION_EXITOSA);
 		return new ResponseEntity<Map<String,Object>>(response, HttpStatus.OK);
 	}
 

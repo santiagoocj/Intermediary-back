@@ -9,4 +9,5 @@ public class CatalogoMensajesSolicitudRegistro {
 	public static final String SOLICITUD_MODIFICADA = "Se ha modificado exitosamente el estado de la solicitud de registro";
 	public static final String EMPRESA_NO_VALIDADA = "La empresa no ha sido validada para el registro";
 	public static final String REPRESENTANTE_YA_REGISTRADO = "La empresa ya tiene registrado un representante legal";
+	public static final String SOLICITUD_REGISTRO_ACEPTADA = "¡El registro se a realizado de manera exitosa!, la empresa pasará a un proceso de verificación para validar los datos, una vez verificado los datos, será informado a travez de correo electrónico";
 }

@@ -17,6 +17,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.intermediary.catalogo.mensajes.CatalogoMensajesUsuario;
 import com.intermediary.dto.InfoBasicaUsuarioDTO;
 import com.intermediary.entity.UsuarioEntity;
 import com.intermediary.exception.DataException;
@@ -41,7 +42,7 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService{
 		
 		if(usuario == null) {
 			logger.error("Error en el login: no existe el usuario '" + username + "' en el sistema!");
-			throw new UsernameNotFoundException("Error en el login: no existe el usuario '" + username + "' en el sistema!");
+			throw new UsernameNotFoundException(CatalogoMensajesUsuario.ERROR_LOGIN_USUARIO_N_EXISTE.replace("{usuario}", username));
 		}
 		List<GrantedAuthority> authorities = usuario.getRoles()
 				.stream()
@@ -60,7 +61,7 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService{
 	public void validarInformacionUsuario(InfoBasicaUsuarioDTO infoUsuario) {
 		UsuarioEntity validacionesUsuario = findByUserName(infoUsuario.getUserName());
 		if(validacionesUsuario != null) {
-			throw new DataException("EL nombre de usuario ya existe en el sistema", HttpStatus.BAD_REQUEST);
+			throw new DataException(CatalogoMensajesUsuario.USUARIO_EXISTENTE_SISTEMA, HttpStatus.BAD_REQUEST);
 		}
 	}
 

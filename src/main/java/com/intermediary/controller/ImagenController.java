@@ -17,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.intermediary.catalogo.mensajes.CatalogoMensajesGenerales;
+import com.intermediary.catalogo.mensajes.CatalogoMensajesImagen;
 import com.intermediary.service.impl.ImagenServiceImpl;
 
 @Controller
@@ -34,10 +36,10 @@ public class ImagenController {
 			for (MultipartFile multipartFile : imagenes) {
 				imagenServiceImpl.subirImagen(multipartFile, idProducto, empresa, producto);
 			}
-			respuesta.put("mensaje", "Se a subido correctamente la imagen");
+			respuesta.put(CatalogoMensajesGenerales.MENSAJE, CatalogoMensajesImagen.SUBIDA_IMAGEN_EXITOSA);
 			return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.CREATED);
 		}
-		respuesta.put("mensaje", "No se a seleccionado ninguna imagen");
+		respuesta.put(CatalogoMensajesGenerales.MENSAJE, CatalogoMensajesImagen.IMAGEN_NO_SELECCIONADA);
 		return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.NO_CONTENT);
 	}
 	

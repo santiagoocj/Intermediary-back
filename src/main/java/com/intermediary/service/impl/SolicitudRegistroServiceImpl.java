@@ -104,7 +104,7 @@ public class SolicitudRegistroServiceImpl implements SolicitudRegistroService{
 	
 	private ResponseEntity<Map<String, String>> crearRespuestaExitoCrearSolicitud(){
 		Map<String, String> respuesta = new HashMap<>();
-		respuesta.put("mensaje", "¡El registro se a realizado de manera exitosa!, la empresa pasará a un proceso de verificación para validar los datos, una vez verificado los datos, será informado a travez de correo electrónico");
+		respuesta.put(CatalogoMensajesGenerales.MENSAJE, CatalogoMensajesSolicitudRegistro.SOLICITUD_REGISTRO_ACEPTADA);
 		return new ResponseEntity<>(respuesta, HttpStatus.OK);
 	}
 	
