@@ -43,13 +43,11 @@ public class RegistroServiceImpl implements RegistroService{
 	@Override
 	public RespuestaRegistroDTO realizarRegistro(RegistroDTO datosRegistro) throws BindException {
 		validarNitDuplicado(datosRegistro);
-		RespuestaRegistroDTO respuesta = null;
 		RegistroEntity registroEntity = registroConverter.ModelToEntity(datosRegistro);
 		Long idDatosRegistro = registroRepository.save(registroEntity).getId();
 		logger.info("Registro realizado, id del registro: " + idDatosRegistro.toString());
 		datosRegistro.setId(idDatosRegistro);
-		respuesta = RespuestaRegistroDTO.builder().registro(datosRegistro).mensaje(CatalogoMensajesRegistro.REGISTRO_EXITOSO).build();
-		return respuesta;
+		return RespuestaRegistroDTO.builder().registro(datosRegistro).mensaje(CatalogoMensajesRegistro.REGISTRO_EXITOSO).build();
 	}
 
 	@Override
@@ -59,8 +57,8 @@ public class RegistroServiceImpl implements RegistroService{
 
 	@Override
 	public RegistroEntity buscarXId(Long idRegistro) {
-		RegistroEntity registro = registroRepository.findById(idRegistro).orElseThrow();
-		return registro;
+		return registroRepository.findById(idRegistro).orElseThrow();
+		
 	}
 
 	@Override

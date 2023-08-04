@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -28,7 +29,7 @@ public class NegociacionController {
 	@Secured("ROLE_EMPRESA")
 	@PostMapping("/negociacion/crear/{id-comprador}/{id-producto}")
 	public ResponseEntity<Map<String, Object>> crearNegociacion(@PathVariable(name = "id-comprador") Long idComprador, @PathVariable(name = "id-producto") Long idProducto, @RequestBody NegocioDTO negocio){
-		return negociacionServiceImpl.crearNegociacion(idComprador, idProducto, negocio);
+		return new ResponseEntity<>(negociacionServiceImpl.crearNegociacion(idComprador, idProducto, negocio), HttpStatus.OK);
 	}
 	
 	@Secured("ROLE_EMPRESA")
@@ -40,13 +41,13 @@ public class NegociacionController {
 	@Secured("ROLE_EMPRESA")
 	@PutMapping("/negociacion/cancelar/{id-negocio}")
 	public ResponseEntity<Map<String, Object>> cancelarNegocio(@PathVariable(name = "id-negocio") Long idNegocio){
-		return negociacionServiceImpl.cancelarNegociacion(idNegocio);
+		return new ResponseEntity<>(negociacionServiceImpl.cancelarNegociacion(idNegocio), HttpStatus.OK);
 	}
 	
 	@Secured("ROLE_EMPRESA")
 	@PutMapping("/negociacion/aceptar/{id-negocio}")
 	public ResponseEntity<Map<String, Object>> aceptarNegociacion(@PathVariable(name = "id-negocio") Long idNegocio, @RequestBody String contraOfertaVendedor){
-		return negociacionServiceImpl.aceptarNegociacion(idNegocio, contraOfertaVendedor);
+		return new ResponseEntity<Map<String,Object>>(negociacionServiceImpl.aceptarNegociacion(idNegocio, contraOfertaVendedor), HttpStatus.OK);
 	}
 	
 

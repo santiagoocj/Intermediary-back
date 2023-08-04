@@ -4,10 +4,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -17,12 +17,13 @@ import com.intermediary.entity.EmpresaEntity;
 import com.intermediary.entity.MembresiaEntity;
 import com.intermediary.entity.VigenciaEntity;
 import com.intermediary.enums.EstadoEntidad;
-import com.intermediary.exception.DataException;
 import com.intermediary.repository.MembresiaRepository;
 import com.intermediary.service.MembresiaService;
 
 @Service("MembresiaService")
 public class MembresiaServiceImpl implements MembresiaService{
+	
+	private static Logger logger = LogManager.getLogger(MembresiaServiceImpl.class);
 	
 	@Autowired
 	@Qualifier("MembresiaRepository")
@@ -56,43 +57,33 @@ public class MembresiaServiceImpl implements MembresiaService{
 	}
 
 	@Override
-	public ResponseEntity<Map<String, Object>> actualizarMembresia(Long idEmpresa, Long idMembresia,
-			MultipartFile comprobantePago) {
-		try {
-			MembresiaEntity membresia = membresiaRepository.findById(idMembresia).orElse(null);
-			EmpresaEntity empresa = empresaServiceImpl.buscarXId(idEmpresa);
-			VigenciaEntity vigencia = vigenciaServiceImpl.registroVigencia(membresia, comprobantePago);
-			empresa.setVigenciaEntity(vigencia);
-			empresaServiceImpl.actualizarEmpresa(empresa);
-		} catch (Exception e) {
-			throw new DataException(CatalogoMensajesGenerales.ERROR + " " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-		
+	public Map<String, Object> actualizarMembresia(Long idEmpresa, Long idMembresia, MultipartFile comprobantePago) {
+		MembresiaEntity membresia = membresiaRepository.findById(idMembresia).orElse(null);
+		EmpresaEntity empresa = empresaServiceImpl.buscarXId(idEmpresa);
+		VigenciaEntity vigencia = vigenciaServiceImpl.registroVigencia(membresia, comprobantePago);
+		empresa.setVigenciaEntity(vigencia);
+		empresaServiceImpl.actualizarEmpresa(empresa);
 		Map<String, Object> respuesta = new HashMap<>();
 		respuesta.put(CatalogoMensajesGenerales.MENSAJE, CatalogoMensajesMembresia.ACTUALIZACION_MEMBRESIA_NOTIFICACION);
-		return new ResponseEntity<Map<String,Object>>(respuesta, HttpStatus.OK);
+		logger.info("Membresia actualizada para la empresa con id " + idEmpresa);
+		return respuesta;
 	}
 
 	@Override
-	public ResponseEntity<Map<String, Object>> activarMembresia(Long idEmpresa, Long idVigencia) {
-		EmpresaEntity empresa;
-		VigenciaEntity vigencia;
-		try {
-			empresa = actualizarRolEmpresa(idEmpresa);
-			vigencia = actualizarVigencia(idVigencia);
-		} catch (Exception e) {
-			throw new DataException("Error " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+	public Map<String, Object> activarMembresia(Long idEmpresa, Long idVigencia) {
+		EmpresaEntity empresa = actualizarRolEmpresa(idEmpresa);
+		VigenciaEntity vigencia = actualizarVigencia(idVigencia);
 		empresaServiceImpl.actualizarEmpresa(empresa);
 		vigenciaServiceImpl.actualizarVigencia(vigencia);
 		Map<String, Object> respuesta = new HashMap<>();
 		respuesta.put(CatalogoMensajesGenerales.MENSAJE, CatalogoMensajesMembresia.ACTIVACION_MEMBRESIA_EXITOSA);
-		return new ResponseEntity<Map<String,Object>>(respuesta, HttpStatus.OK);
+		return respuesta;
 	}
 	
 	private EmpresaEntity actualizarRolEmpresa(Long idEmpresa) {
 		EmpresaEntity empresa = empresaServiceImpl.buscarXId(idEmpresa);
 		empresa.setRoles(roleServiceImpl.actualizarEmpresaARolEmpresa(empresa));
+		logger.info("Actualizando permisos empresa con id " + idEmpresa);
 		return empresa;
 	}
 	

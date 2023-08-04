@@ -9,6 +9,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -28,6 +30,8 @@ import com.intermediary.service.ImagenService;
 
 @Service("ImagenServiceImpl")
 public class ImagenServiceImpl implements ImagenService{
+	
+	private static Logger logger = LogManager.getLogger(ImagenServiceImpl.class);
 	
 	@Value("${ruta.base.imagenes}")
 	private String rutaBaseImagenes;
@@ -49,7 +53,9 @@ public class ImagenServiceImpl implements ImagenService{
 			ImagenProductoEntity imagenProducto = crearEntidadImagen(idProducto, empresa+producto+"/"+nombreImagen);
 			guardarImagen(imagenProducto);
 			productoServiceImpl.asignarFoto(idProducto, imagenProducto);
+			logger.info("producto " + producto + " se registro para la empresa " + empresa);
 		} catch (IOException e) {
+			logger.error("Error al subir la imagen del producto " + producto + ". Error " + e.getMessage());
 			throw new DataException(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -87,6 +93,7 @@ public class ImagenServiceImpl implements ImagenService{
 		actualizarImagenesEnElProducto(producto, posicionImagenEnLista);
 		imagenRepository.delete(imagen);
 		respuesta.put(CatalogoMensajesGenerales.MENSAJE, CatalogoMensajesImagen.IMAGEN_ELIMINADA);
+		logger.info("Imagen del producto con id " + idProducto + " Eliminado de manera exitosa");
 		return new ResponseEntity<Map<String,Object>>(respuesta, HttpStatus.OK);
 	}
 	
@@ -96,8 +103,7 @@ public class ImagenServiceImpl implements ImagenService{
 	}
 	
 	private Path obtenerRutaFoto(String ruta) {
-		Path rutaFoto = Paths.get(rutaBaseImagenes).resolve(ruta).toAbsolutePath();
-		return rutaFoto;
+		return Paths.get(rutaBaseImagenes).resolve(ruta).toAbsolutePath();
 	}
 	
 	private void eliminarFotoCarpeta(Path rutaImagen) {

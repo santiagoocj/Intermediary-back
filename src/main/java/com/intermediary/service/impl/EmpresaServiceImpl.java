@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.dao.DataAccessException;
@@ -33,6 +35,8 @@ import com.intermediary.utils.converter.EmpresaConverter;
 
 @Service("EmpresaService")
 public class EmpresaServiceImpl implements EmpresaService{
+	
+	private static Logger logger = LogManager.getLogger(EmpresaService.class);
 
 	@Autowired
 	@Qualifier("EmpresaRepository")
@@ -69,8 +73,10 @@ public class EmpresaServiceImpl implements EmpresaService{
 		try {
 			empresasDTOs = converter.EntityToModel(empresaRepository.findAll());
 		} catch (DataAccessException e) {
+			logger.error("Error consultando empresas " + e.getMessage());
 			throw new DataException(CatalogoMensajesEmpresa.ERROR_CONSULTA_EMPRESAS, HttpStatus.NOT_FOUND);
 		} catch (BindException e) {
+			logger.error("Error desconocido listando empresas " + e.getMessage());
 			throw new DataException(CatalogoMensajesEmpresa.ERROR_SERVIDOR, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		if(empresasDTOs == null || empresasDTOs.isEmpty()) {
@@ -82,7 +88,7 @@ public class EmpresaServiceImpl implements EmpresaService{
 
 	@Override
 	@Transactional
-	public ResponseEntity<RespuestaEmpresaDTO> registroEmpresa(Long idSolicitudRegistro, InfoBasicaUsuarioDTO infoBasicaUsuario) {
+	public RespuestaEmpresaDTO registroEmpresa(Long idSolicitudRegistro, InfoBasicaUsuarioDTO infoBasicaUsuario) throws BindException {
 		SolicitudRegistroEntity solicitudRegistro = solicitudRegistroServiceImpl.findById(idSolicitudRegistro);
 		solicitudRegistroServiceImpl.validarEstadoSolicitud(solicitudRegistro);
 		RegistroEntity informacionEmpresa = solicitudRegistro.getRegistro();
@@ -118,34 +124,27 @@ public class EmpresaServiceImpl implements EmpresaService{
 		empresa.setEnabled(true);
 	}
 	
-	private ResponseEntity<RespuestaEmpresaDTO> crearMensajeRetornoRegistroEmpresa(EmpresaEntity empresa){
+	private RespuestaEmpresaDTO crearMensajeRetornoRegistroEmpresa(EmpresaEntity empresa) throws BindException{
 		RespuestaEmpresaDTO retorno = new RespuestaEmpresaDTO();
-		try {
-			retorno.setEmpresa(converter.EntityToModel(empresa));
-		} catch (BindException e) {
-			throw new DataException(CatalogoMensajesEmpresa.ERROR_INSERTAR_EMPRESAS, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+		retorno.setEmpresa(converter.EntityToModel(empresa));
 		retorno.setMensaje(CatalogoMensajesEmpresa.EMPRESA_CREADA_CON_EXITO);
-		return new ResponseEntity<RespuestaEmpresaDTO>(retorno, HttpStatus.CREATED);
+		return retorno;
 	}
 
 	@Override
-	public ResponseEntity<RespuestaEmpresaDTO> editarInformacion(Long idEmpresa, EmpresaDTO empresaInformacionNueva) {
+	public RespuestaEmpresaDTO editarInformacion(Long idEmpresa, EmpresaDTO empresaInformacionNueva) throws BindException {
 		EmpresaEntity empresaActual = empresaRepository.findById(idEmpresa).orElse(null);
 		RespuestaEmpresaDTO retorno = new RespuestaEmpresaDTO();
 		if(empresaActual == null) {
 			retorno.setMensaje(CatalogoMensajesEmpresa.EMPRESA_NO_EXISTE);
-			return new ResponseEntity<RespuestaEmpresaDTO>(retorno, HttpStatus.NOT_FOUND);
+			logger.info("La empresa con id " + idEmpresa + " no existe");
+			return retorno;
 		}
 		empresaActual = editarInformacionEmpresa(empresaActual, empresaInformacionNueva);
 		empresaRepository.save(empresaActual);
-		try {
-			retorno.setMensaje(CatalogoMensajesEmpresa.EMPRESA_MODIFICADA_CON_EXITO);
-			retorno.setEmpresa(converter.EntityToModel(empresaActual));
-		} catch (Exception e) {
-			throw new DataException(CatalogoMensajesEmpresa.ERROR_INSERTAR_EMPRESAS, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-		return new ResponseEntity<RespuestaEmpresaDTO>(retorno, HttpStatus.OK);
+		retorno.setMensaje(CatalogoMensajesEmpresa.EMPRESA_MODIFICADA_CON_EXITO);
+		retorno.setEmpresa(converter.EntityToModel(empresaActual));
+		return retorno;
 	}
 
 	private EmpresaEntity editarInformacionEmpresa(EmpresaEntity empresaActual, EmpresaDTO empresaInformacionNueva) {
@@ -177,7 +176,7 @@ public class EmpresaServiceImpl implements EmpresaService{
 	}
 
 	@Override
-	public ResponseEntity<RespuestaEmpresaDTO> inactivar(Long idEmpresa) {
+	public RespuestaEmpresaDTO inactivar(Long idEmpresa) {
 		RespuestaEmpresaDTO respuestaRetorno = new RespuestaEmpresaDTO();
 		EmpresaEntity empresa = empresaRepository.findById(idEmpresa).orElse(null);
 		if(empresa == null) {
@@ -187,9 +186,10 @@ public class EmpresaServiceImpl implements EmpresaService{
 			Long idRepresentante = empresa.getRepresentanteLegalEntity().getId();
 			RepresentanteLegalServiceImpl.inactivar(idRepresentante);
 			empresaRepository.save(empresa);
+			logger.info("Empresa con id " + idEmpresa + " se inactivó de manera exitosa");
 			respuestaRetorno.setMensaje(CatalogoMensajesEmpresa.EMPRESA_ELIMINADA_EXITOSA);
 		}
-		return new ResponseEntity<RespuestaEmpresaDTO>(respuestaRetorno, HttpStatus.OK);
+		return respuestaRetorno;
 	}
 
 	@Override

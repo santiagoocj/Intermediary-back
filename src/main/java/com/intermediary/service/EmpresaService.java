@@ -14,11 +14,11 @@ public interface EmpresaService {
 
 	public ResponseEntity<?> encontrarTodos() throws BindException;
 	
-	public ResponseEntity<RespuestaEmpresaDTO> registroEmpresa(Long idSolicitudRegistro, InfoBasicaUsuarioDTO infoBasicaUsuario);
+	public RespuestaEmpresaDTO registroEmpresa(Long idSolicitudRegistro, InfoBasicaUsuarioDTO infoBasicaUsuario) throws BindException;
 	
-	public ResponseEntity<RespuestaEmpresaDTO> editarInformacion(Long idEmpresa, EmpresaDTO empresaInformacionNueva);
+	public RespuestaEmpresaDTO editarInformacion(Long idEmpresa, EmpresaDTO empresaInformacionNueva) throws BindException;
 	
-	public ResponseEntity<RespuestaEmpresaDTO> inactivar(Long idEmpresa);
+	public RespuestaEmpresaDTO inactivar(Long idEmpresa);
 	
 	public EmpresaEntity buscarXId(Long idEmpresa);
 	
