@@ -2,6 +2,8 @@ package com.intermediary.controller;
 
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +33,8 @@ import com.intermediary.service.impl.SolicitudRegistroServiceImpl;
 @RequestMapping("/api")
 public class SolicitudRegistroController {
 	
+	private static Logger logger = LogManager.getLogger(SolicitudRegistroController.class);
+	
 	@Autowired
 	private SolicitudRegistroServiceImpl solicitudRegistroServiceImpl;
 	
@@ -58,6 +62,7 @@ public class SolicitudRegistroController {
 	public ResponseEntity<Map<String, String>> crearSolicitud(@PathVariable(name = "id-empresa") long idEmpresa, @PathVariable(name = "id-representante") long idRepresentante) throws BusinessExecption, BindException{
 		ValidatorParameters.validarIdNulo(idEmpresa, CatalogoMensajesGenerales.ID_NULO);
 		ValidatorParameters.validarIdNulo(idRepresentante, CatalogoMensajesGenerales.ID_NULO);
+		logger.info("Solicitud de registro iniciada, paramatros requeridos son válidos");
 		return solicitudRegistroServiceImpl.crearSolicitud(idEmpresa, idRepresentante);
 		
 	}

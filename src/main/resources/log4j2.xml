@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="info" name="intermediary">
+  <Appenders>
+    <File name="intermediary" fileName="logs/intermediary.log">
+      <PatternLayout>
+        <Pattern>%d %p %c{1.} [%t] %m%n</Pattern>
+      </PatternLayout>
+    </File>
+  </Appenders>
+  <Loggers>
+    <Root level="INFO">
+      <AppenderRef ref="intermediary"/>
+    </Root>
+  </Loggers>
+</Configuration>
