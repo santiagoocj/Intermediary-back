@@ -7,6 +7,8 @@ import java.time.LocalDate;
 import java.util.List;
 import java.util.UUID;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,7 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import com.intermediary.catalogo.mensajes.CatalogoMensajesVigencia;
 import com.intermediary.dto.InformacionCompraMembresiaEmpresaDTO;
 import com.intermediary.entity.EmpresaEntity;
 import com.intermediary.entity.MembresiaEntity;
@@ -26,6 +27,8 @@ import com.intermediary.service.VigenciaService;
 
 @Service("VigenciaService")
 public class VigenciaServiceImpl implements VigenciaService{
+	
+	private static Logger logger = LogManager.getLogger(VigenciaServiceImpl.class);
 	
 	@Autowired
 	@Qualifier("VigenciaRepository")
@@ -61,6 +64,7 @@ public class VigenciaServiceImpl implements VigenciaService{
 				Files.copy(comprobantePago.getInputStream(), rutaImagen);
 				datosAGuardar.setComprobantePago(nombreImagen);
 			} catch (Exception e) {
+				logger.error("Error registrando vigencia. Error " + e.getMessage());
 				throw new DataException(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		}
@@ -92,13 +96,14 @@ public class VigenciaServiceImpl implements VigenciaService{
 	public void validarVigenciaMembresiaEmpresa(EmpresaEntity empresa) {
 		LocalDate fechaActual = LocalDate.now();
 		if(fechaActual.isAfter(empresa.getVigenciaEntity().getFechaVigencia())) {
-			System.out.print(CatalogoMensajesVigencia.FECHA_ACTUAL_MAYOR_FECHA_VENCIMIENTO);
+			logger.info("la fecha actual es mayor a la fecha de vencimiento");
 			try {
 				empresa.setVigenciaEntity(registroPrimeraVigencia());
 				empresa.setRoles(roleServiceImpl.actualizarEmpresaARolEmpresaInicial(empresa));
 				productoServiceImpl.inactivarTodosLosProductosDeEmpresa(empresa);
 				empresaServiceImpl.actualizarEmpresa(empresa);
 			} catch (Exception e) {
+				logger.error("Error validando membresia. Error " + e.getMessage());
 			}
 		}
 		

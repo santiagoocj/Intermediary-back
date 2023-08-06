@@ -3,7 +3,10 @@ package com.intermediary.controller;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.validation.BindException;
@@ -21,12 +24,15 @@ import com.intermediary.dto.respuestas.RespuestaProductoDTO;
 import com.intermediary.entity.ImagenProductoEntity;
 import com.intermediary.entity.ProductoEntity;
 import com.intermediary.exception.BusinessExecption;
+import com.intermediary.exception.DataException;
 import com.intermediary.exception.util.ValidatorParameters;
 import com.intermediary.service.impl.ProductoServiceImpl;
 
 @RestController
 @RequestMapping("/api")
 public class ProductoController {
+	
+	private static Logger logger = LogManager.getLogger(ProductoController.class);
 	
 	@Autowired
 	private ProductoServiceImpl productoService;
@@ -37,42 +43,66 @@ public class ProductoController {
 		ValidatorParameters.validarNombreNulo(producto.getNombre(), CatalogoMensajesProducto.NOMBRE_NULO);
 		ValidatorParameters.validarNombreNulo(String.valueOf(producto.getPrecio()), CatalogoMensajesProducto.PRECIO_NULO);
 		ValidatorParameters.validarNombreNulo(String.valueOf(producto.getPrecioUnidad()), CatalogoMensajesProducto.PRECIO_UNIDAD_NULO);
-		return productoService.registrarProducto(producto, idEmpresa, idCategoria);
+		logger.info("validaciones iniciales pasadas al registrar producto");
+		try {
+			return new ResponseEntity<RespuestaProductoDTO>(productoService.registrarProducto(producto, idEmpresa, idCategoria), HttpStatus.OK);
+		} catch (BindException e) {
+			e.printStackTrace();
+			logger.error("Error registrar producto. Error " + e.getMessage());
+			throw new DataException(CatalogoMensajesProducto.ERROR_REGISTRAR_PRODUCTO, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 	
 	@Secured({"ROLE_ADMINISTRADOR", "ROLE_EMPRESA"})
 	@PostMapping("/producto/{idProducto}")
 	public ResponseEntity<RespuestaProductoDTO> inactivarproducto(@PathVariable Long idProducto){
-		return productoService.inactivarProducto(idProducto);
+		try {
+			return new ResponseEntity<RespuestaProductoDTO>(productoService.inactivarProducto(idProducto), HttpStatus.OK);
+		} catch (BindException e) {
+			e.printStackTrace();
+			logger.error("Error inactivar producto. Error " + e.getMessage());
+			throw new DataException(CatalogoMensajesProducto.ERROR_ELIMINAR_PRODUCTO, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 	
 	@Secured({"ROLE_ADMINISTRADOR", "ROLE_EMPRESA", "ROLE_EMPRESA_INICIAL"})
 	@PutMapping("/producto")
 	public ResponseEntity<RespuestaProductoDTO> actualizarProducto(@RequestBody ProductoDTO producto){
-		return productoService.actualizarInformacionBasicaProducto(producto);
+		try {
+			RespuestaProductoDTO respuestaProducto = productoService.actualizarInformacionBasicaProducto(producto);
+			if(respuestaProducto.getProducto() == null) {
+				return new ResponseEntity<RespuestaProductoDTO>(respuestaProducto, HttpStatus.NOT_FOUND);
+			}
+			return new ResponseEntity<RespuestaProductoDTO>(respuestaProducto, HttpStatus.OK);
+		} catch (BindException e) {
+			e.printStackTrace();
+			logger.info("Error actualizar producto. Error " + e.getMessage());
+			throw new DataException(CatalogoMensajesProducto.ERROR_INTERNO_DEL_SERVIDOR, HttpStatus.INTERNAL_SERVER_ERROR);
+		}
 	}
 	
 	@Secured({"ROLE_ADMINISTRADOR", "ROLE_EMPRESA", "ROLE_EMPRESA_INICIAL"})
 	@GetMapping("/producto/listar/{idEmpresa}")
 	public ResponseEntity<List<ProductoEntity>> listarProductosXEmpresa(@PathVariable Long idEmpresa){
-		return productoService.listarProductos(idEmpresa);
+		return new ResponseEntity<List<ProductoEntity>>(productoService.listarProductos(idEmpresa), HttpStatus.OK);
 	}
 	
 	@GetMapping("/producto/activo")
 	public ResponseEntity<List<ProductoEntity>> listarTodosProductosActivos(){
-		return productoService.listarActivos();
+		return new ResponseEntity<List<ProductoEntity>>(productoService.listarActivos(), HttpStatus.OK);
 	}
 	
 	@Secured("ROLE_EMPRESA")
 	@PutMapping("/activar/producto/{idEmpresa}/{idProducto}")
 	public ResponseEntity<Map<String, Object>> activarProductoPorEmpresa(@PathVariable Long idEmpresa, @PathVariable Long idProducto){
-		return productoService.activarProducto(idEmpresa, idProducto);
+		logger.info("Inactivar producto con id " + idProducto);
+		return new ResponseEntity<Map<String,Object>>(productoService.activarProducto(idEmpresa, idProducto), HttpStatus.OK);
 	}
 	
 	@Secured({"ROLE_ADMINISTRADOR", "ROLE_EMPRESA", "ROLE_EMPRESA_INICIAL"})
 	@GetMapping("/producto/{idProducto}")
 	public ResponseEntity<ProductoDTO> visualizarProducto(@PathVariable Long idProducto) throws BindException{
-		return productoService.visualizarProducto(idProducto);
+		return new ResponseEntity<ProductoDTO>(productoService.visualizarProducto(idProducto), HttpStatus.OK);
 	}
 	
 	@Secured({"ROLE_ADMINISTRADOR", "ROLE_EMPRESA", "ROLE_EMPRESA_INICIAL"})

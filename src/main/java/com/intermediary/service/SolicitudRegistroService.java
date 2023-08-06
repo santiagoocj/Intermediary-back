@@ -2,7 +2,6 @@ package com.intermediary.service;
 
 import java.util.Map;
 
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 
 import com.intermediary.dto.CambiarEstadoSolicitudRegistroDTO;
@@ -12,13 +11,13 @@ import com.intermediary.entity.SolicitudRegistroEntity;
 
 public interface SolicitudRegistroService {
 	
-	public ResponseEntity<ListarSolicitudRegistroDTO> listarTodo();
+	public ListarSolicitudRegistroDTO listarTodo() throws BindException;
 	
-	public ResponseEntity<RespuestaEstadoSolicitudRegistroDTO> modificar(Long id, CambiarEstadoSolicitudRegistroDTO solicitudCambiar);
+	public RespuestaEstadoSolicitudRegistroDTO modificar(Long id, CambiarEstadoSolicitudRegistroDTO solicitudCambiar) throws BindException;
 	
 	public boolean existeSolicitud(Long id);
 	
-	public ResponseEntity<Map<String, String>> crearSolicitud(Long idEmpresa, Long idRepresentante) throws BindException;
+	public Map<String, String> crearSolicitud(Long idEmpresa, Long idRepresentante) throws BindException;
 	
 	public SolicitudRegistroEntity findById(Long idSolicitudRegistro);
 	

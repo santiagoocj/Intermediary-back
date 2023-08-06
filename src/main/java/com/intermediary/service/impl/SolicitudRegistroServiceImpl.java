@@ -4,10 +4,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindException;
 
@@ -30,6 +31,8 @@ import com.intermediary.utils.converter.SolicitudRegistroConverter;
 @Service("SolicitudRegistroService")
 public class SolicitudRegistroServiceImpl implements SolicitudRegistroService{
 	
+	private static Logger logger = LogManager.getLogger(SolicitudRegistroServiceImpl.class);
+	
 	@Autowired
 	@Qualifier("SolicitudRegistroRepository")
 	private SolicitudRegistroRepository solicitudRegistroRepository;
@@ -47,39 +50,32 @@ public class SolicitudRegistroServiceImpl implements SolicitudRegistroService{
 	private RepresentanteLegalServiceImpl representanteLegalServiceImpl;
 
 	@Override
-	public ResponseEntity<ListarSolicitudRegistroDTO> listarTodo() {
+	public ListarSolicitudRegistroDTO listarTodo() throws BindException {
 		List<SolicitudRegistroDTO> solicitudesListar = null;
 		ListarSolicitudRegistroDTO respuesta = null;
 		String mensajeRespuesta = CatalogoMensajesSolicitudRegistro.SOLICITUDES_DISPONIBLES;
-		try {
-			solicitudesListar = solicitudRegistroConverter.EntityToModel(solicitudRegistroRepository.findAll());
-			if(solicitudesListar == null) {
-				mensajeRespuesta = CatalogoMensajesSolicitudRegistro.NO_HAY_SOLICITUDES;
-			}
-			respuesta = ListarSolicitudRegistroDTO.builder().mensaje(mensajeRespuesta)
-					.solicitudesRegistro(solicitudesListar).build();
-		} catch (BindException e) {
-			throw new DataException(CatalogoMensajesSolicitudRegistro.ERROR_LISTAR_SOLICITUDES_REGISTRO, HttpStatus.BAD_REQUEST);
+		solicitudesListar = solicitudRegistroConverter.EntityToModel(solicitudRegistroRepository.findAll());
+		if(solicitudesListar == null) {
+			logger.info("Sin solicitudes de registro a listar");
+			mensajeRespuesta = CatalogoMensajesSolicitudRegistro.NO_HAY_SOLICITUDES;
 		}
-		return new ResponseEntity<ListarSolicitudRegistroDTO>(respuesta, HttpStatus.OK);
+		respuesta = ListarSolicitudRegistroDTO.builder().mensaje(mensajeRespuesta)
+				.solicitudesRegistro(solicitudesListar).build();
+		return respuesta;
 	}
 
 	@Override
-	public ResponseEntity<RespuestaEstadoSolicitudRegistroDTO> modificar(Long id, CambiarEstadoSolicitudRegistroDTO solicitudCambiar) {
+	public RespuestaEstadoSolicitudRegistroDTO modificar(Long id, CambiarEstadoSolicitudRegistroDTO solicitudCambiar) throws BindException {
 		SolicitudRegistroEntity solicitudRegistro = null;
 		String mensajeRespuesta = CatalogoMensajesSolicitudRegistro.SOLICITUD_MODIFICADA;
 		RespuestaEstadoSolicitudRegistroDTO respuesta = new RespuestaEstadoSolicitudRegistroDTO();
-		try {
-			solicitudRegistro = solicitudRegistroRepository.findById(id).orElse(null);
-			modificarEstadoSolicitudRegistro(solicitudRegistro, solicitudCambiar);
-			EmailDTO email = emailServiceImpl.construirEmail(solicitudRegistro.getRegistro().getEmail(), CatalogoMensajesGenerales.SOLICITUD_REGISTRO, solicitudCambiar.getContenidoCorreoEstadoSolicitud());
-			emailServiceImpl.sendEmail(email);
-			respuesta.setMensaje(mensajeRespuesta);
-			respuesta.setIdSolicitud(id);
-		} catch (BindException e) {
-			throw new DataException(CatalogoMensajesSolicitudRegistro.ERROR_EDITAR_SOLICITUD_DE_REGISTRO, HttpStatus.BAD_REQUEST);
-		}
-		return new ResponseEntity<RespuestaEstadoSolicitudRegistroDTO>(respuesta, HttpStatus.OK);
+		solicitudRegistro = solicitudRegistroRepository.findById(id).orElse(null);
+		modificarEstadoSolicitudRegistro(solicitudRegistro, solicitudCambiar);
+		EmailDTO email = emailServiceImpl.construirEmail(solicitudRegistro.getRegistro().getEmail(), CatalogoMensajesGenerales.SOLICITUD_REGISTRO, solicitudCambiar.getContenidoCorreoEstadoSolicitud());
+		emailServiceImpl.sendEmail(email);
+		respuesta.setMensaje(mensajeRespuesta);
+		respuesta.setIdSolicitud(id);
+		return respuesta;
 	}
 	
 
@@ -94,7 +90,7 @@ public class SolicitudRegistroServiceImpl implements SolicitudRegistroService{
 	}
 
 	@Override
-	public ResponseEntity<Map<String, String>> crearSolicitud(Long idEmpresa, Long idRepresentante) throws BindException {
+	public Map<String, String> crearSolicitud(Long idEmpresa, Long idRepresentante) throws BindException {
 		RegistroEntity empresa = registroEmpresaServiceImpl.buscarXId(idEmpresa);
 		RepresentanteLegalEntity representante = representanteLegalServiceImpl.buscarXId(idRepresentante);
 		validarRepresentanteSolicitudRegistro(empresa);
@@ -102,10 +98,11 @@ public class SolicitudRegistroServiceImpl implements SolicitudRegistroService{
 		return crearRespuestaExitoCrearSolicitud();
 	}
 	
-	private ResponseEntity<Map<String, String>> crearRespuestaExitoCrearSolicitud(){
+	private Map<String, String> crearRespuestaExitoCrearSolicitud(){
 		Map<String, String> respuesta = new HashMap<>();
 		respuesta.put(CatalogoMensajesGenerales.MENSAJE, CatalogoMensajesSolicitudRegistro.SOLICITUD_REGISTRO_ACEPTADA);
-		return new ResponseEntity<>(respuesta, HttpStatus.OK);
+		logger.info("Solicitud de registro aceptada");
+		return respuesta;
 	}
 	
 	private void guardarSolicitud(RegistroEntity registro, RepresentanteLegalEntity representante) throws BindException {
@@ -133,6 +130,7 @@ public class SolicitudRegistroServiceImpl implements SolicitudRegistroService{
 		SolicitudRegistroEntity solicitudRegistroEntity = solicitudRegistroRepository.findByRegistro(empresa);
 		if(solicitudRegistroEntity != null) {
 			if(solicitudRegistroEntity.getRepresentanteLegal() != null) {
+				logger.info("Representante legal ya registrado");
 				throw new DataException(CatalogoMensajesSolicitudRegistro.REPRESENTANTE_YA_REGISTRADO, HttpStatus.BAD_REQUEST);
 			}
 		}

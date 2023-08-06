@@ -5,10 +5,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindException;
 
@@ -21,13 +21,14 @@ import com.intermediary.entity.EmpresaEntity;
 import com.intermediary.entity.ImagenProductoEntity;
 import com.intermediary.entity.ProductoEntity;
 import com.intermediary.enums.EstadoEntidad;
-import com.intermediary.exception.DataException;
 import com.intermediary.repository.ProductoRepository;
 import com.intermediary.service.ProductoService;
 import com.intermediary.utils.converter.ProductoConverter;
 
 @Service("ProductoService")
 public class ProductoServiceImpl implements ProductoService{
+	
+	private static Logger logger = LogManager.getLogger(ProductoServiceImpl.class);
 	
 	@Autowired
 	@Qualifier("ProductoRepository")
@@ -45,80 +46,68 @@ public class ProductoServiceImpl implements ProductoService{
 	private EmpresaServiceImpl empresaServiceImpl;
 	
 	@Override
-	public ResponseEntity<RespuestaProductoDTO> registrarProducto(ProductoDTO producto, Long idEmpresa, Long idCategoria) {
+	public RespuestaProductoDTO registrarProducto(ProductoDTO producto, Long idEmpresa, Long idCategoria) throws BindException {
 		RespuestaProductoDTO respuesta = new RespuestaProductoDTO();
-		try {
-			CategoriaEntity categoriaSeleccionada = categoriaServiceImpl.buscarXId(idCategoria);
-			EmpresaEntity empresa = empresaServiceImpl.buscarXId(idEmpresa);
-			ProductoEntity productoGuardar = productoConverter.modelToEntity(producto);
-			productoGuardar.setEstado(EstadoEntidad.INACTIVO);
-			productoGuardar.setImagenes(new ArrayList<>());
-			productoGuardar.setCategoria(categoriaSeleccionada);
-			productoGuardar.setEmpresa(empresa);
-			productoRepository.save(productoGuardar);
-			respuesta.setProducto(producto);
-			respuesta.setMensaje(CatalogoMensajesProducto.PRODUCTO_REGISTRADO);
-		} catch (BindException e) {
-			throw new DataException(CatalogoMensajesProducto.ERROR_REGISTRAR_PRODUCTO, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-		return new ResponseEntity<RespuestaProductoDTO>(respuesta, HttpStatus.OK);
+		CategoriaEntity categoriaSeleccionada = categoriaServiceImpl.buscarXId(idCategoria);
+		EmpresaEntity empresa = empresaServiceImpl.buscarXId(idEmpresa);
+		ProductoEntity productoGuardar = productoConverter.modelToEntity(producto);
+		productoGuardar.setEstado(EstadoEntidad.INACTIVO);
+		productoGuardar.setImagenes(new ArrayList<>());
+		productoGuardar.setCategoria(categoriaSeleccionada);
+		productoGuardar.setEmpresa(empresa);
+		logger.info("Guardando producto " + producto.getNombre());
+		productoRepository.save(productoGuardar);
+		respuesta.setProducto(producto);
+		respuesta.setMensaje(CatalogoMensajesProducto.PRODUCTO_REGISTRADO);
+		return respuesta;
 	}
 
 	@Override
-	public ResponseEntity<RespuestaProductoDTO> inactivarProducto(Long idProducto) {
+	public RespuestaProductoDTO inactivarProducto(Long idProducto) throws BindException {
 		RespuestaProductoDTO respuesta = new RespuestaProductoDTO();
 		ProductoEntity productoActual = productoRepository.findById(idProducto).orElse(null);
 		if(productoActual != null) {
-			try {
-				productoActual.setEstado(EstadoEntidad.INACTIVO);
-				productoRepository.save(productoActual);
-				respuesta.setProducto(productoConverter.entityToModel(productoActual));
-				respuesta.setMensaje(CatalogoMensajesProducto.INACTIVACION_EXITOSA);
-			} catch (BindException e) {
-				throw new DataException(CatalogoMensajesProducto.ERROR_ELIMINAR_PRODUCTO, HttpStatus.INTERNAL_SERVER_ERROR);
-			}
+			productoActual.setEstado(EstadoEntidad.INACTIVO);
+			productoRepository.save(productoActual);
+			respuesta.setProducto(productoConverter.entityToModel(productoActual));
+			respuesta.setMensaje(CatalogoMensajesProducto.INACTIVACION_EXITOSA);
 		}else {
 			respuesta.setMensaje(CatalogoMensajesProducto.ERROR_ELIMINAR_PRODUCTO);
 		}
-		return new ResponseEntity<RespuestaProductoDTO>(respuesta, HttpStatus.OK);
+		return respuesta;
 	}
 
 	@Override
-	public ResponseEntity<List<ProductoEntity>> listarProductos(Long idEmpresa) {
-		return new ResponseEntity<List<ProductoEntity>>(productoRepository.findAllByIdEmpresa(idEmpresa), HttpStatus.OK);
+	public List<ProductoEntity> listarProductos(Long idEmpresa) {
+		return productoRepository.findAllByIdEmpresa(idEmpresa);
 	}
 
 	@Override
-	public ResponseEntity<ProductoDTO> visualizarProducto(Long idProducto) throws BindException {
+	public ProductoDTO visualizarProducto(Long idProducto) throws BindException {
 		ProductoEntity producto = productoRepository.findById(idProducto).orElse(null);
-		return new ResponseEntity<ProductoDTO>(productoConverter.entityToModel(producto), HttpStatus.OK);
+		return productoConverter.entityToModel(producto);
 	}
 
 	@Override
-	public ResponseEntity<List<ProductoEntity>> listarActivos() {
-		List<ProductoEntity> productos = new ArrayList<>();
-		productos = productoRepository.findByEstado(EstadoEntidad.ACTIVO);
-		return new ResponseEntity<List<ProductoEntity>>(productos, HttpStatus.OK);
+	public List<ProductoEntity> listarActivos() {
+		logger.info("Listando productos activos");
+		return productoRepository.findByEstado(EstadoEntidad.ACTIVO);
 	}
 
 	@Override
-	public ResponseEntity<RespuestaProductoDTO> actualizarInformacionBasicaProducto(ProductoDTO producto) {
+	public RespuestaProductoDTO actualizarInformacionBasicaProducto(ProductoDTO producto) throws BindException {
 		RespuestaProductoDTO respuesta = new RespuestaProductoDTO();
 		ProductoEntity productoActualizar = productoRepository.findById(producto.getId()).orElse(null);
 		if(productoActualizar == null) {
 			respuesta.setMensaje(CatalogoMensajesProducto.PRODUCTO_NO_ENCONTRADO);
-			return new ResponseEntity<RespuestaProductoDTO>(respuesta, HttpStatus.NOT_FOUND);
+			return respuesta;
 		}
 		productoActualizar = actualizarInformacionBasica(productoActualizar, producto);
-		try {
-			productoRepository.save(productoActualizar);
-			ProductoDTO productoRespuesta = productoConverter.entityToModel(productoActualizar);
-			respuesta.setProducto(productoRespuesta);
-			respuesta.setMensaje(CatalogoMensajesProducto.PRODUCTO_MODIFICADO_EXITOSAMENTE);
-		} catch (BindException e) {
-			throw new DataException(CatalogoMensajesProducto.ERROR_INTERNO_DEL_SERVIDOR, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
-		return new ResponseEntity<RespuestaProductoDTO>(respuesta, HttpStatus.OK);
+		productoRepository.save(productoActualizar);
+		ProductoDTO productoRespuesta = productoConverter.entityToModel(productoActualizar);
+		respuesta.setProducto(productoRespuesta);
+		respuesta.setMensaje(CatalogoMensajesProducto.PRODUCTO_MODIFICADO_EXITOSAMENTE);
+		return respuesta;
 	}
 	
 	private ProductoEntity actualizarInformacionBasica(ProductoEntity productoActualizar, ProductoDTO datosActualizar) {
@@ -163,13 +152,13 @@ public class ProductoServiceImpl implements ProductoService{
 	}
 
 	@Override
-	public ResponseEntity<Map<String, Object>> activarProducto(Long idEmpresa, Long idProducto) {
+	public Map<String, Object> activarProducto(Long idEmpresa, Long idProducto) {
 		Map<String, Object> respuesta = new HashMap<String, Object>();
 		ProductoEntity producto = productoRepository.findById(idProducto).orElse(null);
 		producto.setEstado(EstadoEntidad.ACTIVO);
 		productoRepository.save(producto);
 		respuesta.put(CatalogoMensajesGenerales.MENSAJE, CatalogoMensajesProducto.PRODUCTO_ACTIVADO);
-		return new ResponseEntity<Map<String,Object>>(respuesta, HttpStatus.OK);
+		return respuesta;
 	}
 
 	@Override

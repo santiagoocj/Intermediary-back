@@ -3,6 +3,8 @@ package com.intermediary.service.impl;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -23,6 +25,8 @@ import com.intermediary.utils.converter.RepresentanteLegalConverter;
 @Service("RepresentanteLegalService")
 public class RepresentanteLegalServiceImpl implements RepresentanteLegalService{
 	
+	private static Logger logger = LogManager.getLogger(RepresentanteLegalServiceImpl.class);
+	
 	@Autowired
 	@Qualifier("RepresentanteLegalRepository")
 	private RepresentanteLegalRepository representanteLegalRepository;
@@ -36,26 +40,20 @@ public class RepresentanteLegalServiceImpl implements RepresentanteLegalService{
 
 	@Override
 	@Transactional
-	public ResponseEntity<?> registrarRepresentantelegal(RepresentanteLegalDTO datosRepresentanteLegal) {
+	public Map<String, Object> registrarRepresentantelegal(RepresentanteLegalDTO datosRepresentanteLegal) throws BindException {
 		Map<String, Object> respuesta = new HashMap<>();
 		RepresentanteLegalEntity representanteGuardar = null;
-		try {
-			representanteGuardar = representanteConverter.ModelToEntity(datosRepresentanteLegal);
-			representanteGuardar = representanteLegalRepository.save(representanteGuardar);
-			datosRepresentanteLegal.setId(representanteGuardar.getId());
-		} catch (DataException e) {
-			throw new DataException(CatalogoMensajesRepresentanteLegal.ERROR_GUARDAR_REPRESENTANTE, HttpStatus.INTERNAL_SERVER_ERROR);
-		} catch (BindException e) {
-			throw new DataException(CatalogoMensajesRepresentanteLegal.ERROR_SERVIDOR, HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+		representanteGuardar = representanteConverter.ModelToEntity(datosRepresentanteLegal);
+		representanteGuardar = representanteLegalRepository.save(representanteGuardar);
+		datosRepresentanteLegal.setId(representanteGuardar.getId());
 		respuesta.put(CatalogoMensajesRepresentanteLegal.MENSAJE, CatalogoMensajesRepresentanteLegal.REPRESENTANTE_CREADO_CON_EXITO);
 		respuesta.put(CatalogoMensajesRepresentanteLegal.REPRESENTANTE, datosRepresentanteLegal);
-		return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.CREATED);
+		return respuesta;
 	}
 
 	@Override
 	@Transactional(readOnly = true)
-	public ResponseEntity<?> buscar(Long id) {
+	public ResponseEntity<Map<String, Object>> buscar(Long id) {
 		Map<String, Object> respuesta = new HashMap<>();
 		RepresentanteLegalEntity representanteLegalEntity = null;
 		representanteLegalEntity = representanteLegalRepository.findById(id).orElse(null);
@@ -70,6 +68,7 @@ public class RepresentanteLegalServiceImpl implements RepresentanteLegalService{
 			return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.CREATED);
 		}
 		respuesta.put(CatalogoMensajesRepresentanteLegal.MENSAJE, CatalogoMensajesRepresentanteLegal.CLIENTE_NO_ENCONTRADO);
+		logger.info("Buscar por id mensaje de retorno: " + respuesta.get(CatalogoMensajesRepresentanteLegal.MENSAJE));
 		return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.NOT_FOUND);
 	}
 

@@ -44,18 +44,28 @@ public class SolicitudRegistroController {
 	@Secured("ROLE_ADMINISTRADOR")
 	@GetMapping("/solicitud-registro")
 	public ResponseEntity<ListarSolicitudRegistroDTO> listarTodo(){
-		return solicitudRegistroServiceImpl.listarTodo();
+		try {
+			return new ResponseEntity<ListarSolicitudRegistroDTO>(solicitudRegistroServiceImpl.listarTodo(), HttpStatus.OK);
+		} catch (BindException e) {
+			logger.error("Error listando las solicitudes de registro " + e.getMessage());
+			throw new DataException(CatalogoMensajesSolicitudRegistro.ERROR_LISTAR_SOLICITUDES_REGISTRO, HttpStatus.BAD_REQUEST);
+		}
 	}
 	
 	@Secured("ROLE_ADMINISTRADOR")
 	@PostMapping("/solicitud-registro/{id}")
 	public ResponseEntity<RespuestaEstadoSolicitudRegistroDTO> cambiarEstado(@RequestBody CambiarEstadoSolicitudRegistroDTO solicitudRegistro, @PathVariable Long id) throws BusinessExecption{
 		if(!solicitudRegistroServiceImpl.existeSolicitud(id)) {
+			logger.info("Solicitud con id " + id + " no encontrada");
 			throw new DataException(CatalogoMensajesSolicitudRegistro.SOLICITUD_NO_ENCONTRADA, HttpStatus.NOT_FOUND);
 		}
 		ValidatorParameters.validarContenidoCorreoNulo(solicitudRegistro.getContenidoCorreoEstadoSolicitud(), CatalogoMensajesGenerales.CONTENIDO_CORREO_NULO);
 		ValidatorParameters.validarContenidoCorreoVacio(solicitudRegistro.getContenidoCorreoEstadoSolicitud(), CatalogoMensajesGenerales.CONTENIDO_CORREO_VACIO);
-		return solicitudRegistroServiceImpl.modificar(id,solicitudRegistro);
+		try {
+			return new ResponseEntity<RespuestaEstadoSolicitudRegistroDTO>(solicitudRegistroServiceImpl.modificar(id,solicitudRegistro), HttpStatus.OK);
+		} catch (BindException e) {
+			throw new DataException(CatalogoMensajesSolicitudRegistro.ERROR_EDITAR_SOLICITUD_DE_REGISTRO, HttpStatus.BAD_REQUEST);
+		}
 	}
 	
 	@PostMapping("/solicitud-registro/{id-empresa}/{id-representante}")
@@ -63,7 +73,7 @@ public class SolicitudRegistroController {
 		ValidatorParameters.validarIdNulo(idEmpresa, CatalogoMensajesGenerales.ID_NULO);
 		ValidatorParameters.validarIdNulo(idRepresentante, CatalogoMensajesGenerales.ID_NULO);
 		logger.info("Solicitud de registro iniciada, paramatros requeridos son válidos");
-		return solicitudRegistroServiceImpl.crearSolicitud(idEmpresa, idRepresentante);
+		return new ResponseEntity<>(solicitudRegistroServiceImpl.crearSolicitud(idEmpresa, idRepresentante), HttpStatus.OK);
 		
 	}
 	
