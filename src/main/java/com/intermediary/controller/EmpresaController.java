@@ -44,13 +44,12 @@ public class EmpresaController {
 	public ResponseEntity<RespuestaEmpresaDTO> registrarEmpresa(@PathVariable(name = "id-solicitud-registro") Long idSolicitudRegistro, @RequestBody InfoBasicaUsuarioDTO infoRegistroUsuario) throws BusinessExecption{
 		ValidatorParameters.validarIdNulo(idSolicitudRegistro, CatalogoMensajesGenerales.URL_INCORRECTA);
 		ValidatorParameters.validarNombreNulo(infoRegistroUsuario.getUserName(), CatalogoMensajesEmpresa.USER_NAME_NULO);
-		ValidatorParameters.validarNombreNulo(infoRegistroUsuario.getPassword(), CatalogoMensajesEmpresa.PASSWORD_NULO);
+		ValidatorParameters.validarNombreNulo(infoRegistroUsuario.getPassword(), CatalogoMensajesEmpresa.CODIGO_NULO);
 		try {
 			RespuestaEmpresaDTO respuestaEmpresa = empresaService.registroEmpresa(idSolicitudRegistro, infoRegistroUsuario);
 			logger.info("Registro empresa exitoso");
-			return new ResponseEntity<RespuestaEmpresaDTO>(respuestaEmpresa, HttpStatus.CREATED);
+			return new ResponseEntity<>(respuestaEmpresa, HttpStatus.CREATED);
 		} catch (BindException e) {
-			e.printStackTrace();
 			throw new DataException(CatalogoMensajesEmpresa.ERROR_INSERTAR_EMPRESAS, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -61,11 +60,11 @@ public class EmpresaController {
 		try {
 			RespuestaEmpresaDTO respuestaEmpresa = empresaService.editarInformacion(idEmpresa, empresa);
 			if(respuestaEmpresa.getMensaje().equals(CatalogoMensajesEmpresa.EMPRESA_NO_EXISTE)) {
-				return new ResponseEntity<RespuestaEmpresaDTO>(respuestaEmpresa, HttpStatus.NOT_FOUND);
+				return new ResponseEntity<>(respuestaEmpresa, HttpStatus.NOT_FOUND);
 			}
-			return new ResponseEntity<RespuestaEmpresaDTO>(respuestaEmpresa, HttpStatus.OK);
+			return new ResponseEntity<>(respuestaEmpresa, HttpStatus.OK);
 		} catch (BindException e) {
-			logger.error("Error editando información de la empresa " + e.getMessage());
+			logger.error(() -> "Error editando información de la empresa "+ e.getMessage());
 			throw new DataException(CatalogoMensajesEmpresa.ERROR_INSERTAR_EMPRESAS, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -74,6 +73,6 @@ public class EmpresaController {
 	@Secured("ROLE_ADMINISTRADOR")
 	@PostMapping("/empresas/{id-empresa}")
 	public ResponseEntity<RespuestaEmpresaDTO> inactivarEmpresa(@PathVariable(name = "id-empresa") Long idEmpresa){
-		return new ResponseEntity<RespuestaEmpresaDTO>(empresaService.inactivar(idEmpresa), HttpStatus.OK);
+		return new ResponseEntity<>(empresaService.inactivar(idEmpresa), HttpStatus.OK);
 	}
 }

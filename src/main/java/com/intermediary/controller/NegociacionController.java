@@ -47,7 +47,7 @@ public class NegociacionController {
 	@Secured("ROLE_EMPRESA")
 	@PutMapping("/negociacion/aceptar/{id-negocio}")
 	public ResponseEntity<Map<String, Object>> aceptarNegociacion(@PathVariable(name = "id-negocio") Long idNegocio, @RequestBody String contraOfertaVendedor){
-		return new ResponseEntity<Map<String,Object>>(negociacionServiceImpl.aceptarNegociacion(idNegocio, contraOfertaVendedor), HttpStatus.OK);
+		return new ResponseEntity<>(negociacionServiceImpl.aceptarNegociacion(idNegocio, contraOfertaVendedor), HttpStatus.OK);
 	}
 	
 

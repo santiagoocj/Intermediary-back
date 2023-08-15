@@ -55,7 +55,7 @@ public class ProductoServiceImpl implements ProductoService{
 		productoGuardar.setImagenes(new ArrayList<>());
 		productoGuardar.setCategoria(categoriaSeleccionada);
 		productoGuardar.setEmpresa(empresa);
-		logger.info("Guardando producto " + producto.getNombre());
+		logger.info(() -> "Guardando producto " + producto.getNombre());
 		productoRepository.save(productoGuardar);
 		respuesta.setProducto(producto);
 		respuesta.setMensaje(CatalogoMensajesProducto.PRODUCTO_REGISTRADO);

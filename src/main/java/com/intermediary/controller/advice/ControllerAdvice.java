@@ -16,19 +16,19 @@ public class ControllerAdvice {
 	@ExceptionHandler(value = DataException.class)
 	public ResponseEntity<ErrorDTO> requestExceptionHandler(DataException ex){
 		ErrorDTO error = ErrorDTO.builder().error(ex.getMessage()).build();
-		return new ResponseEntity<ErrorDTO>(error, ex.getStatus());
+		return new ResponseEntity<>(error, ex.getStatus());
 	}
 	
 	@ExceptionHandler(value = BusinessExecption.class)
 	public ResponseEntity<ErrorDTO> requestExceptionBusiness(BusinessExecption ex){
 		ErrorDTO error = ErrorDTO.builder().error(ex.getMessage()).build();
-		return new ResponseEntity<ErrorDTO>(error, ex.getStatus());
+		return new ResponseEntity<>(error, ex.getStatus());
 	}
 	
 	@ExceptionHandler(value = GenericExecption.class)
 	public ResponseEntity<ErrorDTO> requestGenericException(GenericExecption ex){
 		ErrorDTO error = ErrorDTO.builder().error(ex.getMessage()).build();
-		return new ResponseEntity<ErrorDTO>(error, ex.getStatus());
+		return new ResponseEntity<>(error, ex.getStatus());
 	}
 
 }

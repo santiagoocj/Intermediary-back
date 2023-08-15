@@ -45,7 +45,7 @@ public class RegistroServiceImpl implements RegistroService{
 		validarNitDuplicado(datosRegistro);
 		RegistroEntity registroEntity = registroConverter.ModelToEntity(datosRegistro);
 		Long idDatosRegistro = registroRepository.save(registroEntity).getId();
-		logger.info("Registro realizado, id del registro: " + idDatosRegistro.toString());
+		logger.info(() -> "Registro realizado, id del registro: " + idDatosRegistro.toString());
 		datosRegistro.setId(idDatosRegistro);
 		return RespuestaRegistroDTO.builder().registro(datosRegistro).mensaje(CatalogoMensajesRegistro.REGISTRO_EXITOSO).build();
 	}
@@ -65,15 +65,19 @@ public class RegistroServiceImpl implements RegistroService{
 	public void registrarDocumento(MultipartFile documento, Long idEmpresa) {
 		RegistroEntity empresaRegistrada = registroRepository.findById(idEmpresa).orElseThrow();
 		if(documento != null) {
-			String nombreAnexo = UUID.randomUUID().toString() + "_" + documento.getOriginalFilename().replace(" ", "");
+			String nombreAnexo = UUID.randomUUID().toString();
+			String NombreOriginalDocumento = documento.getOriginalFilename();
+			if(NombreOriginalDocumento != null) {
+				nombreAnexo = "_" + NombreOriginalDocumento.replace(" ", "");
+			}
 			Path rutaImagen = Paths.get(rutaBaseAnexo).resolve(nombreAnexo).toAbsolutePath();
 			try {
 				Files.copy(documento.getInputStream(), rutaImagen);
-				logger.info("Ruta documento para la empresa a registrar con id " + idEmpresa + ", " + rutaImagen.toString());
+				logger.info(() -> "Ruta documento para la empresa a registrar con id " + idEmpresa + ", " + rutaImagen.toString());
 				empresaRegistrada.setAnexo(nombreAnexo);
 				registroRepository.save(empresaRegistrada);
 			} catch (Exception e) {
-				logger.error("Error registrando documento " + e.getMessage());
+				logger.error(() -> "Error registrando documento "+ e.getMessage());
 				throw new DataException(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		}	
@@ -83,7 +87,7 @@ public class RegistroServiceImpl implements RegistroService{
 	public void validarNitDuplicado(RegistroDTO datosRegistro) {
 		RegistroEntity registroEntity = registroRepository.findByNit(datosRegistro.getNit());
 		if(registroEntity != null) {
-			logger.info("NIT " + datosRegistro.getNit() + " ya registrado");
+			logger.info(() -> "NIT " + datosRegistro.getNit() + " ya registrado");
 			throw new DataException(CatalogoMensajesRegistro.NIT_YA_REGISTRADO, HttpStatus.NOT_ACCEPTABLE);
 		}
 	}

@@ -3,8 +3,7 @@ package com.intermediary.service.impl;
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.apache.logging.log4j.LogManager;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -19,7 +18,7 @@ import com.intermediary.service.EmailService;
 @Component
 public class EmailServiceImpl implements EmailService{
 	
-	private static final Logger LOGGER = LoggerFactory.getLogger(EmailServiceImpl.class);
+	private static org.apache.logging.log4j.Logger LOGGER = LogManager.getLogger(EmailServiceImpl.class);
 	
 	@Autowired(required = false)
 	private JavaMailSender sender;
@@ -41,7 +40,7 @@ public class EmailServiceImpl implements EmailService{
 			send = true;
 			LOGGER.info("Mail enviado!");
 		}catch (MessagingException e) {
-			LOGGER.error("Hubo un error al enviar el mail: {}", e);
+			LOGGER.error(() -> "Error editando información de la empresa "+ e.getMessage());
 			throw new GenericExecption(CatalogoMensajesGenerales.ERROR_ENVIAR_MENSAJE, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		return send;

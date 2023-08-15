@@ -45,9 +45,9 @@ public class SolicitudRegistroController {
 	@GetMapping("/solicitud-registro")
 	public ResponseEntity<ListarSolicitudRegistroDTO> listarTodo(){
 		try {
-			return new ResponseEntity<ListarSolicitudRegistroDTO>(solicitudRegistroServiceImpl.listarTodo(), HttpStatus.OK);
+			return new ResponseEntity<>(solicitudRegistroServiceImpl.listarTodo(), HttpStatus.OK);
 		} catch (BindException e) {
-			logger.error("Error listando las solicitudes de registro " + e.getMessage());
+			logger.error(() -> "Error listando las solicitudes de registro " + e.getMessage());
 			throw new DataException(CatalogoMensajesSolicitudRegistro.ERROR_LISTAR_SOLICITUDES_REGISTRO, HttpStatus.BAD_REQUEST);
 		}
 	}
@@ -56,13 +56,13 @@ public class SolicitudRegistroController {
 	@PostMapping("/solicitud-registro/{id}")
 	public ResponseEntity<RespuestaEstadoSolicitudRegistroDTO> cambiarEstado(@RequestBody CambiarEstadoSolicitudRegistroDTO solicitudRegistro, @PathVariable Long id) throws BusinessExecption{
 		if(!solicitudRegistroServiceImpl.existeSolicitud(id)) {
-			logger.info("Solicitud con id " + id + " no encontrada");
+			logger.info(() -> "Solicitud con id " + id + " no encontrada");
 			throw new DataException(CatalogoMensajesSolicitudRegistro.SOLICITUD_NO_ENCONTRADA, HttpStatus.NOT_FOUND);
 		}
 		ValidatorParameters.validarContenidoCorreoNulo(solicitudRegistro.getContenidoCorreoEstadoSolicitud(), CatalogoMensajesGenerales.CONTENIDO_CORREO_NULO);
 		ValidatorParameters.validarContenidoCorreoVacio(solicitudRegistro.getContenidoCorreoEstadoSolicitud(), CatalogoMensajesGenerales.CONTENIDO_CORREO_VACIO);
 		try {
-			return new ResponseEntity<RespuestaEstadoSolicitudRegistroDTO>(solicitudRegistroServiceImpl.modificar(id,solicitudRegistro), HttpStatus.OK);
+			return new ResponseEntity<>(solicitudRegistroServiceImpl.modificar(id,solicitudRegistro), HttpStatus.OK);
 		} catch (BindException e) {
 			throw new DataException(CatalogoMensajesSolicitudRegistro.ERROR_EDITAR_SOLICITUD_DE_REGISTRO, HttpStatus.BAD_REQUEST);
 		}

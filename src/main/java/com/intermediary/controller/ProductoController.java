@@ -45,10 +45,9 @@ public class ProductoController {
 		ValidatorParameters.validarNombreNulo(String.valueOf(producto.getPrecioUnidad()), CatalogoMensajesProducto.PRECIO_UNIDAD_NULO);
 		logger.info("validaciones iniciales pasadas al registrar producto");
 		try {
-			return new ResponseEntity<RespuestaProductoDTO>(productoService.registrarProducto(producto, idEmpresa, idCategoria), HttpStatus.OK);
+			return new ResponseEntity<>(productoService.registrarProducto(producto, idEmpresa, idCategoria), HttpStatus.OK);
 		} catch (BindException e) {
-			e.printStackTrace();
-			logger.error("Error registrar producto. Error " + e.getMessage());
+			logger.error(() -> "Error registrar producto. Error " + e.getMessage());
 			throw new DataException(CatalogoMensajesProducto.ERROR_REGISTRAR_PRODUCTO, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -57,10 +56,9 @@ public class ProductoController {
 	@PostMapping("/producto/{idProducto}")
 	public ResponseEntity<RespuestaProductoDTO> inactivarproducto(@PathVariable Long idProducto){
 		try {
-			return new ResponseEntity<RespuestaProductoDTO>(productoService.inactivarProducto(idProducto), HttpStatus.OK);
+			return new ResponseEntity<>(productoService.inactivarProducto(idProducto), HttpStatus.OK);
 		} catch (BindException e) {
-			e.printStackTrace();
-			logger.error("Error inactivar producto. Error " + e.getMessage());
+			logger.error(() -> "Error inactivar producto. Error " + e.getMessage());
 			throw new DataException(CatalogoMensajesProducto.ERROR_ELIMINAR_PRODUCTO, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -71,12 +69,11 @@ public class ProductoController {
 		try {
 			RespuestaProductoDTO respuestaProducto = productoService.actualizarInformacionBasicaProducto(producto);
 			if(respuestaProducto.getProducto() == null) {
-				return new ResponseEntity<RespuestaProductoDTO>(respuestaProducto, HttpStatus.NOT_FOUND);
+				return new ResponseEntity<>(respuestaProducto, HttpStatus.NOT_FOUND);
 			}
-			return new ResponseEntity<RespuestaProductoDTO>(respuestaProducto, HttpStatus.OK);
+			return new ResponseEntity<>(respuestaProducto, HttpStatus.OK);
 		} catch (BindException e) {
-			e.printStackTrace();
-			logger.info("Error actualizar producto. Error " + e.getMessage());
+			logger.info(() -> "Error actualizar producto. Error " + e.getMessage());
 			throw new DataException(CatalogoMensajesProducto.ERROR_INTERNO_DEL_SERVIDOR, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -84,25 +81,25 @@ public class ProductoController {
 	@Secured({"ROLE_ADMINISTRADOR", "ROLE_EMPRESA", "ROLE_EMPRESA_INICIAL"})
 	@GetMapping("/producto/listar/{idEmpresa}")
 	public ResponseEntity<List<ProductoEntity>> listarProductosXEmpresa(@PathVariable Long idEmpresa){
-		return new ResponseEntity<List<ProductoEntity>>(productoService.listarProductos(idEmpresa), HttpStatus.OK);
+		return new ResponseEntity<>(productoService.listarProductos(idEmpresa), HttpStatus.OK);
 	}
 	
 	@GetMapping("/producto/activo")
 	public ResponseEntity<List<ProductoEntity>> listarTodosProductosActivos(){
-		return new ResponseEntity<List<ProductoEntity>>(productoService.listarActivos(), HttpStatus.OK);
+		return new ResponseEntity<>(productoService.listarActivos(), HttpStatus.OK);
 	}
 	
 	@Secured("ROLE_EMPRESA")
 	@PutMapping("/activar/producto/{idEmpresa}/{idProducto}")
 	public ResponseEntity<Map<String, Object>> activarProductoPorEmpresa(@PathVariable Long idEmpresa, @PathVariable Long idProducto){
-		logger.info("Inactivar producto con id " + idProducto);
-		return new ResponseEntity<Map<String,Object>>(productoService.activarProducto(idEmpresa, idProducto), HttpStatus.OK);
+		logger.info(() -> "Inactivar producto con id " + idProducto);
+		return new ResponseEntity<>(productoService.activarProducto(idEmpresa, idProducto), HttpStatus.OK);
 	}
 	
 	@Secured({"ROLE_ADMINISTRADOR", "ROLE_EMPRESA", "ROLE_EMPRESA_INICIAL"})
 	@GetMapping("/producto/{idProducto}")
 	public ResponseEntity<ProductoDTO> visualizarProducto(@PathVariable Long idProducto) throws BindException{
-		return new ResponseEntity<ProductoDTO>(productoService.visualizarProducto(idProducto), HttpStatus.OK);
+		return new ResponseEntity<>(productoService.visualizarProducto(idProducto), HttpStatus.OK);
 	}
 	
 	@Secured({"ROLE_ADMINISTRADOR", "ROLE_EMPRESA", "ROLE_EMPRESA_INICIAL"})

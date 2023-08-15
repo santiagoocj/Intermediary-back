@@ -1,7 +1,5 @@
 package com.intermediary.controller;
 
-import java.util.Map;
-
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,14 +33,14 @@ public class RepresentanteLegalController {
 	@PostMapping("/representantelegal")
 	public ResponseEntity<?> registroRepresentanteLeal(@RequestBody RepresentanteLegalDTO datosRepresentanteLegal) throws BusinessExecption{
 		validarDatosInicialesRepresentantelegal(datosRepresentanteLegal);
-		logger.info("Datos iniciales validado para el representante legal con id " + datosRepresentanteLegal.getDocumento());
+		logger.info(() -> "Datos iniciales validado para el representante legal con id " + datosRepresentanteLegal.getDocumento());
 		try {
-			return new ResponseEntity<Map<String, Object>>(representantelegalService.registrarRepresentantelegal(datosRepresentanteLegal), HttpStatus.CREATED);
+			return new ResponseEntity<>(representantelegalService.registrarRepresentantelegal(datosRepresentanteLegal), HttpStatus.CREATED);
 		} catch (DataException e) {
-			logger.error("Error registrando en la base de datos el representante legal con el número de documento " + datosRepresentanteLegal.getDocumento());
+			logger.error(() -> "Error registrando en la base de datos el representante legal con el número de documento " + datosRepresentanteLegal.getDocumento());
 			throw new DataException(CatalogoMensajesRepresentanteLegal.ERROR_GUARDAR_REPRESENTANTE, HttpStatus.INTERNAL_SERVER_ERROR);
 		} catch (BindException e) {
-			logger.error("Error desconocido " + e.getMessage());
+			logger.error(() -> "Error desconocido {0}" + e.getMessage());
 			throw new DataException(CatalogoMensajesRepresentanteLegal.ERROR_SERVIDOR, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

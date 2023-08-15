@@ -36,16 +36,16 @@ public class MembresiaController {
 
 	@PutMapping("/membresia/actualizar")
 	public ResponseEntity<Map<String, Object>> actualizarMembresia(@RequestParam("idEmpresa") Long idEmpresa, @RequestParam("idMembresia") Long idMembresia, @RequestParam("comprobantePago") MultipartFile comprobantePago) {
-		return new ResponseEntity<Map<String,Object>>(membresiaService.actualizarMembresia(idEmpresa, idMembresia, comprobantePago), HttpStatus.OK);
+		return new ResponseEntity<>(membresiaService.actualizarMembresia(idEmpresa, idMembresia, comprobantePago), HttpStatus.OK);
 	}
 	
 	@Secured("ROLE_ADMINISTRADOR")
 	@PutMapping("/membresia/activar")
 	public ResponseEntity<Map<String, Object>> activarMembresia(@RequestParam("idEmpresa") Long idEMpresa, @RequestParam("idVigencia") Long idVigencia){
 		try {
-			return new ResponseEntity<Map<String,Object>>(membresiaService.activarMembresia(idEMpresa, idVigencia), HttpStatus.OK);
+			return new ResponseEntity<>(membresiaService.activarMembresia(idEMpresa, idVigencia), HttpStatus.OK);
 		}catch (Exception e) {
-			logger.error("Error activando la membresia para la empresa con id " + idEMpresa + ". Error " + e.getMessage());
+			logger.error(() -> "Error activando la membresia para la empresa con id "+ idEMpresa +". Error " + e.getMessage());
 			throw new DataException("Error " + e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}

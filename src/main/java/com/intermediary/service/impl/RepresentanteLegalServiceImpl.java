@@ -68,7 +68,7 @@ public class RepresentanteLegalServiceImpl implements RepresentanteLegalService{
 			return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.CREATED);
 		}
 		respuesta.put(CatalogoMensajesRepresentanteLegal.MENSAJE, CatalogoMensajesRepresentanteLegal.CLIENTE_NO_ENCONTRADO);
-		logger.info("Buscar por id mensaje de retorno: " + respuesta.get(CatalogoMensajesRepresentanteLegal.MENSAJE));
+		logger.info(() -> "Buscar por id mensaje de retorno: " + respuesta.get(CatalogoMensajesRepresentanteLegal.MENSAJE));
 		return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.NOT_FOUND);
 	}
 

@@ -1,6 +1,10 @@
 package com.intermediary.catalogo.mensajes;
 
 public class CatalogoMensajesRepresentanteLegal {
+	
+	private CatalogoMensajesRepresentanteLegal() {
+		throw new IllegalStateException();
+	}
 
 	public static final String TIPO_DOCUMENTO_REQUERIDO = "El campo tipo de documento es obligatorio";
 	public static final String NUMERO_DOCUMENTO_REQUERIDO = "El campo documento es requerido";

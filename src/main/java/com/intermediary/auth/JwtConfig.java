@@ -1,6 +1,11 @@
 package com.intermediary.auth;
 
 public class JwtConfig {
+	
+	private JwtConfig() {
+		throw new IllegalStateException();
+	}
+	
 	public static  final  String RSA_PRIVADA = "-----BEGIN RSA PRIVATE KEY-----\n" +
             "MIIEpQIBAAKCAQEA4RAYDKXGC8TP0tAhKydk0D8iDAOnHIsG3GiHwr50QHFQOpAZ\n" +
             "bLCUvZwkkRf31i2A5/Wcs/i8q7yEUfVxRcjWXXLEXBSrXPE/H231NmSWe6HD75aL\n" +

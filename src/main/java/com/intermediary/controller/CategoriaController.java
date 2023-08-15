@@ -23,7 +23,7 @@ public class CategoriaController {
 	@GetMapping("/categorias")
 	public ResponseEntity<List<CategoriaDTO>> obtenerTodasLasCategorias() throws BindException{
 		List<CategoriaDTO> categoriasEncontradas = categoriaServiceImpl.obtenerTodasLasCategorias();
-		return new ResponseEntity<List<CategoriaDTO>>(categoriasEncontradas, HttpStatus.OK);
+		return new ResponseEntity<>(categoriasEncontradas, HttpStatus.OK);
 	}
 
 }

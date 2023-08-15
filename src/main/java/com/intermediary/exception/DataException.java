@@ -7,7 +7,7 @@ public class DataException extends RuntimeException {/**
 	 */
 	private static final long serialVersionUID = -4071638817205573189L;
 
-	private HttpStatus status;
+	private final HttpStatus status;
 	
 	public DataException(String mensaje, HttpStatus status) {
 		super(mensaje);
@@ -16,10 +16,6 @@ public class DataException extends RuntimeException {/**
 
 	public HttpStatus getStatus() {
 		return status;
-	}
-
-	public void setStatus(HttpStatus status) {
-		this.status = status;
 	}
 	
 }

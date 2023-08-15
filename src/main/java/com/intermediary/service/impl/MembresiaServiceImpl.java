@@ -65,7 +65,7 @@ public class MembresiaServiceImpl implements MembresiaService{
 		empresaServiceImpl.actualizarEmpresa(empresa);
 		Map<String, Object> respuesta = new HashMap<>();
 		respuesta.put(CatalogoMensajesGenerales.MENSAJE, CatalogoMensajesMembresia.ACTUALIZACION_MEMBRESIA_NOTIFICACION);
-		logger.info("Membresia actualizada para la empresa con id " + idEmpresa);
+		logger.info(() -> "Membresia actualizada para la empresa con id " + idEmpresa);
 		return respuesta;
 	}
 
@@ -83,7 +83,7 @@ public class MembresiaServiceImpl implements MembresiaService{
 	private EmpresaEntity actualizarRolEmpresa(Long idEmpresa) {
 		EmpresaEntity empresa = empresaServiceImpl.buscarXId(idEmpresa);
 		empresa.setRoles(roleServiceImpl.actualizarEmpresaARolEmpresa(empresa));
-		logger.info("Actualizando permisos empresa con id " + idEmpresa);
+		logger.info(() -> "Actualizando permisos empresa con id " + idEmpresa);
 		return empresa;
 	}
 	

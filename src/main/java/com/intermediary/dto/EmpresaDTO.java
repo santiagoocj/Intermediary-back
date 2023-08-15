@@ -15,7 +15,7 @@ public class EmpresaDTO extends UsuarioDTO{
 	private String tipoPersona;
 	private String anexo;
 	private String celular;
-	private String Correo;
+	private String correo;
 	private RepresentanteLegalDTO representanteLegalDTO;
 	private VigenciaDTO vigenciaDTO;
 }

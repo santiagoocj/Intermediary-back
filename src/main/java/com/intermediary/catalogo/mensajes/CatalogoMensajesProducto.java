@@ -1,6 +1,10 @@
 package com.intermediary.catalogo.mensajes;
 
 public class CatalogoMensajesProducto {
+	
+	private CatalogoMensajesProducto() {
+		throw new IllegalStateException();
+	}
 
 	public static final String NOMBRE_NULO = "El campo nombre no puede ser vacio";
 	public static final String PRECIO_NULO = "El campo precio no puede ser vacio";

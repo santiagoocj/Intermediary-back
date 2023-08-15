@@ -9,7 +9,7 @@ public class GenericExecption extends RuntimeException {
 	 */
 	private static final long serialVersionUID = 8211551935232293149L;
 	
-	private HttpStatus status;
+	private final HttpStatus status;
 	
 	public GenericExecption(String mensaje, HttpStatus status) {
 		super(mensaje);
@@ -19,9 +19,4 @@ public class GenericExecption extends RuntimeException {
 	public HttpStatus getStatus() {
 		return status;
 	}
-
-	public void setStatus(HttpStatus status) {
-		this.status = status;
-	}
-	
 }

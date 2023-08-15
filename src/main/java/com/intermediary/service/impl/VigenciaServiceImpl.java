@@ -58,13 +58,17 @@ public class VigenciaServiceImpl implements VigenciaService{
 		VigenciaEntity datosAGuardar = new VigenciaEntity(membresia);
 		datosAGuardar.setEstado(EstadoEntidad.INACTIVO);
 		if(comprobantePago != null) {
-			String nombreImagen = UUID.randomUUID().toString() + "_" + comprobantePago.getOriginalFilename().replace(" ", "");
+			String nombreImagen = UUID.randomUUID().toString();
+			String nombreComprobanteOriginal = comprobantePago.getOriginalFilename();
+			if(nombreComprobanteOriginal != null) {
+				nombreImagen = "_" + nombreComprobanteOriginal.replace(" ", "");
+			}
 			Path rutaImagen = Paths.get(rutaBaseComprobantePago).resolve(nombreImagen).toAbsolutePath();
 			try {
 				Files.copy(comprobantePago.getInputStream(), rutaImagen);
 				datosAGuardar.setComprobantePago(nombreImagen);
 			} catch (Exception e) {
-				logger.error("Error registrando vigencia. Error " + e.getMessage());
+				logger.error(() -> "Error registrando vigencia. Error "+ e.getMessage());
 				throw new DataException(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 			}
 		}
@@ -79,7 +83,7 @@ public class VigenciaServiceImpl implements VigenciaService{
 
 	@Override
 	public List<InformacionCompraMembresiaEmpresaDTO> listarVigenciasInactivas() {
-		return vigenciaRepository.ListarVigenciasInactivas();
+		return vigenciaRepository.listarVigenciasInactivas();
 	}
 
 	@Override
@@ -103,7 +107,7 @@ public class VigenciaServiceImpl implements VigenciaService{
 				productoServiceImpl.inactivarTodosLosProductosDeEmpresa(empresa);
 				empresaServiceImpl.actualizarEmpresa(empresa);
 			} catch (Exception e) {
-				logger.error("Error validando membresia. Error " + e.getMessage());
+				logger.error(() -> "Error validando membresia. Error "+ e.getMessage());
 			}
 		}
 		

@@ -36,7 +36,7 @@ import com.intermediary.utils.converter.EmpresaConverter;
 @Service("EmpresaService")
 public class EmpresaServiceImpl implements EmpresaService{
 	
-	private static Logger logger = LogManager.getLogger(EmpresaService.class);
+	private static Logger logger = LogManager.getLogger(EmpresaServiceImpl.class);
 
 	@Autowired
 	@Qualifier("EmpresaRepository")
@@ -44,7 +44,7 @@ public class EmpresaServiceImpl implements EmpresaService{
 	
 	@Autowired
 	@Qualifier("RepresentanteLegalService")
-	private RepresentanteLegalServiceImpl RepresentanteLegalServiceImpl;
+	private RepresentanteLegalServiceImpl representanteLegalServiceImpl;
 	
 	@Autowired
 	@Qualifier("VigenciaService")
@@ -73,17 +73,17 @@ public class EmpresaServiceImpl implements EmpresaService{
 		try {
 			empresasDTOs = converter.EntityToModel(empresaRepository.findAll());
 		} catch (DataAccessException e) {
-			logger.error("Error consultando empresas " + e.getMessage());
+			logger.error(() -> "Error consultando empresas "+ e.getMessage());
 			throw new DataException(CatalogoMensajesEmpresa.ERROR_CONSULTA_EMPRESAS, HttpStatus.NOT_FOUND);
 		} catch (BindException e) {
-			logger.error("Error desconocido listando empresas " + e.getMessage());
+			logger.error(() -> "Error desconocido listando empresas "+ e.getMessage());
 			throw new DataException(CatalogoMensajesEmpresa.ERROR_SERVIDOR, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 		if(empresasDTOs == null || empresasDTOs.isEmpty()) {
 			response.put(CatalogoMensajesGenerales.MENSAJE, CatalogoMensajesEmpresa.SIN_EMPRESAS_EN_BASE_DATOS);
-			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
+			return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
 		}
-		return  new ResponseEntity<List<EmpresaDTO>>(empresasDTOs, HttpStatus.OK);
+		return  new ResponseEntity<>(empresasDTOs, HttpStatus.OK);
 	}
 
 	@Override
@@ -137,7 +137,7 @@ public class EmpresaServiceImpl implements EmpresaService{
 		RespuestaEmpresaDTO retorno = new RespuestaEmpresaDTO();
 		if(empresaActual == null) {
 			retorno.setMensaje(CatalogoMensajesEmpresa.EMPRESA_NO_EXISTE);
-			logger.info("La empresa con id " + idEmpresa + " no existe");
+			logger.info(() -> "La empresa con id " + idEmpresa + " no existe");
 			return retorno;
 		}
 		empresaActual = editarInformacionEmpresa(empresaActual, empresaInformacionNueva);
@@ -184,9 +184,9 @@ public class EmpresaServiceImpl implements EmpresaService{
 		}else {
 			empresa.setEstado(EstadoEntidad.INACTIVO);
 			Long idRepresentante = empresa.getRepresentanteLegalEntity().getId();
-			RepresentanteLegalServiceImpl.inactivar(idRepresentante);
+			representanteLegalServiceImpl.inactivar(idRepresentante);
 			empresaRepository.save(empresa);
-			logger.info("Empresa con id " + idEmpresa + " se inactivó de manera exitosa");
+			logger.info(() -> "Empresa con id " + idEmpresa + " se inactivó de manera exitosa");
 			respuestaRetorno.setMensaje(CatalogoMensajesEmpresa.EMPRESA_ELIMINADA_EXITOSA);
 		}
 		return respuestaRetorno;

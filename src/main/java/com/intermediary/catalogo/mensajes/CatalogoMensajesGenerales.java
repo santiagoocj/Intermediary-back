@@ -1,6 +1,10 @@
 package com.intermediary.catalogo.mensajes;
 
 public class CatalogoMensajesGenerales {
+	
+	private CatalogoMensajesGenerales() {
+		throw new IllegalStateException();
+	}
 
 	public static final String ERROR_ENVIAR_MENSAJE = "Ocurrió un error al tratar de enviar el correo elecrónico";
 	public static final String CONTENIDO_CORREO_NULO = "El contenido para el envio de correo no puede ser nulo";

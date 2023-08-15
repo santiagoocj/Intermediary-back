@@ -4,6 +4,7 @@ import java.util.Arrays;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -23,6 +24,12 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	@Autowired
 	private BCryptPasswordEncoder passwordEncoder;
 	
+	@Value("${spring.value.autorization}")
+	private String value;
+	
+	@Value("${spring.value.authorizedGrantTypes}")
+	private String authorizedGrantTypes;
+	
 	@Autowired
 	@Qualifier("authenticationManager")
 	private AuthenticationManager authenticationManager;
@@ -39,9 +46,9 @@ public class AuthorizationServerConfig extends AuthorizationServerConfigurerAdap
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 		clients.inMemory().withClient("intermediaryapp")
-		.secret(passwordEncoder.encode("12345"))
+		.secret(passwordEncoder.encode(value))
 		.scopes("read","write")
-		.authorizedGrantTypes("password","refresh_token")
+		.authorizedGrantTypes("password",authorizedGrantTypes)
 		.accessTokenValiditySeconds(3600)
 		.refreshTokenValiditySeconds(3600);
 	}

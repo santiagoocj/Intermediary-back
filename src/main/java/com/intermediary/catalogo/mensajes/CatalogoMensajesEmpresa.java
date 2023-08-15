@@ -2,6 +2,10 @@ package com.intermediary.catalogo.mensajes;
 
 public class CatalogoMensajesEmpresa {
 	
+	private CatalogoMensajesEmpresa() {
+		throw new IllegalStateException();
+	}
+	
 	public static final String EMPRESA = "Empresa";
 	public static final String ERROR_INSERTAR_EMPRESAS = "Error al realizar el insert en la base de datos";
 	public static final String ERROR_CONSULTA_EMPRESAS = "Error al realizar la consulta en la base de datos";
@@ -14,6 +18,6 @@ public class CatalogoMensajesEmpresa {
 	public static final String EMPRESA_MODIFICADA_CON_EXITO = "La empresa ha sido modificada con exito";
 	public static final String EMPRESA_ELIMINADA_EXITOSA = "La empresa se ha eliminado de manera exitosa";
 	public static final String USER_NAME_NULO = "El nombre de usuario no puede ser vacío";
-	public static final String PASSWORD_NULO = "La contraseña no puede ser vacía";
+	public static final String CODIGO_NULO = "La contraseña no puede ser vacía";
 	
 }

@@ -8,7 +8,7 @@ public class BusinessExecption extends Exception {
 	 */
 	private static final long serialVersionUID = 2202436054232940143L;
 	
-	private HttpStatus status;
+	private final HttpStatus status;
 
 	public BusinessExecption(String mensaje, HttpStatus status) {
 		super(mensaje);
@@ -19,7 +19,4 @@ public class BusinessExecption extends Exception {
 		return status;
 	}
 
-	public void setStatus(HttpStatus status) {
-		this.status = status;
-	}
 }

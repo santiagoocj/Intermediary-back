@@ -41,7 +41,7 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService{
 		UsuarioEntity usuario = usuarioRepository.findByUserName(username).orElse(null);
 		
 		if(usuario == null) {
-			logger.error("Error en el login: no existe el usuario '" + username + "' en el sistema!");
+			logger.error("Error en el login: no existe el usuario '{0}' en el sistema!", username);
 			throw new UsernameNotFoundException(CatalogoMensajesUsuario.ERROR_LOGIN_USUARIO_N_EXISTE.replace("{usuario}", username));
 		}
 		List<GrantedAuthority> authorities = usuario.getRoles()
@@ -58,6 +58,7 @@ public class UsuarioServiceImpl implements UsuarioService, UserDetailsService{
 	}
 
 	@Override
+	@Transactional(readOnly = true)
 	public void validarInformacionUsuario(InfoBasicaUsuarioDTO infoUsuario) {
 		UsuarioEntity validacionesUsuario = findByUserName(infoUsuario.getUserName());
 		if(validacionesUsuario != null) {

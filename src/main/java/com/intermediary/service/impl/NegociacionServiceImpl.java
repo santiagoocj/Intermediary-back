@@ -44,7 +44,7 @@ public class NegociacionServiceImpl implements NegociacionService{
 
 	@Override
 	public Map<String, Object> crearNegociacion(Long idComprador, Long idProducto, NegocioDTO negocio) {
-		logger.info("inicio negociacion del producto con id " + idProducto);
+		logger.info(() -> "inicio negociacion del producto con id " + idProducto);
 		Map<String, Object> response = new HashMap<>();
 		ProductoEntity producto = productoServiceImpl.obtenerProducto(idProducto);
 		EmpresaEntity comprador = empresaServiceImpl.buscarXId(idComprador);
@@ -72,7 +72,7 @@ public class NegociacionServiceImpl implements NegociacionService{
 		Map<String, Object> response = new HashMap<>();
 		response.put(CatalogoMensajesGenerales.MENSAJE, CatalogoMensajesNegociacion.CANCELAR_NEGOCIACION);
 		response.put("solicitud de compra", solicitudCompraServiceImpl.cancelarSolicitud(idNegocio));
-		logger.info("cancelar solicitud de compra para el negocio con id " + idNegocio);
+		logger.info(() -> "cancelar solicitud de compra para el negocio con id " + idNegocio);
 		return response;
 	}
 
@@ -87,7 +87,7 @@ public class NegociacionServiceImpl implements NegociacionService{
 		negocio.getSolicitudCompra().setEstadoNegociacion(EstadoNegociacion.ACEPTADA);
 		negociacionRepository.save(negocio);
 		response.put(CatalogoMensajesGenerales.MENSAJE, CatalogoMensajesNegociacion.NEGOCIACION_EXITOSA);
-		logger.info("Negocio con id " + idNegocio + " aceptado");
+		logger.info(() -> "Negocio con id " + idNegocio + " aceptado");
 		return response;
 	}
 

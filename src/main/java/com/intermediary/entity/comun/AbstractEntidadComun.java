@@ -57,7 +57,7 @@ public abstract class AbstractEntidadComun implements Serializable {
 	@Column(name = "update_at")
 	protected Date updateAt;
 	
-	public AbstractEntidadComun() {
+	protected AbstractEntidadComun() {
 		this.estado = EstadoEntidad.ACTIVO;
 		this.versionEntidad = 0L;
 	}

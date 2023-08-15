@@ -46,16 +46,20 @@ public class ImagenServiceImpl implements ImagenService{
 
 	@Override
 	public void subirImagen(MultipartFile imagen, Long idProducto, String empresa, String producto) throws BindException {
-		String nombreImagen = UUID.randomUUID().toString() + "_" + imagen.getOriginalFilename().replace(" ", "");
+		String nombreOriginal = imagen.getOriginalFilename();
+		String nombreImagen = UUID.randomUUID().toString();
+		if(nombreOriginal != null) {
+			nombreImagen = "_" + nombreOriginal.replace(" ", "");
+		}
 		Path rutaImagen = Paths.get(crearDirectorioAlmacenarImagen(empresa, producto)).resolve(nombreImagen).toAbsolutePath();
 		try {
 			Files.copy(imagen.getInputStream(), rutaImagen);
 			ImagenProductoEntity imagenProducto = crearEntidadImagen(idProducto, empresa+producto+"/"+nombreImagen);
 			guardarImagen(imagenProducto);
 			productoServiceImpl.asignarFoto(idProducto, imagenProducto);
-			logger.info("producto " + producto + " se registro para la empresa " + empresa);
+			logger.info(() -> "producto " + producto + " se registro para la empresa " + empresa);
 		} catch (IOException e) {
-			logger.error("Error al subir la imagen del producto " + producto + ". Error " + e.getMessage());
+			logger.error(() -> "Error al subir la imagen del producto "+ producto + ". Error " + e.getMessage());
 			throw new DataException(e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
@@ -86,15 +90,15 @@ public class ImagenServiceImpl implements ImagenService{
 
 	@Override
 	public ResponseEntity<Map<String, Object>> eliminarImagen(Long idProducto, int posicionImagenEnLista) {
-		Map<String, Object> respuesta = new HashMap<String, Object>();
+		Map<String, Object> respuesta = new HashMap<>();
 		ProductoEntity producto = productoServiceImpl.obtenerProducto(idProducto);
 		ImagenProductoEntity imagen = producto.getImagenes().get(posicionImagenEnLista);
 		eliminarFotoCarpeta(obtenerRutaFoto(imagen.getRuta()));
 		actualizarImagenesEnElProducto(producto, posicionImagenEnLista);
 		imagenRepository.delete(imagen);
 		respuesta.put(CatalogoMensajesGenerales.MENSAJE, CatalogoMensajesImagen.IMAGEN_ELIMINADA);
-		logger.info("Imagen del producto con id " + idProducto + " Eliminado de manera exitosa");
-		return new ResponseEntity<Map<String,Object>>(respuesta, HttpStatus.OK);
+		logger.info(() -> "Imagen del producto con id " + idProducto + " Eliminado de manera exitosa");
+		return new ResponseEntity<>(respuesta, HttpStatus.OK);
 	}
 	
 	private void actualizarImagenesEnElProducto(ProductoEntity producto, int posicionImagenEnLista) {

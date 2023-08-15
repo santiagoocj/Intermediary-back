@@ -38,9 +38,9 @@ public class RegistroController {
 		logger.info("Registro inicial, parámetros requeridos pasaron");
 		try {
 			RespuestaRegistroDTO respuestaRegistroDTO = registroServiceImpl.realizarRegistro(empresa);
-			return new ResponseEntity<RespuestaRegistroDTO>(respuestaRegistroDTO, HttpStatus.CREATED);
+			return new ResponseEntity<>(respuestaRegistroDTO, HttpStatus.CREATED);
 		} catch (BindException e) {
-			logger.error("Error realizar registro: " + e.getMessage());
+			logger.error(() -> "Error realizar registro: " + e.getMessage());
 			throw new DataException(CatalogoMensajesRegistro.REGISTRO_FALLIDO, HttpStatus.BAD_REQUEST);
 		}
 	}
@@ -50,9 +50,9 @@ public class RegistroController {
 	public ResponseEntity<List<RegistroDTO>> listarRegistro(){
 		try {
 			List<RegistroDTO> registros = registroServiceImpl.listarTodo();
-			return new ResponseEntity<List<RegistroDTO>>(registros, HttpStatus.OK);
+			return new ResponseEntity<>(registros, HttpStatus.OK);
 		} catch (BindException e) {
-			logger.error("Error listando registros. Error " + e.getMessage());
+			logger.error(() -> "Error listando registros. Error " + e.getMessage());
 			throw new DataException(CatalogoMensajesRegistro.ERROR_LISTAR_REGISTRO, HttpStatus.BAD_REQUEST);
 		}
 	}

@@ -37,10 +37,10 @@ public class ImagenController {
 				imagenServiceImpl.subirImagen(multipartFile, idProducto, empresa, producto);
 			}
 			respuesta.put(CatalogoMensajesGenerales.MENSAJE, CatalogoMensajesImagen.SUBIDA_IMAGEN_EXITOSA);
-			return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.CREATED);
+			return new ResponseEntity<>(respuesta, HttpStatus.CREATED);
 		}
 		respuesta.put(CatalogoMensajesGenerales.MENSAJE, CatalogoMensajesImagen.IMAGEN_NO_SELECCIONADA);
-		return new ResponseEntity<Map<String, Object>>(respuesta, HttpStatus.NO_CONTENT);
+		return new ResponseEntity<>(respuesta, HttpStatus.NO_CONTENT);
 	}
 	
 

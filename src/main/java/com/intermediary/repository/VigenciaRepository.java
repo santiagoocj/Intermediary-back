@@ -16,5 +16,5 @@ public interface VigenciaRepository extends JpaRepository<VigenciaEntity, Long>{
 			+ " from vigencias vi JOIN empresas em ON vi.id = em.vigencia "
 			+ " JOIN membresias mem ON vi.membresia = mem.id "
 			+ " where vi.estado = 'INACTIVO'", nativeQuery = true)
-	List<InformacionCompraMembresiaEmpresaDTO> ListarVigenciasInactivas();
+	List<InformacionCompraMembresiaEmpresaDTO> listarVigenciasInactivas();
 }

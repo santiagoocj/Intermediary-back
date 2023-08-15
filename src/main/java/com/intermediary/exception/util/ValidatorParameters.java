@@ -10,6 +10,8 @@ public class ValidatorParameters {
 	private static final int TAMANO_MINIMO_NIT = 4;
 	private static final int TAMANO_MAXIMO_NOMBRE_EMPRESA = 20;
 	
+	private ValidatorParameters() {}
+	
 	public static void validarNitNulo(String nit, String mensaje) throws BusinessExecption{
 		if(nit == null) {
 			throw new BusinessExecption(mensaje, HttpStatus.BAD_REQUEST);
