@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.springframework.validation.BindException;
+import org.springframework.data.domain.Page;
 
 import com.intermediary.dto.ProductoDTO;
 import com.intermediary.dto.respuestas.RespuestaProductoDTO;
@@ -19,7 +20,7 @@ public interface ProductoService {
 	
 	public List<ProductoEntity> listarProductos(Long idEmpresa);
 	
-	public List<ProductoEntity> listarActivos();
+	public Page<List<ProductoEntity>> listarActivos(Integer page);
 	
 	public ProductoDTO visualizarProducto(Long idProducto) throws BindException;
 	

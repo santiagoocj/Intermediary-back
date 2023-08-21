@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.data.domain.Page;
 
 import com.intermediary.catalogo.mensajes.CatalogoMensajesProducto;
 import com.intermediary.dto.ProductoDTO;
@@ -84,9 +85,9 @@ public class ProductoController {
 		return new ResponseEntity<>(productoService.listarProductos(idEmpresa), HttpStatus.OK);
 	}
 	
-	@GetMapping("/producto/activo")
-	public ResponseEntity<List<ProductoEntity>> listarTodosProductosActivos(){
-		return new ResponseEntity<>(productoService.listarActivos(), HttpStatus.OK);
+	@GetMapping("/producto/activo/page/{page}")
+	public ResponseEntity<Page<List<ProductoEntity>>> listarTodosProductosActivos(@PathVariable Integer page){
+		return new ResponseEntity<>(productoService.listarActivos(page), HttpStatus.OK);
 	}
 	
 	@Secured("ROLE_EMPRESA")

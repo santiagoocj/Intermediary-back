@@ -9,8 +9,10 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindException;
+import org.springframework.data.domain.Page;
 
 import com.intermediary.catalogo.mensajes.CatalogoMensajesGenerales;
 import com.intermediary.catalogo.mensajes.CatalogoMensajesProducto;
@@ -25,10 +27,13 @@ import com.intermediary.repository.ProductoRepository;
 import com.intermediary.service.ProductoService;
 import com.intermediary.utils.converter.ProductoConverter;
 
+import org.springframework.data.domain.Pageable;
+
 @Service("ProductoService")
 public class ProductoServiceImpl implements ProductoService{
 	
 	private static Logger logger = LogManager.getLogger(ProductoServiceImpl.class);
+	private static final int NUMERO_PRODUCTOS_POR_PAGINA = 8;
 	
 	@Autowired
 	@Qualifier("ProductoRepository")
@@ -89,9 +94,10 @@ public class ProductoServiceImpl implements ProductoService{
 	}
 
 	@Override
-	public List<ProductoEntity> listarActivos() {
+	public Page<List<ProductoEntity>> listarActivos(Integer page) {
+		Pageable pageable = PageRequest.of(page, NUMERO_PRODUCTOS_POR_PAGINA);
 		logger.info("Listando productos activos");
-		return productoRepository.findByEstado(EstadoEntidad.ACTIVO);
+		return productoRepository.findByEstado(EstadoEntidad.ACTIVO, pageable);
 	}
 
 	@Override

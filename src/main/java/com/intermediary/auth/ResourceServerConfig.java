@@ -17,7 +17,7 @@ public class ResourceServerConfig extends ResourceServerConfigurerAdapter{
 			.antMatchers(HttpMethod.POST, "/api/registro", "/api/representantelegal").permitAll()
 			.antMatchers(HttpMethod.POST, "api/registro/documento/{empresa}").permitAll()
 			.antMatchers(HttpMethod.POST, "api/documento").permitAll()
-			.antMatchers(HttpMethod.GET, "/api/producto/{idProducto}", "/api/producto/activo", "/api/producto/categoria/{categoria}").permitAll()
+			.antMatchers(HttpMethod.GET, "/api/producto/{idProducto}", "/api/producto/activo/page/{page}", "/api/producto/categoria/{categoria}").permitAll()
 			.antMatchers(HttpMethod.GET, "/api/categorias").permitAll()
 			.antMatchers(HttpMethod.GET, "/api/membresia/lista").permitAll()
 			.antMatchers("/v2/api-docs", "/configuration/ui", "/swagger-resources", "/configuration/security", "/swagger-ui.html", "/webjars/**").permitAll()
