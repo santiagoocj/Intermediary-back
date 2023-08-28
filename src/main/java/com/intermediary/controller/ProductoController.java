@@ -109,9 +109,9 @@ public class ProductoController {
 		return productoService.obtenerImagenesDelProducto(idProducto);
 	}
 	
-	@GetMapping("/producto/categoria/{categoria}")
-	public List<ProductoEntity> buscarXCategoria(@PathVariable String categoria){
-		return productoService.buscarXCategoria(categoria);
+	@GetMapping("/producto/categoria/{categoria}/{page}")
+	public Page<List<ProductoEntity>> buscarXCategoria(@PathVariable String categoria, @PathVariable Integer page){
+		return productoService.buscarXCategoria(categoria, page);
 	}
 	
 }

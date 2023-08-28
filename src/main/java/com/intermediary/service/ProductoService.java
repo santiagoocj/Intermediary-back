@@ -30,7 +30,7 @@ public interface ProductoService {
 	
 	public Map<String, Object> activarProducto(Long idEmpresa, Long idProducto);
 	
-	public List<ProductoEntity> buscarXCategoria(String categoria);
+	public Page<List<ProductoEntity>> buscarXCategoria(String categoria, Integer page);
 	
 	public void inactivarTodosLosProductosDeEmpresa(EmpresaEntity empresa);
 }

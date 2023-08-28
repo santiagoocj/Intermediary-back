@@ -168,13 +168,15 @@ public class ProductoServiceImpl implements ProductoService{
 	}
 
 	@Override
-	public List<ProductoEntity> buscarXCategoria(String categoria) {
-		return productoRepository.findByCategoria(categoria);
+	public Page<List<ProductoEntity>> buscarXCategoria(String categoria, Integer page) {
+		Pageable pageable = PageRequest.of(page, NUMERO_PRODUCTOS_POR_PAGINA);
+		return productoRepository.findByCategoria(categoria, pageable);
 	}
 
 	@Override
 	public void inactivarTodosLosProductosDeEmpresa(EmpresaEntity empresa) {
 		productoRepository.inactivarTodosLosProductos(empresa.getId());
 	}
+
 
 }
