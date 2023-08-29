@@ -13,6 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.intermediary.catalogo.mensajes.CatalogoMensajesGenerales;
 import com.intermediary.catalogo.mensajes.CatalogoMensajesMembresia;
+import com.intermediary.dto.EmailDTO;
 import com.intermediary.entity.EmpresaEntity;
 import com.intermediary.entity.MembresiaEntity;
 import com.intermediary.entity.VigenciaEntity;
@@ -40,6 +41,9 @@ public class MembresiaServiceImpl implements MembresiaService{
 	@Autowired
 	@Qualifier("RoleService")
 	private RoleServiceImpl roleServiceImpl;
+	
+	@Autowired(required = true)
+	private EmailServiceImpl emailServiceImpl;
 	
 	@Override
 	public MembresiaEntity buscarXId(Long id) {
@@ -76,6 +80,8 @@ public class MembresiaServiceImpl implements MembresiaService{
 		empresaServiceImpl.actualizarEmpresa(empresa);
 		vigenciaServiceImpl.actualizarVigencia(vigencia);
 		Map<String, Object> respuesta = new HashMap<>();
+		EmailDTO email = emailServiceImpl.construirEmail(empresa.getCorreo(), CatalogoMensajesMembresia.SOLICITUD_ACTIVACION_MEMBRESIA, CatalogoMensajesMembresia.ACTIVACION_MEMBRESIA_EXITOSA);
+		emailServiceImpl.sendEmail(email);
 		respuesta.put(CatalogoMensajesGenerales.MENSAJE, CatalogoMensajesMembresia.ACTIVACION_MEMBRESIA_EXITOSA);
 		return respuesta;
 	}
