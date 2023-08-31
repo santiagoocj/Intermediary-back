@@ -12,7 +12,7 @@
 	<groupId>com.intermediary</groupId>
 	<artifactId>intermediary</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<name>intermediary</name>
 	<description>desarrollo back end para la plataforma intermediary que conecta empresarios con vendedores del oriente antioqueño para ampliar su mercado y negocios </description>
 	<properties>
