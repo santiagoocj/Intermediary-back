@@ -1,1 +1,1 @@
-web: java -jar target/intermediary-0.0.1-SNAPSHOT.war
+web: java -war target/intermediary-0.0.1-SNAPSHOT.war
